@@ -1,0 +1,109 @@
+<!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>WFC Fix - Recent Form</title>
+        <link href="static/bootstrap.min.css" rel="stylesheet"/>
+    </head>
+    <body>
+        <div class="container">
+            <div class="page-header">
+                <h1>Wakefield HC Fixtures <small>The important ones
+                        anyway...</small></h1>
+            </div>
+            <div class="well">
+            <h3>Recent Form</h3>
+            <table class="table">
+                <tbody>                    
+                    {% for team_form in recent_form|sort(attribute='teamName') %}
+                    <tr>
+                        <td>{{ team_form.teamName }}</td>
+                        {% for result in team_form.results %}
+                        {% if loop.revindex in (1,2,3,4) %}
+                        <td>{{ result.resultInitial }}</td>                        
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>                
+            </table>
+        </div>
+            <div class="well">
+            <h3>Recent Form Table</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>Team</td>
+                        <td>P</td>
+                        <td>W</td>
+                        <td>D</td>
+                        <td>L</td>
+                        <td>Pts.</td>
+                    </tr>
+                </thead>
+                <tbody>                    
+                    {% for team_form in recent_form|sort(True) %}
+                    <tr>
+                        <td>{{team_form.teamName}}</td>
+                        <td>{{team_form.played()}}</td>
+                        <td>{{team_form.wins()}}</td>
+                        <td>{{team_form.draws()}}</td>
+                        <td>{{team_form.loses()}}</td>
+                        <td>{{team_form.points()}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>                
+            </table>
+        </div>
+            <div class="well">
+            <h3>Last Result</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>Date</td>
+                        <td>Time</td>
+                        <td>Home</td>
+                        <td>Score</td>
+                        <td>Away</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for match in lastResults %}
+                    <tr>
+                        <td>{{match.date}}</td>
+                        <td>{{match.time}}</td>
+                        <td>{{match.home}}</td>
+                        <td>{{match.homeGoals}} - {{match.awayGoals}}</td>
+                        <td>{{match.away}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+            <div class="well">
+            <h3>Up Coming Fixtures</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>Date</td>
+                        <td>Time</td>
+                        <td>Home</td>
+                        <td>Away</td>
+                        <td>Venue</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for match in nextMatches %}
+                    <tr>
+                        <td>{{match.date}}</td>
+                        <td>{{match.time}}</td>
+                        <td>{{match.home}}</td>
+                        <td>{{match.away}}</td>
+                        <td>{{match.venue}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        </div>
+    </body>
+</html>

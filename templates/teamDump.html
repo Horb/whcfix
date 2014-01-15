@@ -1,0 +1,60 @@
+<!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>WFC Fix - Recent Form</title>
+        <style type="text/css">
+            td {
+                text-align:center;
+            }
+            td.resultBox {
+                width:20px;
+            }
+            td.formLabel {
+                text-align:left;
+                white-space:nowrap;
+            }
+            
+            td.win, td.lose, td.draw {
+                padding:5px;
+            }
+            td.win {
+                background-color:green;
+            }
+            td.lose {
+                background-color:red;
+            }
+            td.draw {
+                background-color:yellow;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Matches</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <td>Date</td>
+                        <td>Push Back</td>
+                        <td>Home</td>
+                        <td width="30px"></td>
+                        <td>Away</td>
+                        <td>isResult?</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for match in matches %}
+                    <tr>
+                        <td>{{match.date}}</td>
+                        <td>{{match.time}}</td>
+                        <td>{{match.home}}</td>
+                        <td>{{match.homeGoals}} - {{match.awayGoals}}</td>
+                        <td>{{match.away}}</td>
+                        <td>{{match.isResult()}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
