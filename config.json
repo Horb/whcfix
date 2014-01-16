@@ -1,13 +1,65 @@
 {
-    "LEAGUE_ID":[103, 102],
-    "CLUB_ID":66,
-    "teams":[
-        "Wakefield 3 Mens"
-        ,"Wakefield 4 Mens"
-        ,"Wakefield 5 Mens"
-        ,"Wakefield 4 Ladies"
-        ,"Wakefield 5 Ladies"
-        ,"Wakefield 6 Mens"
-        ,"Wakefield 7 Mens"
-        ]
+    "configs": [
+        {
+            "dataSource": {
+                "club": "66", 
+                "league": "103", 
+                "source": "YorkshireHA"
+            }, 
+            "sectionName": "Mens"
+        }, 
+        {
+            "dataSource": {
+                "club": "66", 
+                "league": "102", 
+                "source": "YorkshireHA"
+            }, 
+            "sectionName": "Ladies"
+        }, 
+        {
+            "dataSource": {
+                "code": "1031", 
+                "name": "Wakefield-Mens-1s", 
+                "source": "FixturesLive"
+            }, 
+            "sectionName": "Mens", 
+            "teamName": "Wakefield 1 Mens"
+        }, 
+        {
+            "dataSource": {
+                "code": "1131", 
+                "name": "Wakefield-Mens-2s", 
+                "source": "FixturesLive"
+            }, 
+            "sectionName": "Mens", 
+            "teamName": "Wakefield 2 Mens"
+        }, 
+        {
+            "dataSource": {
+                "code": "4160", 
+                "name": "Wakefield-Ladies-1s", 
+                "source": "FixturesLive"
+            }, 
+            "sectionName": "Ladies", 
+            "teamName": "Wakefield 1 Ladies"
+        }, 
+        {
+            "dataSource": {
+                "code": "4173", 
+                "name": "Wakefield-Ladies-2s", 
+                "source": "FixturesLive"
+            }, 
+            "sectionName": "Ladies", 
+            "teamName": "Wakefield 2 Ladies"
+        }, 
+        {
+            "dataSource": {
+                "code": "4221", 
+                "name": "Wakefield-Ladies-3s", 
+                "source": "FixturesLive"
+            }, 
+            "sectionName": "Ladies", 
+            "teamName": "Wakefield 3 Ladies"
+        }
+    ]
 }

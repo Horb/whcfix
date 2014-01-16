@@ -2,23 +2,27 @@ from flask import Flask, render_template
 import logic
 
 app = Flask(__name__, static_folder='static', static_url_path='/static')
-conf = logic.getConfig()
-strings = logic.initAppStrings()
-
 
 @app.route("/")
 def hello():
-    matches = logic.getMatchesObject(conf['LEAGUE_ID'][0], conf['LEAGUE_ID'][1], conf['CLUB_ID'])
+    matches = logic.getMatchesObject()
+    teams = matches.listOfTeamNames(searchTerm="Wakefield")
     return render_template("dashboard.html"
-                           , strings = strings
-                           , recent_form = matches.recentForm(conf['teams'])
-                           , nextMatches = matches.getNextMatches(conf['teams'])
-                           , lastResults = matches.getLastResults(conf['teams']))
+                           , strings = logic.appStrings()
+                           , recent_form = matches.recentForm(teams)
+                           , nextMatches = matches.getNextMatches(teams)
+                           , lastResults = matches.getLastResults(teams)
+                           )
 
-@app.route("/team/<team>/")
+@app.route("/teams/<team>/")
 def team(team):
-    matches = logic.getMatchesObject(conf['LEAGUE_ID'][0], conf['LEAGUE_ID'][1], conf['CLUB_ID'])
+    matches = logic.getMatchesObject()
     return render_template("teamDump.html", matches = matches.getMatches(team))
+
+@app.route("/teams/")
+def teams():
+    matches = logic.getMatchesObject()
+    return render_template("teamDump.html", matches = matches.listOfMatches)
 
 if __name__ == '__main__':
     app.debug = True
