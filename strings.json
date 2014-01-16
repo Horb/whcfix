@@ -1,8 +1,11 @@
 {
-"hPageDesc":"Always Up To Date",
-"pPageDesc":"The fixtures and results are drawn directly from the Yorkshire Hockey Association, so they're always up to date.",
-"hRecentForm":"Compare Sides Recent Form",
-"pRecentForm":"You can compare all the Wakefield sides recent form in the Recent Form table. It uses the last four results to construct a Wakefield mini league.",
-"hContact":"Problems and Improvements",
-"pContact":"If you'd like to suggest any changes or report any problems please get in touch!"
+    "hPageDesc":"Always Up To Date",
+    "pPageDesc":"The fixtures and results are drawn directly from the Yorkshire Hockey Association, so they're always up to date.",
+    "hRecentForm":"Compare Sides Recent Form",
+    "pRecentForm":"You can compare all the Wakefield sides recent form in the Recent Form table. It uses the last four results to construct a Wakefield mini league.",
+    "hContact":"Problems and Improvements",
+    "pContact":"If you'd like to suggest any changes or report any problems please get in touch!",
+    "hFixtures": "View Last Result and Next Fixturie",
+    "pFixtures": "See how each Wakefield Side fared last weekend and who they've got coming up this weekend.",
+    "":""
 }
