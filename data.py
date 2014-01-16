@@ -2,6 +2,10 @@ import requests
 from BeautifulSoup import BeautifulSoup
 import json
 
+def initAppStrings():
+    with open('strings.json') as jsonFile:
+        return json.loads(jsonFile.read())
+
 def getConfig():
     with open('config.json') as jsonFile:
         return json.loads(jsonFile.read())

@@ -1,4 +1,6 @@
 import data
+def initAppStrings():
+    return data.initAppStrings()
 
 class TeamForm(object):
     def __init__(self, teamName, results):
