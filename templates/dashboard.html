@@ -30,7 +30,7 @@
                 <tbody>                    
                     {% for team_form in recent_form|sort(attribute='teamName') %}
                     <tr>
-                        <td>{{ team_form.teamName }}</td>
+                        <td><a href="/teams/{{team_form.teamName}}/">{{ team_form.teamName }}</a></td>
                         {% for result in team_form.results %}
                         {% if loop.revindex in (1,2,3,4) %}
                         <td>{{ result.resultInitial }}</td>                        
