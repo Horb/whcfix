@@ -2,6 +2,28 @@ import requests
 import objects
 from BeautifulSoup import BeautifulSoup
 import json
+import pickle
+import os
+import time
+
+def cacheExists():
+    if os.path.exists('cache.pickle'):
+        anHourInSeconds = 60 * 60
+        ageOfCacheInSeconds = time.time() - os.path.getctime("cache.pickle")
+        if  ageOfCacheInSeconds > anHourInSeconds:
+            # Return false if the cache is out of date.
+            return False
+        return True
+    else:
+        return False
+
+def cacheMatchesObject(matchesObject):
+    with open('cache.pickle', 'w') as pickleFile:
+        pickle.dump(matchesObject, pickleFile)
+
+def getMatchesObjectFromCache():
+    with open('cache.pickle') as pickleFile:
+        return pickle.load(pickleFile)
 
 def getConfig():
     with open('config.json') as jsonFile:

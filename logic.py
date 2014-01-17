@@ -5,10 +5,15 @@ def appStrings():
     return data.initAppStrings()
 
 def getMatchesObject():
-    matches = []
-    for config in data.getConfig()["configs"]:
-        matches += getMatchesFromConfig(config)
-    return objects.Matches(matches)
+    if data.cacheExists():
+        return data.getMatchesObjectFromCache()
+    else:
+        matches = []
+        for config in data.getConfig()["configs"]:
+            matches += getMatchesFromConfig(config)
+        matchesObject = objects.Matches(matches)
+        data.cacheMatchesObject(matchesObject)
+        return matchesObject
 
 def getMatchesFromConfig(config):
     if config['dataSource']['source'] == 'YorkshireHA':
