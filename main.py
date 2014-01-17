@@ -17,7 +17,7 @@ def hello():
 @app.route("/teams/<team>/")
 def team(team):
     matches = logic.getMatchesObject()
-    return render_template("teamDump.html", matches = matches.getMatches(team))
+    return render_template("teamDump.html", team = team, matches = matches.getMatches(team))
 
 @app.route("/teams/")
 def teams():
