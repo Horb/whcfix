@@ -167,24 +167,51 @@ class FixturesLiveAdapter(AdapterBase):
         try:
             if len(tr) != 9:
                 return None
-            _, oposition, _, score, league, date_time, home_away, venue, _ = [child for child in tr.childGenerator()]
-            if ":" in score.text:
-                homeGoals, awayGoals = score.text.split(":")
-                homeGoals, awayGoals = map(int, (homeGoals, awayGoals))
-            elif score.text == "&nbsp;":
-                homeGoals, awayGoals = None, None
-            try:
-                date, time = date_time.text.split(" ")
-            except:
-                date = date_time.text
-                time = ""
-            venue = venue.text
+            _, oposition, resultIndicator, score, league, date_time, home_away, venue, _ = [child for child in tr.childGenerator()]
             if home_away.text == "A":
                 home = oposition.text
                 away = self.clubName
             else:
                 home = self.clubName
                 away = oposition.text
+
+            def apportionGoals(club, oposition, score, resultIndicator, home_away):
+                clubGoals = None
+                opositionGoals = None
+                if ":" in score.text:
+                    goals = score.text.split(":")
+                    goals = map(int, goals)
+                    if max(goals) == min(goals):
+                        homeGoals, awayGoals = goals
+                    else:
+                        if "emerald" in str(resultIndicator):
+                            opositionGoals = min(goals)
+                            clubGoals = max(goals)
+                        else:
+                            opositionGoals = max(goals)
+                            clubGoals = min(goals)
+                elif score.text == "&nbsp;":
+                    homeGoals, awayGoals = None, None
+                if home_away.text == "A":
+                    home = oposition.text
+                    away = club
+                    if opositionGoals is not None: homeGoals = opositionGoals
+                    if clubGoals is not None: awayGoals = clubGoals
+                else:
+                    home = club
+                    if clubGoals is not None: homeGoals = clubGoals
+                    away = oposition.text
+                    if opositionGoals is not None: awayGoals = opositionGoals
+                return home, away, homeGoals, awayGoals
+                
+            home, away, homeGoals, awayGoals = apportionGoals(self.clubName, oposition, score, resultIndicator, home_away)
+
+            try:
+                date, time = date_time.text.split(" ")
+            except:
+                date = date_time.text
+                time = ""
+            venue = venue.text
             return {'date':date,
                     'time':time,
                     'venue':venue,
@@ -196,3 +223,9 @@ class FixturesLiveAdapter(AdapterBase):
         except Exception as ex:
             print ex.message
             return None
+
+if __name__ == '__main__':
+    fixLiveNumber, fixLiveName, clubName, sectionName = "1131", "Wakefield-Mens-2s", "Wakefield 2 Mens", "Mens"
+    a = FixturesLiveAdapter(fixLiveNumber, fixLiveName, clubName, sectionName)
+    print a.getMatches()
+

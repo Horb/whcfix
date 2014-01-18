@@ -125,6 +125,9 @@ class Match(object):
             self.away = "%s %s" % (away, section)
         self.isPostponed = isPostponed
 
+    def __repr__(self):
+        return self.__str__()
+
     def __str__(self):
         return "%s %s - %s %s" % (self.home, self.homeGoals,
                                   self.awayGoals, self.away)
