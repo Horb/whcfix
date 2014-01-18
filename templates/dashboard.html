@@ -57,7 +57,7 @@
                 <tbody>                    
                     {% for team_form in recent_form|sort(True) %}
                     <tr>
-                        <td>{{team_form.teamName}}</td>
+                        <td><a href="/teams/{{team_form.teamName}}/">{{team_form.teamName}}</a></td>
                         <td>{{team_form.played()}}</td>
                         <td>{{team_form.wins()}}</td>
                         <td>{{team_form.draws()}}</td>
@@ -85,9 +85,17 @@
                     <tr>
                         <td>{{match.date}}</td>
                         <td>{{match.time}}</td>
+                        {% if "Wakefield" in match.home %}
+                        <td><a href="/teams/{{match.home}}/">{{match.home}}</a></td>
+                        {% else %}
                         <td>{{match.home}}</td>
+                        {% endif %}
                         <td>{{match.homeGoals}} - {{match.awayGoals}}</td>
+                        {% if "Wakefield" in match.away %}
+                        <td><a href="/teams/{{match.away}}/">{{match.away}}</a></td>
+                        {% else %}
                         <td>{{match.away}}</td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -110,8 +118,16 @@
                     <tr>
                         <td>{{match.date}}</td>
                         <td>{{match.time}}</td>
+                        {% if "Wakefield" in match.home %}
+                        <td><a href="/teams/{{match.home}}/">{{match.home}}</a></td>
+                        {% else %}
                         <td>{{match.home}}</td>
+                        {% endif %}
+                        {% if "Wakefield" in match.away %}
+                        <td><a href="/teams/{{match.away}}/">{{match.away}}</a></td>
+                        {% else %}
                         <td>{{match.away}}</td>
+                        {% endif %}
                         <td>{{match.venue}}</td>
                     </tr>
                     {% endfor %}
