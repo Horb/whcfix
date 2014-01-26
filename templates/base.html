@@ -1,0 +1,22 @@
+<!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        {% block head %}
+            <title>WFC Fix</title>
+        {% endblock %}
+        <link href="/static/bootstrap.min.css" rel="stylesheet"/>
+        <style type="text/css">
+            {% block pageCSS %}
+            {% endblock %}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            {% block breadcrumbs %}
+            {% endblock %}
+            {% block body %}
+            <p>Page intentionally blank.</p>
+            {% endblock %}
+        </div>
+    </body>
+</html>
