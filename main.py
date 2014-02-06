@@ -1,12 +1,13 @@
 from flask import Flask, render_template
 import logic
+import models
 
 app = Flask(__name__, static_folder='static', static_url_path='/static')
 
 @app.route("/")
 def hello():
-    matches = logic.getMatchesObject()
-    teams = matches.listOfTeamNames(searchTerm="Wakefield")
+    matches = models.Matches()
+    teams = matches.teamNames("Wakefield")
     return render_template("dashboard.html"
                            , strings = logic.appStrings()
                            , recent_form = matches.recentForm(teams)
@@ -16,14 +17,14 @@ def hello():
 
 @app.route("/teams/<team>/")
 def team(team):
-    matches = logic.getMatchesObject()
-    return render_template("teamDump.html", team = team, matches = matches.getMatches(team))
+    matches = models.Matches()
+    return render_template("teamDump.html", team = team, matches = matches.teamFilter(team))
 
 @app.route("/teams/")
 def teams():
-    matches = logic.getMatchesObject()
-    return render_template("teamDump.html", matches = matches.listOfMatches)
+    matches = models.Matches()
+    return render_template("teamDump.html", team = "All", matches = matches.listOfMatches)
 
 if __name__ == '__main__':
-    app.debug = True
+    debug = True
     app.run()
