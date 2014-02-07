@@ -8,10 +8,16 @@ class TeamForm(object):
         return self.points()
 
     def __gt__(self, other):
-        return int(self) > int(other)
+        if int(other) == int(self):
+            return self.goalDifference() > other.goalDifference()
+        else:
+            return int(self) > int(other)
 
     def __lt__(self, other):
-        return int(self) < int(other)
+        if int(other) == int(self):
+            return self.goalDifference() < other.goalDifference()
+        else:
+            return int(self) < int(other)
 
     def _countRecentResultInitial(self, initial):
         return len([r for r in self.results[:4] if r.resultInitial == initial])
@@ -25,6 +31,10 @@ class TeamForm(object):
     def loses(self):
         return self._countRecentResultInitial('L')
 
+    def goalDifference(self):
+        print self.teamName, [result.goalDifference for result in self.results]
+        return sum([result.goalDifference for result in self.results])
+
     def points(self):
         return self.wins() * 3 + self.draws()
 
@@ -33,14 +43,11 @@ class TeamForm(object):
 
 
 class Result(object):
-    def __init__(self, resultInitial, resultIndicatorCssClass, points):
+    def __init__(self, resultInitial, resultIndicatorCssClass, points, goalDifference):
         self.resultInitial = resultInitial
         self.resultIndicatorCssClass = resultIndicatorCssClass
         self.points = points
-
-WIN = Result('W', 'win', 3)
-LOSE = Result('L', 'lose', 0)
-DRAW = Result('D', 'draw', 1)
+        self.goalDifference = goalDifference
 
 
 class Match(object):
@@ -100,3 +107,21 @@ class Match(object):
 
     def isResult(self):
         return self.homeGoals is not None and self.awayGoals is not None
+
+    def homeGoalDifference(self):
+        if self.isResult():
+            return self.homeGoals - self.awayGoals
+        return 0
+
+    def awayGoalDifference(self):
+        if self.isResult():
+            return self.awayGoals - self.homeGoals
+        return 0
+
+    def teamGoalDifference(self, teamName):
+        if teamName == self.home:
+            return self.homeGoalDifference()
+        if teamName == self.away:
+            return self.awayGoalDifference()
+        else:
+            0

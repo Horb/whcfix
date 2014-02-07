@@ -1,9 +1,3 @@
-# matches should be accessed as;
-#    matches = Match().all()
-#    firstTeamMatches = Matches.filter(team="Wakefield Mens 1")
-#
-#And so on
-
 import adapters
 import os
 import json
@@ -137,18 +131,19 @@ class Matches(MatchesBase):
             for match in self.listOfMatches[::-1]:
                 if match.doesFeature(name) and match.isResult():
                     if match.didWin(name):
-                        results.append(objects.WIN)
+                        results.append(objects.Result('W', 'win', 3, match.teamGoalDifference(name)))
                     elif match.didLose(name):
-                        results.append(objects.LOSE)
+                        results.append(objects.Result('L', 'lose', 0, match.teamGoalDifference(name)))
                     elif match.isDraw():
-                        results.append(objects.DRAW)
+                        results.append(objects.Result('D', 'draw', 1, match.teamGoalDifference(name)))
                     else:
                         assert False
                 if len(results) == 4:
+                    print results
                     return results
 
         teams = [(_getLastFourResults(team), team) for team in listOfTeamNames]
         return [objects.TeamForm(name, results) for results, name in teams]
 
 if __name__ == '__main__':
-    m = Match()
+    m = Matches()

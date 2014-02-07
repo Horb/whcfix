@@ -26,5 +26,5 @@ def teams():
     return render_template("teamDump.html", team = "All", matches = matches.listOfMatches)
 
 if __name__ == '__main__':
-    debug = True
+    app.debug = True
     app.run()
