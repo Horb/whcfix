@@ -68,8 +68,8 @@
             <tbody>
                 {% for match in lastResults %}
                 <tr>
-                    <td>{{match.date}}</td>
-                    <td>{{match.time}}</td>
+                    <td>{{match.date_string()}}</td>
+                    <td>{{match.time_string()}}</td>
                     {% if "Wakefield" in match.home %}
                     <td><a href="/teams/{{match.home}}/">{{match.home}}</a></td>
                     {% else %}
@@ -101,8 +101,8 @@
             <tbody>
                 {% for match in nextMatches %}
                 <tr>
-                    <td>{{match.date}}</td>
-                    <td>{{match.time}}</td>
+                    <td>{{match.date_string()}}</td>
+                    <td>{{match.time_string()}}</td>
                     {% if "Wakefield" in match.home %}
                     <td><a href="/teams/{{match.home}}/">{{match.home}}</a></td>
                     {% else %}

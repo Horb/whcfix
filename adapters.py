@@ -5,6 +5,7 @@ import json
 import pickle
 import os
 import time
+import datetime
 
 
 
@@ -71,14 +72,20 @@ class YorkshireHockeyAssociationAdapter(AdapterBase):
         r = requests.post(url, data=payload)
         return r.content
 
+    def _parseDate(self, dateText):
+        return datetime.datetime.strptime(dateText, '%d %b %y')
+
+    def _parseTime(self, timeText):
+        return datetime.datetime.strptime(timeText, '%H:%M')
+
     def _parseRow(self, tr):
         try:
             tds = tr("td")
             nbsp = '&nbsp;'
             if len(tds) == 6:
                 date, time, venue, home, result, away = tds
-                date = date.text
-                time = time.text
+                date = self._parseDate(date.text)
+                time = self._parseTime(time.text)
                 venue = " ".join(venue.text.split(nbsp))
                 home = " ".join(home.text.split(nbsp))
                 if result.text == nbsp + nbsp:
@@ -139,8 +146,15 @@ class FixturesLiveAdapter(AdapterBase):
 
     def _getHTML(self):
         url = "http://w.fixtureslive.com/team/%s/fixtures/%s" % (self.fixLiveNumber, self.fixLiveName)
+        print url
         r = requests.get(url)
         return r.content
+
+    def _parseDate(self, dateText):
+        return datetime.datetime.strptime(dateText, '%d.%m.%y')
+
+    def _parseTime(self, timeText):
+        return datetime.datetime.strptime(timeText, '%H:%M')
 
     def _parseRow(self, tr):
         try:
@@ -182,11 +196,13 @@ class FixturesLiveAdapter(AdapterBase):
                     away = oposition.text
                     if opositionGoals is not None: awayGoals = opositionGoals
                 return home, away, homeGoals, awayGoals
-                
+
             home, away, homeGoals, awayGoals = apportionGoals(self.clubName, oposition, score, resultIndicator, home_away)
 
             try:
                 date, time = date_time.text.split(" ")
+                date = self._parseDate(date)
+                time = self._parseTime(time)
             except:
                 date = date_time.text
                 time = ""
@@ -203,8 +219,17 @@ class FixturesLiveAdapter(AdapterBase):
             print ex.message
             return None
 
-if __name__ == '__main__':
-    fixLiveNumber, fixLiveName, clubName, sectionName = "1131", "Wakefield-Mens-2s", "Wakefield 2 Mens", "Mens"
-    a = FixturesLiveAdapter(fixLiveNumber, fixLiveName, clubName, sectionName)
-    print a.getMatches()
-
+#if __name__ == '__main__':
+#    fixLiveNumber, fixLiveName, clubName, sectionName = "1131", "Wakefield-Mens-2s", "Wakefield 2 Mens", "Mens"
+#    a = FixturesLiveAdapter(fixLiveNumber, fixLiveName, clubName, sectionName)
+#    print "gettingMatches"
+#    a.getMatches()
+#    matches = YorkshireHockeyAssociationAdapter("103", "66", "Mens")
+#    print "init"
+#    matches.getMatches()
+#    print "got"
+#                "club": "66", 
+#                "league": "103", 
+#                "source": "YorkshireHA"
+#            }, 
+#            "sectionName": "Mens"

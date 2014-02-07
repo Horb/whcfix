@@ -33,8 +33,8 @@
                 {% else %}
                 {% endif %}
                     ">
-                <td>{{match.date}}</td>
-                <td>{{match.time}}</td>
+                <td>{{match.date_string()}}</td>
+                <td>{{match.time_string()}}</td>
                 <td>{{match.home}}</td>
                 <td>{% if match.isResult() %}{{match.homeGoals}}{% endif %} - {% if match.isResult() %}{{match.awayGoals}}{% endif %}</td>
                 <td>{{match.away}}</td>

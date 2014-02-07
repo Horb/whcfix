@@ -139,7 +139,6 @@ class Matches(MatchesBase):
                     else:
                         assert False
                 if len(results) == 4:
-                    print results
                     return results
 
         teams = [(_getLastFourResults(team), team) for team in listOfTeamNames]
