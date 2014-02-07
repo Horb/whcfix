@@ -1,5 +1,5 @@
-
 class TeamForm(object):
+    
     def __init__(self, teamName, results):
         self.results = results
         self.teamName = teamName
@@ -8,10 +8,16 @@ class TeamForm(object):
         return self.points()
 
     def __gt__(self, other):
-        return int(self) > int(other)
+        if int(other) == int(self):
+            return self.goalDifference() > other.goalDifference()
+        else:
+            return int(self) > int(other)
 
     def __lt__(self, other):
-        return int(self) < int(other)
+        if int(other) == int(self):
+            return self.goalDifference() < other.goalDifference()
+        else:
+            return int(self) < int(other)
 
     def _countRecentResultInitial(self, initial):
         return len([r for r in self.results[:4] if r.resultInitial == initial])
@@ -25,6 +31,10 @@ class TeamForm(object):
     def loses(self):
         return self._countRecentResultInitial('L')
 
+    def goalDifference(self):
+        print self.teamName, [result.goalDifference for result in self.results]
+        return sum([result.goalDifference for result in self.results])
+
     def points(self):
         return self.wins() * 3 + self.draws()
 
@@ -33,77 +43,11 @@ class TeamForm(object):
 
 
 class Result(object):
-    def __init__(self, resultInitial, resultIndicatorCssClass, points):
+    def __init__(self, resultInitial, resultIndicatorCssClass, points, goalDifference):
         self.resultInitial = resultInitial
         self.resultIndicatorCssClass = resultIndicatorCssClass
         self.points = points
-
-WIN = Result('W', 'win', 3)
-LOSE = Result('L', 'lose', 0)
-DRAW = Result('D', 'draw', 1)
-
-
-class Matches(object):
-
-    def __init__(self, listOfMatches):
-        self.listOfMatches = listOfMatches
-
-    def getMatches(self, team):
-        return [match for match in self.listOfMatches if match.doesFeature(team)]
-
-    def listOfTeamNames(self, searchTerm=""):
-        teamNames = []
-        for match in self.listOfMatches:
-            if match.home not in teamNames:
-                teamNames.append(match.home)
-            if match.away not in teamNames:
-                teamNames.append(match.away)
-        if searchTerm == "": 
-            return teamNames
-        else:
-            return [teamName for teamName in teamNames if searchTerm in teamName]
-
-    def getLastResults(self, listOfTeamNames):
-        def _lastResult(team):
-            for match in self.listOfMatches[::-1]:
-                if match.doesFeature(team) and match.isResult():
-                    return match
-
-        lastResults = []
-        for team in listOfTeamNames:
-            lastResults.append(_lastResult(team))
-        return [match for match in lastResults if match is not None]
-
-    def getNextMatches(self, listOfTeamNames):
-        def _nextMatch(team):
-            teamFixtures = [match for match in self.listOfMatches[::-1] if match.doesFeature(team)]
-            for n, match in enumerate(teamFixtures):
-                if match.isResult():
-                    return teamFixtures[n-1]
-
-        nextMatches = []
-        for team in listOfTeamNames:
-            nextMatches.append(_nextMatch(team))
-        return nextMatches
-
-    def recentForm(self, listOfTeamNames):
-        def _getLastFourResults(name):
-            results = []
-            for match in self.listOfMatches[::-1]:
-                if match.doesFeature(name) and match.isResult():
-                    if match.didWin(name):
-                        results.append(WIN)
-                    elif match.didLose(name):
-                        results.append(LOSE)
-                    elif match.isDraw():
-                        results.append(DRAW)
-                    else:
-                        assert False
-                if len(results) == 4:
-                    return results
-
-        teams = [(_getLastFourResults(team), team) for team in listOfTeamNames]
-        return [TeamForm(name, results) for results, name in teams]
+        self.goalDifference = goalDifference
 
 
 class Match(object):
@@ -163,3 +107,21 @@ class Match(object):
 
     def isResult(self):
         return self.homeGoals is not None and self.awayGoals is not None
+
+    def homeGoalDifference(self):
+        if self.isResult():
+            return self.homeGoals - self.awayGoals
+        return 0
+
+    def awayGoalDifference(self):
+        if self.isResult():
+            return self.awayGoals - self.homeGoals
+        return 0
+
+    def teamGoalDifference(self, teamName):
+        if teamName == self.home:
+            return self.homeGoalDifference()
+        if teamName == self.away:
+            return self.awayGoalDifference()
+        else:
+            0
