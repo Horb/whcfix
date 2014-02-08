@@ -32,7 +32,6 @@ class TeamForm(object):
         return self._countRecentResultInitial('L')
 
     def goalDifference(self):
-        print self.teamName, [result.goalDifference for result in self.results]
         return sum([result.goalDifference for result in self.results])
 
     def points(self):
@@ -54,8 +53,8 @@ class Match(object):
 
     def __init__(self, date, time, venue, 
                  home, homeGoals, awayGoals, away, isPostponed, section):
-        self.date = date
-        self.time = time
+        self._date = date
+        self._time = time
         self.venue = venue
         if section in home:
             self.home = home
@@ -65,9 +64,15 @@ class Match(object):
         self.awayGoals = awayGoals
         if section in away:
             self.away = away
-        else: 
+        else:
             self.away = "%s %s" % (away, section)
         self.isPostponed = isPostponed
+
+    def date_string(self):
+        return self._date.strftime('%d-%m-%y') if self._date is not None else ""
+    
+    def time_string(self):
+        return self._time.strftime('%H:%M') if self._time is not None else ""
 
     def __repr__(self):
         return self.__str__()
