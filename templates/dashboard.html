@@ -99,7 +99,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for match in nextMatches %}
+                {% for match in nextMatches|sort %}
                 <tr>
                     <td>{{match.date_string()}}</td>
                     <td>{{match.time_string()}}</td>
