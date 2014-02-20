@@ -78,10 +78,10 @@ class Match(object):
         return not self.__gt__(other)
 
     def date_string(self):
-        return self._date.strftime('%d-%m-%y')
+        return self._date.strftime('%d-%m-%y') if self._date is not None else ""
     
     def time_string(self):
-        return self._time.strftime('%H:%M')
+        return self._time.strftime('%H:%M') if self._time is not None else ""
 
     def __repr__(self):
         return self.__str__()

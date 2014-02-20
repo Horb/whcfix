@@ -73,10 +73,16 @@ class YorkshireHockeyAssociationAdapter(AdapterBase):
         return r.content
 
     def _parseDate(self, dateText):
-        return datetime.datetime.strptime(dateText, '%d %b %y')
+        try:
+            return datetime.datetime.strptime(dateText, '%d %b %y')
+        except:
+            return None
 
     def _parseTime(self, timeText):
-        return datetime.datetime.strptime(timeText, '%H:%M')
+        try:
+            return datetime.datetime.strptime(timeText, '%H:%M')
+        except:
+            return None
 
     def _parseRow(self, tr):
         try:
@@ -151,10 +157,16 @@ class FixturesLiveAdapter(AdapterBase):
         return r.content
 
     def _parseDate(self, dateText):
-        return datetime.datetime.strptime(dateText, '%d.%m.%y')
+        try:
+            return datetime.datetime.strptime(dateText, '%d.%m.%y')
+        except:
+            return None
 
     def _parseTime(self, timeText):
-        return datetime.datetime.strptime(timeText, '%H:%M')
+        try:
+            return datetime.datetime.strptime(timeText, '%H:%M')
+        except:
+            return None
 
     def _parseRow(self, tr):
         try:
