@@ -68,6 +68,15 @@ class Match(object):
         else:
             self.away = "%s %s" % (away, section)
         self.isPostponed = isPostponed
+        
+    def __gt__(self, other):
+        if self._date != other._date:
+            return self._date > other._date
+        else:
+            return self._time > other._time
+
+    def __lt__(self, other):
+        return not self.__gt__(other)
 
     def date_string(self):
         return self._date.strftime('%d-%m-%y') if isinstance(self._date, datetime.datetime) else ""
