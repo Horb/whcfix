@@ -1,6 +1,6 @@
 import json
 
 def initAppStrings():
-    with open('strings.json') as jsonFile:
+    with open('/var/www/whcfix/strings.json') as jsonFile:
         return json.loads(jsonFile.read())
 

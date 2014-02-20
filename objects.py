@@ -1,3 +1,4 @@
+import datetime
 class TeamForm(object):
     
     def __init__(self, teamName, results):
@@ -69,10 +70,10 @@ class Match(object):
         self.isPostponed = isPostponed
 
     def date_string(self):
-        return self._date.strftime('%d-%m-%y') if self._date is not None else ""
+        return self._date.strftime('%d-%m-%y') if isinstance(self._date, datetime.datetime) else ""
     
     def time_string(self):
-        return self._time.strftime('%H:%M') if self._time is not None else ""
+        return self._time.strftime('%H:%M') if isinstance(self._time, datetime.datetime) else ""
 
     def __repr__(self):
         return self.__str__()
