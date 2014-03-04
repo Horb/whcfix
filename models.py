@@ -19,7 +19,7 @@ class MatchesBase(object):
 
     def cacheExists(self):
         if os.path.exists('/var/www/whcfix/cache.pickle'):
-            anHourInSeconds = 60 * 60
+            anHourInSeconds = 59 * 60
             ageOfCacheInSeconds = time.time() - os.path.getctime("/var/www/whcfix/cache.pickle")
             if  ageOfCacheInSeconds > anHourInSeconds:
                 # The cache is out of date
