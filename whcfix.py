@@ -17,6 +17,30 @@ def hello():
                            , lastResults = matches.getLastResults(teams)
                            )
 
+@app.route("/recent_form/")
+def recent_form():
+    matches = models.Matches()
+    teams = matches.teamNames("Wakefield")
+    return render_template("recent_form.html"
+                           , recent_form = matches.recentForm(teams)
+                           )
+
+@app.route("/last_result/")
+def last_result():
+    matches = models.Matches()
+    teams = matches.teamNames("Wakefield")
+    return render_template("last_result.html"
+                           , lastResults = matches.getLastResults(teams)
+                           )
+
+@app.route("/next_match/")
+def next_match():
+    matches = models.Matches()
+    teams = matches.teamNames("Wakefield")
+    return render_template("next_match.html"
+                           , nextMatches = matches.getNextMatches(teams)
+                           )
+
 @app.route("/teams/<team>/")
 def team(team):
     matches = models.Matches()

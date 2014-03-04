@@ -1,0 +1,27 @@
+<h3><a href="/recent_form/">Recent Form Table</a></h3>
+<table class="table">
+    <thead>
+        <tr>
+            <td>Team</td>
+            <td>P</td>
+            <td>W</td>
+            <td>D</td>
+            <td>L</td>
+            <td>GD</td>
+            <td>Pts.</td>
+        </tr>
+    </thead>
+    <tbody>                    
+        {% for team_form in recent_form|sort(True) %}
+        <tr>
+            <td><a href="/teams/{{team_form.teamName}}/">{{team_form.teamName}}</a></td>
+            <td>{{team_form.played()}}</td>
+            <td>{{team_form.wins()}}</td>
+            <td>{{team_form.draws()}}</td>
+            <td>{{team_form.loses()}}</td>
+            <td>{{team_form.goalDifference()}}</td>
+            <td>{{team_form.points()}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>                
+</table>
