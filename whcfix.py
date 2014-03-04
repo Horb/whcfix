@@ -2,7 +2,8 @@ from flask import Flask, render_template
 import logic
 import models
 import os
-os.chdir('/var/www/whcfix')
+curDir = os.path.dirname(os.path.realpath(__file__))
+os.chdir(curDir)
 
 app = Flask(__name__, static_folder='static', static_url_path='/static')
 

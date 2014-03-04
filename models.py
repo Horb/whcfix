@@ -18,9 +18,9 @@ class MatchesBase(object):
             self.saveToCache()
 
     def cacheExists(self):
-        if os.path.exists('/var/www/whcfix/cache.pickle'):
+        if os.path.exists('cache.pickle'):
             anHourInSeconds = 59 * 60
-            ageOfCacheInSeconds = time.time() - os.path.getctime("/var/www/whcfix/cache.pickle")
+            ageOfCacheInSeconds = time.time() - os.path.getctime("cache.pickle")
             if  ageOfCacheInSeconds > anHourInSeconds:
                 # The cache is out of date
                 return False
@@ -29,11 +29,11 @@ class MatchesBase(object):
             return False
 
     def saveToCache(self):
-        with open('/var/www/whcfix/cache.pickle', 'w') as pickleFile:
+        with open('cache.pickle', 'w') as pickleFile:
             pickle.dump(self.listOfMatches, pickleFile)
 
     def loadFromCache(self):
-        with open('/var/www/whcfix/cache.pickle') as pickleFile:
+        with open('cache.pickle') as pickleFile:
             self.listOfMatches = pickle.load(pickleFile)
 
     def configGenerator(self):
@@ -41,7 +41,7 @@ class MatchesBase(object):
             yield config
 
     def getConfig(self):
-        with open('/var/www/whcfix/config.json') as jsonFile:
+        with open('config.json') as jsonFile:
             return json.loads(jsonFile.read())
 
     def getMatchesFromConfig(self, config):
