@@ -1,31 +1,33 @@
-<h3><a href="/next_match">Up Coming Matches</a></h3>
-<table class="table">
-    <thead>
-        <tr>
-            <td>Date</td>
-            <td>Time</td>
-            <td>Home</td>
-            <td>Away</td>
-            <td>Venue</td>
-        </tr>
-    </thead>
-    <tbody>
-        {% for match in nextMatches %}
-        <tr>
-            <td>{{match.date_string()}}</td>
-            <td>{{match.time_string()}}</td>
-            {% if "Wakefield" in match.home %}
-            <td><a href="/teams/{{match.home}}/">{{match.home}}</a></td>
-            {% else %}
-            <td>{{match.home}}</td>
-            {% endif %}
-            {% if "Wakefield" in match.away %}
-            <td><a href="/teams/{{match.away}}/">{{match.away}}</a></td>
-            {% else %}
-            <td>{{match.away}}</td>
-            {% endif %}
-            <td>{{match.venue}}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="col-xs-12">
+    <h3><a href="/next_match">Up Coming Matches</a></h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <td>Date</td>
+                <td>Time</td>
+                <td>Home</td>
+                <td>Away</td>
+                <td class="hidden-sm hidden-xs">Venue</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for match in nextMatches %}
+            <tr>
+                <td>{{match.date_string()}}</td>
+                <td>{{match.time_string()}}</td>
+                {% if "Wakefield" in match.home %}
+                <td><a href="/teams/{{match.home}}/">{{match.home}}</a></td>
+                {% else %}
+                <td>{{match.home}}</td>
+                {% endif %}
+                {% if "Wakefield" in match.away %}
+                <td><a href="/teams/{{match.away}}/">{{match.away}}</a></td>
+                {% else %}
+                <td>{{match.away}}</td>
+                {% endif %}
+                <td class="hidden-sm hidden-xs">{{match.venue}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
