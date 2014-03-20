@@ -1,4 +1,5 @@
 import adapters
+import datetime
 import os
 import json
 import time
@@ -123,7 +124,8 @@ class Matches(MatchesBase):
         nextMatches = []
         for team in listOfTeamNames:
             nextMatches.append(_nextMatch(team))
-        return nextMatches
+        nextMatches.sort()
+        return [match for match in nextMatches if match._date > datetime.datetime.now()]
 
     def recentForm(self, listOfTeamNames):
         def _getLastFourResults(name):
