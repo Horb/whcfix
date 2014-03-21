@@ -5,14 +5,16 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <div class="row">
+<div class="row">
+    <div class="col-sm-12 col-md-12">
         <ol class="breadcrumb">
             <li><a href="/">WHC Fix</a></li>
             <li>Next Match</li>
         </ol>
     </div>
+</div>
 {% endblock %}
 
 {% block body %}
-    <div class="well">{% include "next_match_snippet.html" %}</div>
+    {% include "next_match_snippet.html" %}
 {% endblock %}

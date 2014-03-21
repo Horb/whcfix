@@ -3,8 +3,9 @@
     <table class="table">
         <thead>
             <tr>
-                <td>Date</td>
-                <td>Time</td>
+                <td class="visible-sm visible-xs" style="text-align:center;">Date/Time</td>
+                <td class="hidden-sm hidden-xs">Date</td>
+                <td class="hidden-sm hidden-xs">Time</td>
                 <td>Home</td>
                 <td>Away</td>
                 <td class="hidden-sm hidden-xs">Venue</td>
@@ -13,8 +14,9 @@
         <tbody>
             {% for match in nextMatches %}
             <tr>
-                <td>{{match.date_string()}}</td>
-                <td>{{match.time_string()}}</td>
+                <td class="visible-sm visible-xs" style="text-align:center;">{{match.date_string()}}<br/>{{match.time_string()}}</td>
+                <td class="hidden-sm hidden-xs">{{match.date_string()}}</td>
+                <td class="hidden-sm hidden-xs">{{match.time_string()}}</td>
                 {% if "Wakefield" in match.home %}
                 <td><a href="/teams/{{match.home}}/">{{match.home}}</a></td>
                 {% else %}
