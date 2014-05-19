@@ -1,5 +1,6 @@
 <div class="col-xs-12">
     <h3><a href="/next_match">Up Coming Matches</a></h3>
+    {% if matches %}
     <table class="table">
         <thead>
             <tr>
@@ -32,4 +33,9 @@
             {% endfor %}
         </tbody>
     </table>
+    {% else %}
+        <div>
+            <p>No information on up coming matches is available. Check back soon!</p>
+        </div>
+    {% endif %}
 </div>
