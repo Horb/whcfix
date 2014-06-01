@@ -84,14 +84,16 @@ class Match(object):
         return not self.__gt__(other)
 
     def date_string(self):
-        return self._date.strftime('%d-%m-%y') if isinstance(self._date, datetime.datetime) else ""
+        if isinstance(self._date, datetime.datetime):
+            if self._date.year >= 1900:
+                return self._date.strftime('%d-%m-%y')
+        return ""
     
     def time_string(self):
-        try:
-            return self._time.strftime('%H:%M') if isinstance(self._time, datetime.datetime) else ""
-        except ValueError as val_err:
-# caused by the datetime falling out of range
-            return ""
+        if isinstance(self._date, datetime.datetime):
+            if self._time.year >= 1900:
+                return self._time.strftime('%H:%M')
+        return ""
 
     def __repr__(self):
         return self.__str__()
