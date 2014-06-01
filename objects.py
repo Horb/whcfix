@@ -75,10 +75,13 @@ class Match(object):
         self.isPostponed = isPostponed
         
     def __gt__(self, other):
-        if self._date != other._date:
-            return self._date > other._date
-        else:
-            return self._time > other._time
+        try:
+            if self._date != other._date:
+                return self._date > other._date
+            else:
+                return self._time > other._time
+        except:
+            return False
 
     def __lt__(self, other):
         return not self.__gt__(other)
