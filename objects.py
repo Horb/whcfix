@@ -54,6 +54,11 @@ class Match(object):
 
     def __init__(self, date, time, venue, 
                  home, homeGoals, awayGoals, away, isPostponed, section):
+        if not isinstance(date, datetime.datetime):
+            raise TypeError("Parameter 'date' must be a datetime object.")
+        if not isinstance(time, datetime.datetime):
+            print time, home, away, section
+            raise TypeError("Parameter 'time' must be a datetime object.")
         self._date = date
         self._time = time
         self.venue = venue
@@ -82,7 +87,11 @@ class Match(object):
         return self._date.strftime('%d-%m-%y') if isinstance(self._date, datetime.datetime) else ""
     
     def time_string(self):
-        return self._time.strftime('%H:%M') if isinstance(self._time, datetime.datetime) else ""
+        try:
+            return self._time.strftime('%H:%M') if isinstance(self._time, datetime.datetime) else ""
+        except ValueError as val_err:
+# caused by the datetime falling out of range
+            return ""
 
     def __repr__(self):
         return self.__str__()

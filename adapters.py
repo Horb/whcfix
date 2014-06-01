@@ -76,13 +76,13 @@ class YorkshireHockeyAssociationAdapter(AdapterBase):
         try:
             return datetime.datetime.strptime(dateText, '%d %b %y')
         except:
-            return None
+            return datetime.datetime.min
 
     def _parseTime(self, timeText):
         try:
             return datetime.datetime.strptime(timeText, '%H:%M')
         except:
-            return None
+            return datetime.datetime.min
 
     def _parseRow(self, tr):
         try:
@@ -160,13 +160,13 @@ class FixturesLiveAdapter(AdapterBase):
         try:
             return datetime.datetime.strptime(dateText, '%d.%m.%y')
         except:
-            return None
+            return datetime.datetime.min
 
     def _parseTime(self, timeText):
         try:
             return datetime.datetime.strptime(timeText, '%H:%M')
         except:
-            return None
+            return datetime.datetime.min
 
     def _parseRow(self, tr):
         try:
@@ -216,8 +216,8 @@ class FixturesLiveAdapter(AdapterBase):
                 date = self._parseDate(date)
                 time = self._parseTime(time)
             except:
-                date = date_time.text
-                time = ""
+                date = datetime.datetime.min
+                time = datetime.datetime.min
             venue = venue.text
             return {'date':date,
                     'time':time,
