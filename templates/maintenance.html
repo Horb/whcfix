@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <title>Wakefield Hockey Club Fixtures and Results</title>
+{% endblock %}
+
+{% block breadcrumbs %}
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>Wakefield Hockey Club Fixtures</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-4">
+            <h3>{{strings.hPageDesc}}</h3>
+            <p>{{strings.pPageDesc}}</p>
+        </div>
+        <div class="col-sm-12 col-md-4">
+            <h3>{{strings.hRecentForm}}</h3>
+            <p>{{strings.pRecentForm}}</p>
+        </div>
+        <div class="col-sm-12 col-md-4">
+            <h3>{{strings.hFixtures}}</h3>
+            <p>{{strings.pFixtures}}</p>
+        </div>
+    </div>
+    <div class="row">{% include "maintenance_snippet.html" %}</div>
+{% endblock %}
