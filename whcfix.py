@@ -9,9 +9,7 @@ app = Flask(__name__, static_folder='static', static_url_path='/static')
 
 @app.route("/")
 def maintenance():
-    return render_template("maintenance.html"
-            , strings = logic.appStrings()
-            )
+    return render_template("maintenance.html", strings = logic.appStrings())
 
 #@app.route("/")
 #def hello():
@@ -56,7 +54,7 @@ def maintenance():
 #def teams():
 #    matches = models.Matches()
 #    return render_template("teamDump.html", team = "All", matches = matches.listOfMatches)
-#
+
 if __name__ == '__main__':
     app.debug = True
     app.run('0.0.0.0')
