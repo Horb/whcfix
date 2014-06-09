@@ -1,4 +1,5 @@
 import datetime
+
 class TeamForm(object):
     
     def __init__(self, teamName, results):
@@ -54,11 +55,6 @@ class Match(object):
 
     def __init__(self, date, time, venue, 
                  home, homeGoals, awayGoals, away, isPostponed, section):
-        if not isinstance(date, datetime.datetime):
-            raise TypeError("Parameter 'date' must be a datetime object.")
-        if not isinstance(time, datetime.datetime):
-            print time, home, away, section
-            raise TypeError("Parameter 'time' must be a datetime object.")
         self._date = date
         self._time = time
         self.venue = venue

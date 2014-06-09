@@ -1,15 +1,16 @@
 from flask import Flask, render_template
-import logic
-import models
+from whcfix.logic.strings import appStrings
 import os
-curDir = os.path.dirname(os.path.realpath(__file__))
-os.chdir(curDir)
+
+if __name__ == '__main__':
+    current_directory = os.path.dirname(os.path.realpath(__file__))
+    os.chdir(current_directory)
 
 app = Flask(__name__, static_folder='static', static_url_path='/static')
 
 @app.route("/")
 def maintenance():
-    return render_template("maintenance.html", strings = logic.appStrings())
+    return render_template("maintenance.html", strings = appStrings())
 
 #@app.route("/")
 #def hello():

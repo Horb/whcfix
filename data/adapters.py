@@ -1,19 +1,18 @@
 import requests
-import objects
 from BeautifulSoup import BeautifulSoup
-import json
-import pickle
-import os
-import time
 import datetime
-
-
+import json
+import whcfix.logic.objects
 
 def initAppStrings():
     with open('strings.json') as jsonFile:
         return json.loads(jsonFile.read())
 
+
 class AdapterBase():
+    
+    def __init__(self, sectionName):
+        self.sectionName = sectionName
 
     def _getHTML():
         raise Exception("Not Implimented")
@@ -37,25 +36,17 @@ class AdapterBase():
 class YorkshireHockeyAssociationAdapter(AdapterBase):
 
     def __init__(self, leagueId, clubId, sectionName):
+        AdapterBase.__init__(self, sectionName)
+        #super(YorkshireHockeyAssociationAdapter, self).__init__(sectionName)
         self.leagueId = leagueId
         self.clubId = clubId
-        self.sectionName = sectionName
+        self.nbsp = '&nbsp;'
     
-    def getMatches(self):
-        dicts = self._getMatchDicts()
+    def GetMatches(self):
+        dicts = self._get_matches_from_HTML(self._get_HTML())
         return [self._getMatchObjectFromDict(d) for d in dicts]
 
-    def _getMatchDicts(self):
-        htmlString = self._getHTML()
-        soup = BeautifulSoup(htmlString)
-        listOfMatches = []
-        for tr in soup("tr"):
-            matchDict = self._parseRow(tr)
-            if matchDict is not None:
-                listOfMatches.append(matchDict)
-        return listOfMatches
-
-    def _getHTML(self):
+    def _get_HTML(self):
         url = "http://www.yorkshireha.org.uk/e107_plugins/league_manager/index.php?fixtures"
         payload = {
                 "leagman_club":self.clubId,
@@ -72,61 +63,88 @@ class YorkshireHockeyAssociationAdapter(AdapterBase):
         r = requests.post(url, data=payload)
         return r.content
 
-    def _parseDate(self, dateText):
-        try:
-            return datetime.datetime.strptime(dateText, '%d %b %y')
-        except:
-            return datetime.datetime.min
-
-    def _parseTime(self, timeText):
-        try:
-            return datetime.datetime.strptime(timeText, '%H:%M')
-        except:
-            return datetime.datetime.min
-
-    def _parseRow(self, tr):
+    def _get_matches_from_HTML(self, html):
+        soup = BeautifulSoup(html)
+        listOfMatches = []
+        for tr in soup("tr"):
+            matchDict = self._parse_row(tr)
+            if matchDict is not None:
+                listOfMatches.append(matchDict)
+        return listOfMatches
+    
+    def _parse_row(self, tr):
         try:
             tds = tr("td")
             nbsp = '&nbsp;'
-            if len(tds) == 6:
-                date, time, venue, home, result, away = tds
-                date = self._parseDate(date.text)
-                time = self._parseTime(time.text)
-                venue = " ".join(venue.text.split(nbsp))
-                home = " ".join(home.text.split(nbsp))
-                if result.text == nbsp + nbsp:
-                    homeGoals = None
-                    awayGoals = None
-                else:
-                    scores = result.text.split(nbsp)
-                    homeGoals = scores[0]
-                    awayGoals = scores[2]
-
-                if homeGoals == u'P':
-                    homeGoals = None
-                    awayGoals = None
-                    isPostponed = True
-                elif homeGoals != None:
-                    homeGoals = int(homeGoals)
-                    awayGoals = int(awayGoals)
-                    isPostponed = False
-                else:
-                    isPostponed = False
-                away = " ".join(away.text.split(nbsp))
-
-                return {'date':date,
-                        'time':time,
-                        'venue':venue,
-                        'home':home,
-                        'homeGoals':homeGoals,
-                        'awayGoals':awayGoals,
-                        'isPostponed':isPostponed,
-                        'away':away}
-            else:
+            if len(tds) != 6:
                 return None
+            date_td, time_td, venue_td, home_td, result_td, away_td = tds
+            return {'date':self._parse_date(date_td),
+                    'time':self._parse_time(time_td),
+                    'venue':self._parse_venue(venue_td),
+                    'home':self._parse_home(home_td),
+                    'homeGoals':self._parse_homeGoals(result_td),
+                    'awayGoals':self._parse_awayGoals(result_td),
+                    'isPostponed':self._parse_isPostponed(result_td),
+                    'away':self._parse_away(away_td)}
         except Exception as ex:
-            print ex.message
             return None
+
+
+    def _parse_date(self, date_td):
+        s = date_td.text
+        try:
+            return datetime.datetime.strptime(s, '%d %b %y')
+        except Exception as ex:
+            return None
+
+    def _parse_time(self, time_td):
+        s = time_td.text
+        try:
+            return datetime.datetime.strptime(s, '%H:%M')
+        except Exception as ex: 
+            return None
+
+    def _parse_venue(self, venue_td):
+        s = venue_td.text
+        return " ".join(s.split(self.nbsp))
+
+    def _parse_home(self, home_td):
+        s = home_td.text
+        return " ".join(s.split(self.nbsp))
+
+    def _parse_away(self, away_td):
+        s = away_td.text
+        return " ".join(s.split(self.nbsp))
+
+    def _parse_homeGoals(self, result_td):
+        s = result_td.text
+        if s == self.nbsp + self.nbsp:
+            return None
+        else:
+            scores = s.split(self.nbsp)
+            if 'P' in scores:
+                return None
+            else:
+                return int(scores[0])
+
+    def _parse_awayGoals(self, result_td):
+        s = result_td.text
+        if s == self.nbsp + self.nbsp:
+            return None
+        else:
+            scores = s.split(self.nbsp)
+            if 'P' in scores:
+                return None
+            else:
+                return int(scores[1])
+
+    def _parse_isPostponed(self, result_td):
+        s = result_td.text
+        if 'P' in s:
+            return True
+        else:
+            return False
 
 class FixturesLiveAdapter(AdapterBase):
 
@@ -152,7 +170,6 @@ class FixturesLiveAdapter(AdapterBase):
 
     def _getHTML(self):
         url = "http://w.fixtureslive.com/team/%s/fixtures/%s" % (self.fixLiveNumber, self.fixLiveName)
-        print url
         r = requests.get(url)
         return r.content
 
@@ -228,20 +245,6 @@ class FixturesLiveAdapter(AdapterBase):
                     'isPostponed':False,
                     'away':away}
         except Exception as ex:
-            print ex.message
             return None
 
-#if __name__ == '__main__':
-#    fixLiveNumber, fixLiveName, clubName, sectionName = "1131", "Wakefield-Mens-2s", "Wakefield 2 Mens", "Mens"
-#    a = FixturesLiveAdapter(fixLiveNumber, fixLiveName, clubName, sectionName)
-#    print "gettingMatches"
-#    a.getMatches()
-#    matches = YorkshireHockeyAssociationAdapter("103", "66", "Mens")
-#    print "init"
-#    matches.getMatches()
-#    print "got"
-#                "club": "66", 
-#                "league": "103", 
-#                "source": "YorkshireHA"
-#            }, 
-#            "sectionName": "Mens"
+

@@ -1,4 +1,0 @@
-BeautifulSoup==3.2.1
-Flask==0.10.1
-gunicorn==18.0
-requests==2.1.0

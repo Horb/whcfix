@@ -1,12 +1,12 @@
 import datetime
 import unittest
-import adapters
+from whcfix.data.adapters import YorkshireHockeyAssociationAdapter
 import BeautifulSoup
 
 class YorkshireHockeyAssociationAdapterTests(unittest.TestCase):
 
     def setUp(self):
-        self.adapter = adapters.YorkshireHockeyAssociationAdapter(None, None, None)
+        self.adapter = YorkshireHockeyAssociationAdapter(None, None, None)
 
     def test_parse_row(self):
         html = '<tr>'
