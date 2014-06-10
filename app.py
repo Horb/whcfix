@@ -6,7 +6,10 @@ if __name__ == '__main__':
     current_directory = os.path.dirname(os.path.realpath(__file__))
     os.chdir(current_directory)
 
-app = Flask(__name__, static_folder='static', static_url_path='/static')
+app = Flask(__name__
+        , template_folder='whcfix/templates'
+        , static_folder='whcfix/static'
+        , static_url_path='/static')
 
 @app.route("/")
 def maintenance():

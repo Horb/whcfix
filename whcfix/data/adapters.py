@@ -2,10 +2,12 @@ import requests
 from BeautifulSoup import BeautifulSoup
 import datetime
 import json
+import os
 import whcfix.logic.objects
 
 def initAppStrings():
-    with open('config/strings.json') as jsonFile:
+    path_to_strings = os.path.join(os.getcwd(), 'whcfix', 'config', 'string.json')
+    with open(path_to_strings) as jsonFile:
         return json.loads(jsonFile.read())
 
 
