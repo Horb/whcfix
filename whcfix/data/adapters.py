@@ -163,7 +163,7 @@ class FixturesLiveAdapter(AdapterBase):
         soup = BeautifulSoup(htmlString)
         listOfMatches = []
         for tr in soup("tr"):
-            matchDict = self._parseRow(tr)
+            matchDict = self._parse_row(tr)
             if matchDict is not None:
                 listOfMatches.append(matchDict)
         return listOfMatches
@@ -173,69 +173,78 @@ class FixturesLiveAdapter(AdapterBase):
         r = requests.get(url)
         return r.content
 
-    def _parseDate(self, dateText):
-        try:
-            return datetime.datetime.strptime(dateText, '%d.%m.%y')
-        except:
-            return datetime.datetime.min
+    def _parse_home(self, home_away_text, oposition_text):
+        if home_away_text == 'A':
+            return oposition_text
+        else:
+            return self.clubName
 
-    def _parseTime(self, timeText):
+    def _parse_away(self, homeOrAwayIndicater, oposition_text):
+        if homeOrAwayIndicater == 'A':
+            return self.clubName
+        else:
+            return oposition_text
+
+    def _parse_homeGoals(self, score_text, resultIndicator):
+        if ":" in score_text:
+            goals = score_text.split(":")
+            goals = map(int, goals)
+            if max(goals) == min(goals):
+                # it's a draw, we cant return the wrong number of goals
+                return goals[0]
+            else:
+                if "emerald" in str(resultIndicator):
+                    # this indicates a win for the club
+                    return max(goals)
+                else:
+                    return min(goals)
+        return None
+
+    def _parse_awayGoals(self, score_text, resultIndicator):
+        if ":" in score_text:
+            goals = score_text.split(":")
+            goals = map(int, goals)
+            if max(goals) == min(goals):
+                # it's a draw, we cant return the wrong number of goals
+                return min(goals)
+            else:
+                if "emerald" in str(resultIndicator):
+                    # this indicates a win for the club
+                    return min(goals)
+                else:
+                    return max(goals)
+        return None
+
+    def _parse_date(self, date_time_text):
         try:
+            date_fragment = date_time_text.split(" ")[0]
+            return datetime.datetime.strptime(date_fragment, '%d.%m.%y')
+        except ValueError as valErr:
+            return None
+        except Exception as ex:
+            return None
+
+    def _parse_time(self, date_time_text):
+        try:
+            date_fragment = date_time_text.split(" ")[1]
             return datetime.datetime.strptime(timeText, '%H:%M')
-        except:
-            return datetime.datetime.min
+        except ValueError as valErr:
+            return None
+        except Exception as ex:
+            return None
 
-    def _parseRow(self, tr):
+    def _parse_row(self, tr):
         try:
             if len(tr) != 9:
                 return None
             _, oposition, resultIndicator, score, league, date_time, home_away, venue, _ = [child for child in tr.childGenerator()]
-            if home_away.text == "A":
-                home = oposition.text
-                away = self.clubName
-            else:
-                home = self.clubName
-                away = oposition.text
-
-            def apportionGoals(club, oposition, score, resultIndicator, home_away):
-                clubGoals = None
-                opositionGoals = None
-                if ":" in score.text:
-                    goals = score.text.split(":")
-                    goals = map(int, goals)
-                    if max(goals) == min(goals):
-                        homeGoals, awayGoals = goals
-                    else:
-                        if "emerald" in str(resultIndicator):
-                            opositionGoals = min(goals)
-                            clubGoals = max(goals)
-                        else:
-                            opositionGoals = max(goals)
-                            clubGoals = min(goals)
-                elif score.text == "&nbsp;":
-                    homeGoals, awayGoals = None, None
-                if home_away.text == "A":
-                    home = oposition.text
-                    away = club
-                    if opositionGoals is not None: homeGoals = opositionGoals
-                    if clubGoals is not None: awayGoals = clubGoals
-                else:
-                    home = club
-                    if clubGoals is not None: homeGoals = clubGoals
-                    away = oposition.text
-                    if opositionGoals is not None: awayGoals = opositionGoals
-                return home, away, homeGoals, awayGoals
-
-            home, away, homeGoals, awayGoals = apportionGoals(self.clubName, oposition, score, resultIndicator, home_away)
-
-            try:
-                date, time = date_time.text.split(" ")
-                date = self._parseDate(date)
-                time = self._parseTime(time)
-            except:
-                date = datetime.datetime.min
-                time = datetime.datetime.min
-            venue = venue.text
+            home = self._parse_home(home_away.text, oposition.text)
+            homeGoals = self._parse_homeGoals(score.text, resultIndicator)
+            away = self._parse_away(home_away.text, oposition.text)
+            awayGoals = self._parse_awayGoals(score.text, resultIndicator)
+            date = self._parse_date(date_time.text)
+            time = self._parse_time(date_time.text)
+            venue = self._parse_venue(venue.text)
             return {'date':date,
                     'time':time,
                     'venue':venue,
