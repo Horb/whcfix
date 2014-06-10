@@ -5,7 +5,7 @@ import json
 import whcfix.logic.objects
 
 def initAppStrings():
-    with open('strings.json') as jsonFile:
+    with open('config/strings.json') as jsonFile:
         return json.loads(jsonFile.read())
 
 
