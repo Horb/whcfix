@@ -1,7 +1,54 @@
 import datetime
 import unittest
-from whcfix.data.adapters import YorkshireHockeyAssociationAdapter
+from whcfix.data.adapters import YorkshireHockeyAssociationAdapter, FixturesLiveAdapter
 import BeautifulSoup
+
+class FixturesLiveAdapterTests(unittest.TestCase):
+
+    def setUp(self):
+        fixLiveNumber = None
+        fixLiveName = None
+        self.adapter = FixturesLiveAdapter(fixLiveNumber
+                                            , fixLiveName
+                                            , 'ClubName'
+                                            , 'SectionName') 
+
+# TODO
+# Rewrite this such that the tests and functions accept BeautifulSoup objects
+
+    def test_parse_home(self):
+        expected = "ClubName"
+        actual = self.adapter._parse_home("H", "OppositionName")
+        self.assertEqual(actual, expected)
+        expected = "OppositionName"
+        actual = self.adapter._parse_home("A", "OppositionName")
+        self.assertEqual(actual, expected)
+
+    def test_parse_away(self):
+        expected = "OppositionName"
+        actual = self.adapter._parse_away("H", "OppositionName")
+        self.assertEqual(actual, expected)
+        expected = "ClubName"
+        actual = self.adapter._parse_away("A", "OppositionName")
+        self.assertEqual(actual, expected)
+
+    def test_parse_homeGoals(self):
+        score_text = "2:2"
+        expected = 2
+        actual = self.adapter._parse_homeGoals(score_text, None)
+        self.assertEqual(actual, expected)
+
+        score_text = "3:2"
+        expected = 3
+        actual = self.adapter._parse_homeGoals(score_text, 'emerald')
+        self.assertEqual(actual, expected)
+
+        score_text = "2:3"
+        expected = 2
+        actual = self.adapter._parse_homeGoals(score_text, 'red')
+        self.assertEqual(actual, expected)
+
+
 
 class YorkshireHockeyAssociationAdapterTests(unittest.TestCase):
 
