@@ -169,64 +169,65 @@ class FixturesLiveAdapter(AdapterBase):
         return listOfMatches
 
     def _getHTML(self):
-        url = "http://w.fixtureslive.com/team/%s/fixtures/%s" % (self.fixLiveNumber, self.fixLiveName)
+        url = "http://w.fixtureslive.com/team/%s/fixtures/%s"
+        url = url % (self.fixLiveNumber, self.fixLiveName)
         r = requests.get(url)
         return r.content
 
-    def _parse_home(self, home_away_text, oposition_text):
-        if home_away_text == 'A':
-            return oposition_text
+    def _parse_home(self, home_td, team_td):
+        if home_td.text == 'A':
+            return team_td.text
         else:
             return self.clubName
 
-    def _parse_away(self, homeOrAwayIndicater, oposition_text):
-        if homeOrAwayIndicater == 'A':
+    def _parse_away(self, homeOrAwayIndicater, team_td):
+        if homeOrAwayIndicater.text == 'A':
             return self.clubName
         else:
-            return oposition_text
+            return team_td.text
 
-    def _parse_homeGoals(self, score_text, resultIndicator):
-        if ":" in score_text:
-            goals = score_text.split(":")
+    def _parse_homeGoals(self, score_td, resultIndicator):
+        if ":" in score_td.text:
+            goals = score_td.text.split(":")
             goals = map(int, goals)
             if max(goals) == min(goals):
                 # it's a draw, we cant return the wrong number of goals
                 return goals[0]
             else:
-                if "emerald" in str(resultIndicator):
+                if "emerald" in str(resultIndicator.text):
                     # this indicates a win for the club
                     return max(goals)
                 else:
                     return min(goals)
         return None
 
-    def _parse_awayGoals(self, score_text, resultIndicator):
-        if ":" in score_text:
-            goals = score_text.split(":")
+    def _parse_awayGoals(self, score_td, resultIndicator):
+        if ":" in score_td.text:
+            goals = score_td.text.split(":")
             goals = map(int, goals)
             if max(goals) == min(goals):
                 # it's a draw, we cant return the wrong number of goals
                 return min(goals)
             else:
-                if "emerald" in str(resultIndicator):
+                if "emerald" in str(resultIndicator.text):
                     # this indicates a win for the club
                     return min(goals)
                 else:
                     return max(goals)
         return None
 
-    def _parse_date(self, date_time_text):
+    def _parse_date(self, date_time_td):
         try:
-            date_fragment = date_time_text.split(" ")[0]
+            date_fragment = date_time_td.text.split(" ")[0]
             return datetime.datetime.strptime(date_fragment, '%d.%m.%y')
         except ValueError as valErr:
             return None
         except Exception as ex:
             return None
 
-    def _parse_time(self, date_time_text):
+    def _parse_time(self, date_time_td):
         try:
-            date_fragment = date_time_text.split(" ")[1]
+            date_fragment = date_time_td.text.split(" ")[1]
             return datetime.datetime.strptime(timeText, '%H:%M')
         except ValueError as valErr:
             return None
