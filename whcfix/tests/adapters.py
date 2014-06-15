@@ -1,4 +1,5 @@
 import datetime
+import logging
 import unittest
 from whcfix.data.adapters import YorkshireHockeyAssociationAdapter
 from whcfix.data.adapters import FixturesLiveAdapter
@@ -124,4 +125,5 @@ class YorkshireHockeyAssociationAdapterTests(unittest.TestCase):
         self.assertEqual('Blue Pitch', self.adapter._parse_venue(venue_td))
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
     unittest.main()

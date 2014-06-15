@@ -1,18 +1,20 @@
 import requests
+import logging
 from BeautifulSoup import BeautifulSoup
 import datetime
 import json
-import whcfix.logic.objects
+import whcfix.logic.objects as objects
 
 def initAppStrings():
-    with open('config/strings.json') as jsonFile:
+    with open('/home/adam/whcfix/whcfix/config/string.json') as jsonFile:
         return json.loads(jsonFile.read())
 
 
-class AdapterBase():
+class AdapterBase(object):
     
     def __init__(self, sectionName):
         self.sectionName = sectionName
+        self.nbsp = '&nbsp;'
 
     def _getHTML():
         raise Exception("Not Implimented")
@@ -36,11 +38,9 @@ class AdapterBase():
 class YorkshireHockeyAssociationAdapter(AdapterBase):
 
     def __init__(self, leagueId, clubId, sectionName):
-        AdapterBase.__init__(self, sectionName)
-        #super(YorkshireHockeyAssociationAdapter, self).__init__(sectionName)
+        super(YorkshireHockeyAssociationAdapter, self).__init__(sectionName)
         self.leagueId = leagueId
         self.clubId = clubId
-        self.nbsp = '&nbsp;'
     
     def GetMatches(self):
         dicts = self._get_matches_from_HTML(self._get_HTML())
@@ -75,7 +75,6 @@ class YorkshireHockeyAssociationAdapter(AdapterBase):
     def _parse_row(self, tr):
         try:
             tds = tr("td")
-            nbsp = '&nbsp;'
             if len(tds) != 6:
                 return None
             date_td, time_td, venue_td, home_td, result_td, away_td = tds
@@ -149,12 +148,13 @@ class YorkshireHockeyAssociationAdapter(AdapterBase):
 class FixturesLiveAdapter(AdapterBase):
 
     def __init__(self, fixLiveNumber, fixLiveName, clubName, sectionName):
+        super(FixturesLiveAdapter, self).__init__(sectionName)
         self.fixLiveNumber = fixLiveNumber
         self.fixLiveName = fixLiveName
         self.clubName = clubName
         self.sectionName = sectionName
 
-    def getMatches(self):
+    def GetMatches(self):
         dicts = self._getMatchDicts()
         return [self._getMatchObjectFromDict(d) for d in dicts]
 
@@ -167,6 +167,10 @@ class FixturesLiveAdapter(AdapterBase):
             if matchDict is not None:
                 listOfMatches.append(matchDict)
         return listOfMatches
+
+    def _parse_venue(self, venue_td):
+        s = venue_td.text
+        return " ".join(s.split(self.nbsp))
 
     def _getHTML(self):
         url = "http://w.fixtureslive.com/team/%s/fixtures/%s"
@@ -235,17 +239,18 @@ class FixturesLiveAdapter(AdapterBase):
             return None
 
     def _parse_row(self, tr):
+        logging.debug("Attempting to parse <tr>")
         try:
             if len(tr) != 9:
                 return None
             _, oposition, resultIndicator, score, league, date_time, home_away, venue, _ = [child for child in tr.childGenerator()]
-            home = self._parse_home(home_away.text, oposition.text)
-            homeGoals = self._parse_homeGoals(score.text, resultIndicator)
-            away = self._parse_away(home_away.text, oposition.text)
-            awayGoals = self._parse_awayGoals(score.text, resultIndicator)
-            date = self._parse_date(date_time.text)
-            time = self._parse_time(date_time.text)
-            venue = self._parse_venue(venue.text)
+            home = self._parse_home(home_away, oposition)
+            homeGoals = self._parse_homeGoals(score, resultIndicator)
+            away = self._parse_away(home_away, oposition)
+            awayGoals = self._parse_awayGoals(score, resultIndicator)
+            date = self._parse_date(date_time)
+            time = self._parse_time(date_time)
+            venue = self._parse_venue(venue)
             return {'date':date,
                     'time':time,
                     'venue':venue,
@@ -255,6 +260,7 @@ class FixturesLiveAdapter(AdapterBase):
                     'isPostponed':False,
                     'away':away}
         except Exception as ex:
+            logging.warning("Exception whilst parsing <tr>: %s." % ex.message)
             return None
 
 
