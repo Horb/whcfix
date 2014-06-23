@@ -4,6 +4,7 @@ import unittest
 from whcfix.data.adapters import YorkshireHockeyAssociationAdapter
 from whcfix.data.adapters import FixturesLiveAdapter
 from BeautifulSoup import BeautifulSoup
+import whcfix.settings as settings
 
 class FixturesLiveAdapterTests(unittest.TestCase):
 
@@ -12,6 +13,21 @@ class FixturesLiveAdapterTests(unittest.TestCase):
         fixLiveName = None
         self.adapter = FixturesLiveAdapter(fixLiveNumber, fixLiveName, 
                                            'ClubName' , 'SectionName') 
+
+    def test_parse_html(self):
+        htmlString = ""
+        with open('FixturesLiveExample1.html', 'r') as fl:
+            for line in fl:
+                htmlString += line
+        match_dicts = self.adapter._get_match_dicts_from_HTML(htmlString)
+        self.assertEqual(len(match_dicts), 22)
+        homeSides = [m['home'] for m in match_dicts]
+        awaySides = [m['away'] for m in match_dicts]
+        sides = homeSides + awaySides
+        sides = set(sides)
+        self.assertTrue('ClubName' in sides)
+        self.assertTrue("Harrogate Men's 1s" in sides)
+
 
     def test_parse_home(self):
         team_td = BeautifulSoup("<td>OppositionName</td>")
@@ -58,6 +74,11 @@ class YorkshireHockeyAssociationAdapterTests(unittest.TestCase):
 
     def setUp(self):
         self.adapter = YorkshireHockeyAssociationAdapter(None, None, None)
+
+    def test_parse_2013_2014(self):
+        self.adapter = YorkshireHockeyAssociationAdapter(103, 66, "Mens")
+        match_dicts = self.adapter.get_matches()
+        print len(match_dicts)
 
     def test_parse_row(self):
         html = '<tr>'
@@ -125,5 +146,5 @@ class YorkshireHockeyAssociationAdapterTests(unittest.TestCase):
         self.assertEqual('Blue Pitch', self.adapter._parse_venue(venue_td))
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG, format=settings.LOG_FORMAT)
     unittest.main()

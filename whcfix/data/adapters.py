@@ -6,7 +6,7 @@ import json
 import whcfix.logic.objects as objects
 
 def initAppStrings():
-    with open('/home/adam/whcfix/whcfix/config/string.json') as jsonFile:
+    with open('/home/adam/whcfix/whcfix/whcfix/config/string.json') as jsonFile:
         return json.loads(jsonFile.read())
 
 
@@ -16,7 +16,7 @@ class AdapterBase(object):
         self.sectionName = sectionName
         self.nbsp = '&nbsp;'
 
-    def _getHTML():
+    def _get_HTML():
         raise Exception("Not Implimented")
 
     def _parseRow():
@@ -42,8 +42,8 @@ class YorkshireHockeyAssociationAdapter(AdapterBase):
         self.leagueId = leagueId
         self.clubId = clubId
     
-    def GetMatches(self):
-        dicts = self._get_matches_from_HTML(self._get_HTML())
+    def get_matches(self):
+        dicts = self._get_match_dicts_from_HTML(self._get_HTML())
         return [self._getMatchObjectFromDict(d) for d in dicts]
 
     def _get_HTML(self):
@@ -63,7 +63,7 @@ class YorkshireHockeyAssociationAdapter(AdapterBase):
         r = requests.post(url, data=payload)
         return r.content
 
-    def _get_matches_from_HTML(self, html):
+    def _get_match_dicts_from_HTML(self, html):
         soup = BeautifulSoup(html)
         listOfMatches = []
         for tr in soup("tr"):
@@ -78,71 +78,109 @@ class YorkshireHockeyAssociationAdapter(AdapterBase):
             if len(tds) != 6:
                 return None
             date_td, time_td, venue_td, home_td, result_td, away_td = tds
-            return {'date':self._parse_date(date_td),
-                    'time':self._parse_time(time_td),
-                    'venue':self._parse_venue(venue_td),
-                    'home':self._parse_home(home_td),
-                    'homeGoals':self._parse_homeGoals(result_td),
-                    'awayGoals':self._parse_awayGoals(result_td),
-                    'isPostponed':self._parse_isPostponed(result_td),
-                    'away':self._parse_away(away_td)}
+            date = self._parse_date(date_td)
+            time = self._parse_time(time_td)
+            venue = self._parse_venue(venue_td)
+            home = self._parse_home(home_td)
+            homeGoals = self._parse_homeGoals(result_td)
+            awayGoals = self._parse_awayGoals(result_td)
+            isPostponed = self._parse_isPostponed(result_td)
+            away = self._parse_away(away_td)
+            
+            return_dict = {'date':date,
+                           'time':time,
+                           'venue':venue,
+                           'home':home,
+                           'homeGoals':homeGoals,
+                           'awayGoals':awayGoals,
+                           'isPostponed':isPostponed,
+                           'away':away
+                            }
+            return return_dict
         except Exception as ex:
+            logging.exception("")
             return None
 
 
     def _parse_date(self, date_td):
-        s = date_td.text
         try:
-            return datetime.datetime.strptime(s, '%d %b %y')
+            return datetime.datetime.strptime(date_td.text, '%d %b %y')
         except Exception as ex:
+            logging.exception(date_td.text)
             return None
 
     def _parse_time(self, time_td):
-        s = time_td.text
         try:
-            return datetime.datetime.strptime(s, '%H:%M')
+            if time_td.text == '--:--':
+                return None
+            return datetime.datetime.strptime(time_td.text, '%H:%M')
         except Exception as ex: 
+            logging.exception(time_td.text)
             return None
 
     def _parse_venue(self, venue_td):
-        s = venue_td.text
-        return " ".join(s.split(self.nbsp))
+        try:
+            s = venue_td.text
+            return " ".join(s.split(self.nbsp))
+        except Exception as ex:
+            logging.exception(away_td.text)
+            return None
 
     def _parse_home(self, home_td):
-        s = home_td.text
-        return " ".join(s.split(self.nbsp))
+        try:
+            s = home_td.text
+            return " ".join(s.split(self.nbsp))
+        except Exception as ex:
+            logging.exception(away_td.text)
+            return None
 
     def _parse_away(self, away_td):
-        s = away_td.text
-        return " ".join(s.split(self.nbsp))
+        try:
+            s = away_td.text
+            return " ".join(s.split(self.nbsp))
+        except Exception as ex:
+            logging.exception(away_td.text)
+            return None
 
     def _parse_homeGoals(self, result_td):
-        s = result_td.text
-        if s == self.nbsp + self.nbsp:
-            return None
-        else:
-            scores = s.split(self.nbsp)
-            if 'P' in scores:
+        try:
+            s = result_td.text
+            if s == self.nbsp + self.nbsp:
                 return None
             else:
-                return int(scores[0])
+                scores = s.split(self.nbsp)
+                if 'P' in scores:
+                    return None
+                else:
+                    return int(scores[0])
+        except Exception as ex:
+            logging.exception(result_td.text)
+            return None
 
     def _parse_awayGoals(self, result_td):
-        s = result_td.text
-        if s == self.nbsp + self.nbsp:
-            return None
-        else:
-            scores = s.split(self.nbsp)
-            if 'P' in scores:
+        try:
+            s = result_td.text
+            if s == self.nbsp + self.nbsp:
                 return None
             else:
-                return int(scores[1])
+                scores = s.split(self.nbsp)
+                if 'P' in scores:
+                    return None
+                else:
+                    return int(scores[-1])
+        except Exception as ex:
+            logging.exception(result_td.text)
+            return None
 
     def _parse_isPostponed(self, result_td):
-        s = result_td.text
-        if 'P' in s:
-            return True
-        else:
+        try:
+            s = result_td.text
+            if 'P' in s:
+                return True
+            else:
+                return False
+        except Exception as ex:
+            logging.exception(result_td.text)
             return False
 
 class FixturesLiveAdapter(AdapterBase):
@@ -154,12 +192,11 @@ class FixturesLiveAdapter(AdapterBase):
         self.clubName = clubName
         self.sectionName = sectionName
 
-    def GetMatches(self):
+    def get_matches(self):
         dicts = self._getMatchDicts()
         return [self._getMatchObjectFromDict(d) for d in dicts]
 
-    def _getMatchDicts(self):
-        htmlString = self._getHTML()
+    def _get_match_dicts_from_HTML(self, htmlString):
         soup = BeautifulSoup(htmlString)
         listOfMatches = []
         for tr in soup("tr"):
@@ -168,11 +205,15 @@ class FixturesLiveAdapter(AdapterBase):
                 listOfMatches.append(matchDict)
         return listOfMatches
 
+    def _get_match_dicts(self):
+        htmlString = self._get_HTML()
+        return _getMatchDictsFromHTML(htmlString)
+
     def _parse_venue(self, venue_td):
         s = venue_td.text
         return " ".join(s.split(self.nbsp))
 
-    def _getHTML(self):
+    def _get_HTML(self):
         url = "http://w.fixtureslive.com/team/%s/fixtures/%s"
         url = url % (self.fixLiveNumber, self.fixLiveName)
         r = requests.get(url)
@@ -222,24 +263,33 @@ class FixturesLiveAdapter(AdapterBase):
 
     def _parse_date(self, date_time_td):
         try:
-            date_fragment = date_time_td.text.split(" ")[0]
-            return datetime.datetime.strptime(date_fragment, '%d.%m.%y')
+            if " " in date_time_td.text:
+                date_fragment = date_time_td.text.split(" ")[0]
+                return datetime.datetime.strptime(date_fragment, '%d.%m.%y')
+            else:
+                date_fragment = date_time_td.text
+                return datetime.datetime.strptime(date_fragment, '%d.%m.%y')
         except ValueError as valErr:
+            logging.exception("")
             return None
         except Exception as ex:
+            logging.exception("")
             return None
 
     def _parse_time(self, date_time_td):
         try:
-            date_fragment = date_time_td.text.split(" ")[1]
-            return datetime.datetime.strptime(timeText, '%H:%M')
+            if " " in date_time_td.text:
+                date_fragment = date_time_td.text.split(" ")[1]
+                return datetime.datetime.strptime(date_fragment, '%H:%M')
+            return None
         except ValueError as valErr:
+            logging.exception(date_time_td.text)
             return None
         except Exception as ex:
+            logging.exception(date_time_td.text)
             return None
 
     def _parse_row(self, tr):
-        logging.debug("Attempting to parse <tr>")
         try:
             if len(tr) != 9:
                 return None
@@ -260,7 +310,7 @@ class FixturesLiveAdapter(AdapterBase):
                     'isPostponed':False,
                     'away':away}
         except Exception as ex:
-            logging.warning("Exception whilst parsing <tr>: %s." % ex.message)
+            logging.exception("")
             return None
 
 

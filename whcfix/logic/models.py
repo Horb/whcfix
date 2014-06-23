@@ -5,13 +5,16 @@ import json
 import time
 import pickle
 import objects
+import logging
 
 class MatchesBase(object):
     '''MatchBase handles initiating the class and making the data available.'''
-    pathToCacheFile = '/home/adam/whcfix/tmp/cache.pickle'
-    pathToConfigFile = '/home/adam/whcfix/whcfix/config/config.json'
+    pathToCacheFile = os.path.join(os.getcwd(), 'cache.pickle')
+    pathToConfigFile = os.path.join(os.getcwd(), 'config.json')
 
     def __init__(self):
+        logging.debug(self.pathToCacheFile)
+        logging.debug(self.pathToConfigFile)
         self.listOfMatches = []
         if self.cacheExists():
             self.loadFromCache()

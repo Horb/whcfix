@@ -27,7 +27,13 @@
             <p>{{strings.pFixtures}}</p>
         </div>
     </div>
+    {% if recent_form %}
     <div class="row">{% include "recent_form_snippet.html" %}</div>
+    {% endif %}
+    {% if lastResults %}
     <div class="row">{% include "last_result_snippet.html" %}</div>
+    {% endif %}
+    {% if nextMatches %}
     <div class="row">{% include "next_match_snippet.html" %}</div>
+    {% endif %}
 {% endblock %}

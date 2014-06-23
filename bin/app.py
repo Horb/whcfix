@@ -8,9 +8,9 @@ if __name__ == '__main__':
     os.chdir(current_directory)
 
 app = Flask(__name__, 
-            static_folder='/home/adam/whcfix/whcfix/static', 
+            static_folder='/home/adam/whcfix/whcfix/whcfix/static', 
             static_url_path='/static',
-            template_folder='/home/adam/whcfix/whcfix/templates')
+            template_folder='/home/adam/whcfix/whcfix/whcfix/templates')
 
 # @app.route("/")
 # def maintenance():
@@ -20,14 +20,15 @@ app = Flask(__name__,
 def hello():
     matches = models.Matches()
     teams = matches.teamNames("Wakefield")
-    recent_form = matches.recentForm(teams)
+    #recent_form = matches.recentForm(teams)
     nextMatches = matches.getNextMatches(teams)
     lastResults = matches.getLastResults(teams)
     return render_template("dashboard.html"
                            , strings = appStrings()
-                           , recent_form = recent_form 
+                           #, recent_form = recent_form 
                            , nextMatches = nextMatches
-                           , lastResults = lastResults)
+                           , lastResults = lastResults
+                           )
 
 #@app.route("/recent_form/")
 #def recent_form():
