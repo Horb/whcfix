@@ -1,5 +1,6 @@
 from flask import Flask, render_template
-from whcfix.logic.strings import appStrings
+from whcfix.data.ApplicationStrings import ApplicationStrings
+import whcfix.logic.models as models
 import os
 
 if __name__ == '__main__':
@@ -14,8 +15,15 @@ app = Flask(__name__,
 
 @app.route("/")
 def maintenance():
-    return render_template("maintenance.html",
-                           strings=appStrings())
+    return render_template("maintenance.html", strings=ApplicationStrings())
+
+@app.route("/teams/")
+def teams():
+    matches = models.Matches()
+    teams = matches.teamNames("Wakefield")
+    return render_template("teams.html", teams=teams,
+                           strings=ApplicationStrings())
+
 
 # @app.route("/")
 # def hello():

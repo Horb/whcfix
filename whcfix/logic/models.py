@@ -56,14 +56,14 @@ class MatchesBase(object):
             clubId = config['dataSource']['club']
             sectionName = config['sectionName']
             adapter = adapters.YorkshireHockeyAssociationAdapter(leagueId, clubId, sectionName)
-            return adapter.GetMatches()
+            return adapter.get_matches()
         elif config['dataSource']['source'] == 'FixturesLive':
             code = config['dataSource']['code']
             name = config['dataSource']['name']
             teamName = config['teamName']
             sectionName = config['sectionName']
             adapter = adapters.FixturesLiveAdapter(code, name, teamName, sectionName)
-            return adapter.GetMatches()
+            return adapter.get_matches()
 
 class Matches(MatchesBase):
 
