@@ -37,8 +37,8 @@
                     {% else %}
                     {% endif %}
                         ">
-                    <td class="hidden-sm hidden-xs">{{match.date_string()}}</td>
-                    <td class="hidden-sm hidden-xs">{{match.time_string()}}</td>
+                    <td class="hidden-sm hidden-xs">{{match.date}}</td>
+                    <td class="hidden-sm hidden-xs">{{match.time}}</td>
                     <td>{{match.home}}</td>
                     <td style="white-space:nowrap;">{% if match.isResult() %}{{match.homeGoals}}{% endif %} - {% if match.isResult() %}{{match.awayGoals}}{% endif %}</td>
                     <td>{{match.away}}</td>

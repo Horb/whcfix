@@ -1,15 +1,20 @@
-import adapters
+import whcfix.data.adapters as adapters
 import datetime
 import os
 import json
 import time
 import pickle
 import objects
+import logging
 
 class MatchesBase(object):
     '''MatchBase handles initiating the class and making the data available.'''
+    pathToCacheFile = os.path.join(os.getcwd(), 'cache.pickle')
+    pathToConfigFile = os.path.join(os.getcwd(), 'config.json')
 
     def __init__(self):
+        logging.debug(self.pathToCacheFile)
+        logging.debug(self.pathToConfigFile)
         self.listOfMatches = []
         if self.cacheExists():
             self.loadFromCache()
@@ -19,9 +24,9 @@ class MatchesBase(object):
             self.saveToCache()
 
     def cacheExists(self):
-        if os.path.exists('cache.pickle'):
+        if os.path.exists(self.pathToCacheFile):
             anHourInSeconds = 59 * 60
-            ageOfCacheInSeconds = time.time() - os.path.getctime("cache.pickle")
+            ageOfCacheInSeconds = time.time() - os.path.getctime(self.pathToCacheFile)
             if  ageOfCacheInSeconds > anHourInSeconds:
                 # The cache is out of date
                 return False
@@ -30,11 +35,11 @@ class MatchesBase(object):
             return False
 
     def saveToCache(self):
-        with open('cache.pickle', 'w') as pickleFile:
+        with open(self.pathToCacheFile, 'w') as pickleFile:
             pickle.dump(self.listOfMatches, pickleFile)
 
     def loadFromCache(self):
-        with open('cache.pickle') as pickleFile:
+        with open(self.pathToCacheFile) as pickleFile:
             self.listOfMatches = pickle.load(pickleFile)
 
     def configGenerator(self):
@@ -42,7 +47,7 @@ class MatchesBase(object):
             yield config
 
     def getConfig(self):
-        with open('config.json') as jsonFile:
+        with open(self.pathToConfigFile) as jsonFile:
             return json.loads(jsonFile.read())
 
     def getMatchesFromConfig(self, config):
@@ -51,14 +56,14 @@ class MatchesBase(object):
             clubId = config['dataSource']['club']
             sectionName = config['sectionName']
             adapter = adapters.YorkshireHockeyAssociationAdapter(leagueId, clubId, sectionName)
-            return adapter.getMatches()
+            return adapter.GetMatches()
         elif config['dataSource']['source'] == 'FixturesLive':
             code = config['dataSource']['code']
             name = config['dataSource']['name']
             teamName = config['teamName']
             sectionName = config['sectionName']
             adapter = adapters.FixturesLiveAdapter(code, name, teamName, sectionName)
-            return adapter.getMatches()
+            return adapter.GetMatches()
 
 class Matches(MatchesBase):
 
@@ -125,7 +130,12 @@ class Matches(MatchesBase):
         for team in listOfTeamNames:
             nextMatches.append(_nextMatch(team))
         nextMatches.sort()
-        return [match for match in nextMatches if match._date > datetime.datetime.now()]
+        nextMatches = [match 
+                       for match in nextMatches 
+                       if match is not None]
+        return [match 
+                for match in nextMatches 
+                if match.isMatchInTheFuture()]
 
     def recentForm(self, listOfTeamNames):
         def _getLastFourResults(name):

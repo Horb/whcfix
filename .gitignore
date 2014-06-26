@@ -1,0 +1,4 @@
+*.pyc
+.gitignore
+*.pickle
+*.swp

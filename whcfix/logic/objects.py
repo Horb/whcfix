@@ -1,4 +1,5 @@
 import datetime
+import logging
 
 class TeamForm(object):
     
@@ -54,21 +55,72 @@ class Result(object):
 class Match(object):
 
     def __init__(self, date, time, venue, 
-                 home, homeGoals, awayGoals, away, isPostponed, section):
+                 home, homeGoals, awayGoals, 
+                 away, isPostponed, section):
         self._date = date
         self._time = time
-        self.venue = venue
+        self._venue = venue
         if section in home:
-            self.home = home
+            self._home = home
         else:
-            self.home = "%s %s" % (home, section)
-        self.homeGoals = homeGoals
-        self.awayGoals = awayGoals
+            self._home = "%s %s" % (home, section)
+        self._homeGoals = homeGoals
+        self._awayGoals = awayGoals
         if section in away:
-            self.away = away
+            self._away = away
         else:
-            self.away = "%s %s" % (away, section)
-        self.isPostponed = isPostponed
+            self._away = "%s %s" % (away, section)
+        self._isPostponed = isPostponed
+
+    def isMatchInTheFuture(self):
+        if self._date is None:
+            return False
+        if self._date > datetime.datetime.now():
+            return True
+        else:
+            return False
+
+    @property
+    def venue(self):
+        try:
+            return self._venue
+        except:
+            return ""
+
+    @property
+    def isPostponed(self):
+        try:
+            return self._isPostponed
+        except:
+            return False
+
+    @property
+    def homeGoals(self):
+        try:
+            return self._homeGoals
+        except:
+            return 0
+
+    @property
+    def awayGoals(self):
+        try:
+            return self._awayGoals
+        except:
+            return 0
+
+    @property
+    def away(self):
+        try:
+            return self._away
+        except:
+            return ""
+
+    @property
+    def home(self):
+        try:
+            return self._home
+        except:
+            return ""
         
     def __gt__(self, other):
         try:
@@ -82,24 +134,37 @@ class Match(object):
     def __lt__(self, other):
         return not self.__gt__(other)
 
-    def date_string(self):
-        if isinstance(self._date, datetime.datetime):
-            if self._date.year >= 1900:
-                return self._date.strftime('%d-%m-%y')
-        return ""
+    @property
+    def date(self):
+        try:
+            if self._date is None:
+                return ""
+            if isinstance(self._date, datetime.datetime):
+                if self._date.year >= 1900:
+                    return self._date.strftime('%d-%m-%y')
+            return ""
+        except:
+            logging.critical("Couldn't format date as string.")
+            return ""
     
-    def time_string(self):
-        if isinstance(self._date, datetime.datetime):
-            if self._time.year >= 1900:
-                return self._time.strftime('%H:%M')
-        return ""
+    @property
+    def time(self):
+        try:
+            if self._time is None:
+                return ""
+            return self._time.strftime('%H:%M')
+        except:
+            logging.critical("Couldn't format time as string.")
+            return ""
 
     def __repr__(self):
         return self.__str__()
 
     def __str__(self):
-        return "%s %s - %s %s" % (self.home, self.homeGoals,
-                                  self.awayGoals, self.away)
+        return "%s %s - %s %s" % (self.home, 
+                                  self.homeGoals,
+                                  self.awayGoals, 
+                                  self.away)
 
     def isFixture(self):
         return self.homeGoals == None and self.awayGoals == None
