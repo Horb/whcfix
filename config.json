@@ -1,0 +1,20 @@
+{
+    "configs": [
+        {
+            "dataSource": {
+                "club": "66", 
+                "league": "103", 
+                "source": "YorkshireHA"
+            }, 
+            "sectionName": "Mens"
+        }, 
+        {
+            "dataSource": {
+                "club": "66", 
+                "league": "102", 
+                "source": "YorkshireHA"
+            }, 
+            "sectionName": "Ladies"
+        } 
+    ]
+}
