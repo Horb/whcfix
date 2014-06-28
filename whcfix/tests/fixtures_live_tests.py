@@ -1,8 +1,6 @@
-import datetime
 import logging
 import unittest
-from whcfix.data.adapters import YorkshireHockeyAssociationAdapter
-from whcfix.data.adapters import FixturesLiveAdapter
+from whcfix.data.fixturesliveadapter import FixturesLiveAdapter
 from BeautifulSoup import BeautifulSoup
 import whcfix.settings as settings
 
@@ -13,21 +11,6 @@ class FixturesLiveAdapterTests(unittest.TestCase):
         fixLiveName = None
         self.adapter = FixturesLiveAdapter(fixLiveNumber, fixLiveName, 
                                            'ClubName' , 'SectionName') 
-
-    def test_parse_html(self):
-        htmlString = ""
-        with open('FixturesLiveExample1.html', 'r') as fl:
-            for line in fl:
-                htmlString += line
-        match_dicts = self.adapter._get_match_dicts_from_HTML(htmlString)
-        self.assertEqual(len(match_dicts), 22)
-        homeSides = [m['home'] for m in match_dicts]
-        awaySides = [m['away'] for m in match_dicts]
-        sides = homeSides + awaySides
-        sides = set(sides)
-        self.assertTrue('ClubName' in sides)
-        self.assertTrue("Harrogate Men's 1s" in sides)
-
 
     def test_parse_home(self):
         team_td = BeautifulSoup("<td>OppositionName</td>")
@@ -68,3 +51,7 @@ class FixturesLiveAdapterTests(unittest.TestCase):
         expected = 2
         actual = self.adapter._parse_homeGoals(score_td, indicatesLoss)
         self.assertEqual(actual, expected)
+
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG, format=settings.LOG_FORMAT)
+    unittest.main()

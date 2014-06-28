@@ -1,56 +1,6 @@
 import datetime
 import logging
-
-class TeamForm(object):
-    
-    def __init__(self, teamName, results):
-        self.results = results
-        self.teamName = teamName
-
-    def __int__(self):
-        return self.points()
-
-    def __gt__(self, other):
-        if int(other) == int(self):
-            return self.goalDifference() > other.goalDifference()
-        else:
-            return int(self) > int(other)
-
-    def __lt__(self, other):
-        if int(other) == int(self):
-            return self.goalDifference() < other.goalDifference()
-        else:
-            return int(self) < int(other)
-
-    def _countRecentResultInitial(self, initial):
-        return len([r for r in self.results[:4] if r.resultInitial == initial])
-
-    def wins(self):
-        return self._countRecentResultInitial('W')
-
-    def draws(self):
-        return self._countRecentResultInitial('D')
-
-    def loses(self):
-        return self._countRecentResultInitial('L')
-
-    def goalDifference(self):
-        return sum([result.goalDifference for result in self.results])
-
-    def points(self):
-        return self.wins() * 3 + self.draws()
-
-    def played(self):
-        return len(self.results)
-
-
-class Result(object):
-    def __init__(self, resultInitial, resultIndicatorCssClass, points, goalDifference):
-        self.resultInitial = resultInitial
-        self.resultIndicatorCssClass = resultIndicatorCssClass
-        self.points = points
-        self.goalDifference = goalDifference
-
+import whcfix.utils as utils
 
 class Match(object):
 
@@ -60,13 +10,13 @@ class Match(object):
         self._date = date
         self._time = time
         self._venue = venue
-        if section in home:
+        if home is not None and section in home:
             self._home = home
         else:
             self._home = "%s %s" % (home, section)
         self._homeGoals = homeGoals
         self._awayGoals = awayGoals
-        if section in away:
+        if away is not None and section in away:
             self._away = away
         else:
             self._away = "%s %s" % (away, section)
@@ -81,46 +31,36 @@ class Match(object):
             return False
 
     @property
+    @utils.nz
     def venue(self):
-        try:
-            return self._venue
-        except:
-            return ""
+        return self._venue
 
     @property
     def isPostponed(self):
-        try:
-            return self._isPostponed
-        except:
+        if self._isPostponed is None:
             return False
+        else:
+            return self._isPostponed
 
     @property
+    @utils.nz
     def homeGoals(self):
-        try:
-            return self._homeGoals
-        except:
-            return 0
+        return self._homeGoals
 
     @property
+    @utils.nz
     def awayGoals(self):
-        try:
-            return self._awayGoals
-        except:
-            return 0
+        return self._awayGoals
 
     @property
+    @utils.nz
     def away(self):
-        try:
-            return self._away
-        except:
-            return ""
+        return self._away
 
     @property
+    @utils.nz
     def home(self):
-        try:
-            return self._home
-        except:
-            return ""
+        return self._home
         
     def __gt__(self, other):
         try:
@@ -135,6 +75,7 @@ class Match(object):
         return not self.__gt__(other)
 
     @property
+    @utils.nz
     def date(self):
         try:
             if self._date is None:
@@ -142,12 +83,12 @@ class Match(object):
             if isinstance(self._date, datetime.datetime):
                 if self._date.year >= 1900:
                     return self._date.strftime('%d-%m-%y')
-            return ""
         except:
             logging.critical("Couldn't format date as string.")
             return ""
     
     @property
+    @utils.nz
     def time(self):
         try:
             if self._time is None:
@@ -167,7 +108,7 @@ class Match(object):
                                   self.away)
 
     def isFixture(self):
-        return self.homeGoals == None and self.awayGoals == None
+        return self._homeGoals is None and self._awayGoals is None
 
     def isHomeWin(self):
         return self.homeGoals > self.awayGoals
@@ -196,7 +137,7 @@ class Match(object):
         return not self.didWin(teamName) and not self.isDraw()
 
     def isResult(self):
-        return self.homeGoals is not None and self.awayGoals is not None
+        return self._homeGoals is not None and self._awayGoals is not None
 
     def homeGoalDifference(self):
         if self.isResult():

@@ -1,4 +1,5 @@
 import whcfix.data.adapters as adapters
+import whcfix.settings as settings
 import datetime
 import os
 import json
@@ -47,8 +48,7 @@ class MatchesBase(object):
             yield config
 
     def getConfig(self):
-        with open(self.pathToConfigFile) as jsonFile:
-            return json.loads(jsonFile.read())
+        return settings.CONFIGS
 
     def getMatchesFromConfig(self, config):
         if config['dataSource']['source'] == 'YorkshireHA':

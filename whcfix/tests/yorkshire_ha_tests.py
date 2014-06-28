@@ -1,8 +1,7 @@
 import datetime
 import logging
 import unittest
-from whcfix.data.adapters import YorkshireHockeyAssociationAdapter
-from whcfix.data.adapters import FixturesLiveAdapter
+from whcfix.data.yorkshirehockeyassociationadapter import YorkshireHockeyAssociationAdapter
 from BeautifulSoup import BeautifulSoup
 import whcfix.settings as settings
 
@@ -12,9 +11,23 @@ class YorkshireHockeyAssociationAdapterTests(unittest.TestCase):
     def setUp(self):
         self.adapter = YorkshireHockeyAssociationAdapter(None, None, None)
 
-    def test_parse_2013_2014(self):
-        self.adapter = YorkshireHockeyAssociationAdapter(103, 66, "Mens")
+    def test_parse_2013_2014_mens(self):
+        mens_14_15 = 138
+        wakefield_hockey_club = 66
+        self.adapter = YorkshireHockeyAssociationAdapter(mens_14_15, 
+                                                         wakefield_hockey_club, 
+                                                         "Mens")
         match_objects = self.adapter.get_matches()
+        self.assertTrue(len(match_objects) > 0)
+
+    def test_parse_2013_2014_ladies(self):
+        ladies_14_15 = 137
+        wakefield_hockey_club = 66
+        self.adapter = YorkshireHockeyAssociationAdapter(ladies_14_15, 
+                                                         wakefield_hockey_club, 
+                                                         "Mens")
+        match_objects = self.adapter.get_matches()
+        self.assertTrue(len(match_objects) > 0)
 
     def test_parse_row(self):
         html = '<tr>'
