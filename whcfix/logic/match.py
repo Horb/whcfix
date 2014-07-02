@@ -10,8 +10,10 @@ class Match(object):
         self._date = date
         self._time = time
         self._venue = venue
-        if home is not None and section in home:
-            self._home = home
+        if home is not None:
+            if section in home:
+                self._home = home
+            self._home = "%s %s" % (home, section)
         else:
             self._home = "%s %s" % (home, section)
         self._homeGoals = homeGoals

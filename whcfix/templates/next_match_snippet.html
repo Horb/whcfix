@@ -1,6 +1,6 @@
 <div class="col-xs-12">
     <h3><a href="/next_match">Up Coming Matches</a></h3>
-    {% if matches %}
+    {% if nextMatches %}
     <table class="table">
         <thead>
             <tr>
@@ -15,9 +15,9 @@
         <tbody>
             {% for match in nextMatches %}
             <tr>
-                <td class="visible-sm visible-xs" style="text-align:center;">{{match.date_string()}}<br/>{{match.time_string()}}</td>
-                <td class="hidden-sm hidden-xs">{{match.date_string()}}</td>
-                <td class="hidden-sm hidden-xs">{{match.time_string()}}</td>
+                <td class="visible-sm visible-xs" style="text-align:center;">{{match.date}}<br/>{{match.time}}</td>
+                <td class="hidden-sm hidden-xs">{{match.date}}</td>
+                <td class="hidden-sm hidden-xs">{{match.time}}</td>
                 {% if "Wakefield" in match.home %}
                 <td><a href="/teams/{{match.home}}/">{{match.home}}</a></td>
                 {% else %}

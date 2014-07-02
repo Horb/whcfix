@@ -1,0 +1,23 @@
+<div class="col-xs-12">
+    <h3><a href="/teams/">Teams</a></h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <td class="hidden-sm hidden-xs">Team</td>
+                <td class="hidden-sm hidden-xs"></td>
+                <td class="hidden-sm hidden-xs"></td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for team in teams %}
+            <tr>
+                <td class="hidden-sm hidden-xs">
+                    <a href="/teams/{{team}}/">{{ team }}</a>
+                </td>
+                <td class="hidden-sm hidden-xs"></td>
+                <td class="hidden-sm hidden-xs"></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

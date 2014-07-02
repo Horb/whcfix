@@ -1,6 +1,7 @@
 from flask import Flask, render_template
-from whcfix.data.ApplicationStrings import ApplicationStrings
-import whcfix.logic.models as models
+import logging
+from whcfix.data.applicationstrings import ApplicationStrings
+from whcfix.logic.matches import Matches
 import os
 
 if __name__ == '__main__':
@@ -19,9 +20,10 @@ def maintenance():
 
 @app.route("/teams/")
 def teams():
-    matches = models.Matches()
+    matches = Matches()
     teams = matches.teamNames("Wakefield")
-    return render_template("teams.html", teams=teams,
+    return render_template("teams.html", 
+                           teams=teams,
                            strings=ApplicationStrings())
 
 
@@ -35,13 +37,14 @@ def teams():
 #                           , nextMatches = matches.getNextMatches(teams)
 #                           , lastResults = matches.getLastResults(teams)
 #                            )
-# @app.route("/recent_form/")
-# def recent_form():
-#     matches = models.Matches()
-#     teams = matches.teamNames("Wakefield")
-#     return render_template("recent_form.html"
-#                           , recent_form = matches.recentForm(teams)
-#                            )
+
+@app.route("/recent_form/")
+def recent_form():
+    matches = Matches()
+    teams = matches.teamNames("Wakefield")
+    return render_template("recent_form.html"
+                          , recent_form = matches.recentForm(teams)
+                           )
 
 # @app.route("/last_result/")
 # def last_result():
@@ -51,19 +54,20 @@ def teams():
 #                           , lastResults = matches.getLastResults(teams)
 #                            )
 
-# @app.route("/next_match/")
-# def next_match():
-#     matches = models.Matches()
-#     teams = matches.teamNames("Wakefield")
-#     return render_template("next_match.html"
-#                           , nextMatches = matches.getNextMatches(teams)
-#                            )
+@app.route("/next_match/")
+def next_match():
+    matches = Matches()
+    teams = matches.teamNames("Wakefield")
+    return render_template("next_match.html"
+                          , nextMatches = matches.getNextMatches(teams)
+                           )
 
-# @app.route("/teams/<team>/")
-# def team(team):
-#     matches = models.Matches()
-#     return render_template("teamDump.html",
-#                            team = team, matches = matches.teamFilter(team))
+@app.route("/teams/<team>/")
+def team(team):
+    m = Matches()
+    return render_template("teamDump.html",
+                           team = team, 
+                           matches =m.get_matches(lambda m: m.doesFeature(team)))
 
 # @app.route("/teams/")
 # def teams():
@@ -72,5 +76,6 @@ def teams():
 #                            team = "All", matches = matches.listOfMatches)
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
     app.debug = True
     app.run('0.0.0.0')

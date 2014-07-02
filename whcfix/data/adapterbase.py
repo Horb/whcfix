@@ -1,4 +1,4 @@
-import whcfix.logic.objects as objects
+from whcfix.logic.match import Match
 
 class AdapterBase(object):
     
@@ -21,7 +21,7 @@ class AdapterBase(object):
         awayGoals = matchDict['awayGoals']
         isPostponed = matchDict['isPostponed']
         away = matchDict['away']
-        return objects.Match(date, time, venue, 
+        return Match(date, time, venue, 
                 home, homeGoals, awayGoals, away,
                      isPostponed, self.sectionName)
 

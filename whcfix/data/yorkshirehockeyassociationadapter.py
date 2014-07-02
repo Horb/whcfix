@@ -4,7 +4,6 @@ from BeautifulSoup import BeautifulSoup
 import datetime
 import json
 import os
-import whcfix.logic.objects as objects
 import whcfix.utils as utils
 from whcfix.data.adapterbase import AdapterBase
 
