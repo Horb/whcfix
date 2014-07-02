@@ -1,5 +1,6 @@
 <div class="col-xs-12">
     <h3><a href="/recent_form/">Recent Form Table</a></h3>
+    {% if recent_form %}
     <table class="table">
         <thead>
             <tr>
@@ -26,4 +27,7 @@
             {% endfor %}
         </tbody>                
     </table>
+    {% else %}
+    <p>No recent form yet! Teams need to play four games before qualifying for the recent form table.</p>
+    {% endif %}
 </div>

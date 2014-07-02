@@ -39,6 +39,7 @@ class Matches(MatchesBase):
             for match in self.listOfMatches[::-1]:
                 if match.doesFeature(team) and match.isResult():
                     return match
+            return None
         lastResults = []
         for team in listOfTeamNames:
             lastResults.append(_lastResult(team))
@@ -79,8 +80,14 @@ class Matches(MatchesBase):
                         assert False
                 if len(results) == 4:
                     return results
-        teams = [(_getLastFourResults(team), team) for team in listOfTeamNames]
-        return [TeamForm(name, results) for results, name in teams]
+        team_forms = []
+        for team in listOfTeamNames:
+            if len(self.get_matches(condition=lambda m: m.doesFeature(team) 
+                                                    and m.isResult())) < 4:
+                continue
+            else:
+                team_forms.append(TeamForm(team, _getLastFourResults(team)))
+        return team_forms
 
 if __name__ == '__main__':
     m = Matches()
