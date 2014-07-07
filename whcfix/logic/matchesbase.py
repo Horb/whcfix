@@ -11,11 +11,9 @@ from whcfix.data.fixturesliveadapter import FixturesLiveAdapter
 class MatchesBase(object):
     '''MatchBase handles initiating the class and making the data available.'''
     pathToCacheFile = os.path.join(os.getcwd(), 'cache.pickle')
-    pathToConfigFile = os.path.join(os.getcwd(), 'config.json')
 
     def __init__(self, auto_init_data=True):
         logging.debug(self.pathToCacheFile)
-        logging.debug(self.pathToConfigFile)
         self.listOfMatches = []
         if auto_init_data:
             self.init_data()
