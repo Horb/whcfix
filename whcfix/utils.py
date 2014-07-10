@@ -18,3 +18,12 @@ def nz(func):
             return result
     return _nz
 
+import pprint
+
+class PrettyLog(object):
+
+    def __init__(self, obj):
+        self.obj = obj
+
+    def __repr__(self):
+        return pprint.pformat(self.obj)

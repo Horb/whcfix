@@ -18,7 +18,7 @@ class FixturesLiveAdapter(AdapterBase):
         self.sectionName = sectionName
 
     def get_matches(self):
-        dicts = self._getMatchDicts()
+        dicts = self._get_match_dicts()
         return [self._getMatchObjectFromDict(d) for d in dicts]
 
     def _get_match_dicts_from_HTML(self, htmlString):
@@ -32,7 +32,7 @@ class FixturesLiveAdapter(AdapterBase):
 
     def _get_match_dicts(self):
         htmlString = self._get_HTML()
-        return _getMatchDictsFromHTML(htmlString)
+        return self._get_match_dicts_from_HTML(htmlString)
 
     def _parse_venue(self, venue_td):
         s = venue_td.text
@@ -126,14 +126,11 @@ class FixturesLiveAdapter(AdapterBase):
             date = self._parse_date(date_time)
             time = self._parse_time(date_time)
             venue = self._parse_venue(venue)
-            return {'date':date,
-                    'time':time,
-                    'venue':venue,
-                    'home':home,
-                    'homeGoals':homeGoals,
-                    'awayGoals':awayGoals,
-                    'isPostponed':False,
-                    'away':away}
+            return_me =  {'date':date, 'time':time, 'venue':venue, 
+                          'home':home, 'homeGoals':homeGoals, 
+                          'awayGoals':awayGoals, 'isPostponed':False, 'away':away}
+            return return_me
+
         except Exception as ex:
             logging.exception("")
             return None
