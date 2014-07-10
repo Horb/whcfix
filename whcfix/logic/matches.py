@@ -63,6 +63,7 @@ class Matches(MatchesBase):
         nextMatches = [match 
                 for match in nextMatches 
                 if match.isMatchInTheFuture()]
+        nextMatches = set(nextMatches)
         return nextMatches
 
     def recentForm(self, listOfTeamNames):
