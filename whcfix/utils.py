@@ -18,3 +18,12 @@ def nz(func):
             return result
     return _nz
 
+def catch_log_return_None(func):
+    def _catch_log_return_None(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except:
+            logging.exception("args: %s, kwargs %s" % (args, kwargs))
+            return None
+    return _catch_log_return_None
+
