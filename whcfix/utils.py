@@ -27,3 +27,12 @@ def catch_log_return_None(func):
             return None
     return _catch_log_return_None
 
+
+class PrettyLog(object):
+
+    def __init__(self, obj):
+        self.obj = obj
+
+    def __repr__(self):
+        import pprint
+        return pprint.pformat(self.obj)
