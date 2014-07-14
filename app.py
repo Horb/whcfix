@@ -2,6 +2,7 @@ from flask import Flask, render_template
 import logging
 from whcfix.data.applicationstrings import ApplicationStrings
 from whcfix.logic.matches import Matches
+from whcfix.logic.divisions import Divisions
 import os
 
 if __name__ == '__main__':
@@ -23,6 +24,25 @@ app = Flask(__name__,
 #         logging.exception("")
 #         return render_template("501.html")
 
+@app.route("/divisions/")
+def divisions_list():
+    try:
+        divisions = Divisions().get_divisions()
+        return render_template("divisions.html", divisions=divisions)
+    except:
+        logging.exception("")
+        return render_template("501.html")
+
+@app.route("/divisions/<division>/")
+def division_filtered(division):
+    try:
+        d = Divisions()
+        cond = lambda d: d.name == division
+        divisions = Divisions().get_divisions(cond)
+        return render_template("divisions.html", divisions=divisions)
+    except Exception:
+        logging.exception("")
+        return render_template("501.html")
 
 @app.route("/teams/")
 def teams():
@@ -92,9 +112,10 @@ def next_match():
 def team(team):
     try:
         m = Matches()
+        d = Divisions()
         return render_template("teamDump.html", team=team,
-                               matches=m.get_matches(lambda m:
-                                                     m.doesFeature(team)))
+                               matches=m.get_matches(lambda m: m.doesFeature(team)),
+                               divisions=d.get_divisions(lambda d: d.doesFeatureTeam(team)))
     except Exception:
         logging.exception("")
         return render_template("501.html")

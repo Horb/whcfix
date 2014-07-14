@@ -15,14 +15,22 @@
 {% block body %}
 <div class="row">
     <div class="col-sm-12 col-md-12">
-        <table class="table">
+        {% if divisions %}
+            {% for division in divisions %}
+                {% include "division_snippet.html" %}
+            {% endfor %}
+        {% endif %}
+        {% if matches %}
+        <h3>Matches</h3>
+        <table class="table" style="text-align:center;">
             <thead>
                 <tr>
-                    <td class="hidden-sm hidden-xs">Date</td>
-                    <td class="hidden-sm hidden-xs">Push Back</td>
-                    <td>Home</td>
-                    <td></td>
-                    <td>Away</td>
+                    <td>Date</td>
+                    <td>Push Back</td>
+                    <td class="hidden-sm hidden-xs">Home</td>
+                    <td class="hidden-sm hidden-xs"></td>
+                    <td class="hidden-sm hidden-xs">Away</td>
+                    <td class="hidden-md hidden-lg">Home/Away</td>
                 </tr>
             </thead>
             <tbody>
@@ -36,16 +44,32 @@
                         text-info
                     {% else %}
                     {% endif %}
-                        ">
-                    <td class="hidden-sm hidden-xs">{{match.date}}</td>
-                    <td class="hidden-sm hidden-xs">{{match.time}}</td>
-                    <td>{{match.home}}</td>
-                    <td style="white-space:nowrap;">{% if match.isResult() %}{{match.homeGoals}}{% endif %} - {% if match.isResult() %}{{match.awayGoals}}{% endif %}</td>
-                    <td>{{match.away}}</td>
+                         hidden-md hidden-lg">
+                    <td>{{match.date}}</td>
+                    <td></td>
+                    <td>{{match.time}}</td>
+                </tr>
+                <tr class="
+                    {% if match.didLose(team)%}
+                        text-danger
+                    {% elif match.didWin(team)%}
+                        text-success
+                    {% elif match.isResult() %}
+                        text-info
+                    {% else %}
+                    {% endif %}
+                    ">
+                    <td>{{match.date}}</td>
+                    <td>{{match.time}}</td>
+                    <td class="hidden-sm hidden-xs">{{match.home}}</td>
+                    <td class="hidden-sm hidden-xs" style="white-space:nowrap;">{% if match.isResult() %}{{match.homeGoals}}{% endif %} - {% if match.isResult() %}{{match.awayGoals}}{% endif %}</td>
+                    <td class="hidden-sm hidden-xs">{{match.away}}</td>
+                    <td class="hidden-md hidden-lg">{{match.home}}<br/>{% if match.isResult() %}{{match.homeGoals}}{% endif %} - {% if match.isResult() %}{{match.awayGoals}}{% endif %}</br>{{match.away}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

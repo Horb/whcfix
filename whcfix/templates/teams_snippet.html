@@ -4,18 +4,14 @@
         <thead>
             <tr>
                 <td class="hidden-sm hidden-xs">Team</td>
-                <td class="hidden-sm hidden-xs"></td>
-                <td class="hidden-sm hidden-xs"></td>
             </tr>
         </thead>
         <tbody>
             {% for team in teams %}
             <tr>
-                <td class="hidden-sm hidden-xs">
+                <td>
                     <a href="/teams/{{team}}/">{{ team }}</a>
                 </td>
-                <td class="hidden-sm hidden-xs"></td>
-                <td class="hidden-sm hidden-xs"></td>
             </tr>
             {% endfor %}
         </tbody>

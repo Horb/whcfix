@@ -35,7 +35,7 @@ class YorkshireHockeyAssociationDivisionAdapter(object):
                 if division is not None:
                     yield division
                 logging.debug(division_name)
-                division = Division(division_name)
+                division = Division("%s %s" % (self.sectionName, division_name))
 
             division_row = self.try_parse_division_row(tr)
             if division_row is not None:

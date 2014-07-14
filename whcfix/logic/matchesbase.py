@@ -12,13 +12,13 @@ class MatchesBase(object):
             self.init_data()
 
     def init_data(self):
-        pc = PickelCache('cache', 60 * 60)
+        pc = PickleCache('cache', 60 * 60)
         if pc.exists():
             self.listOfMatches = pc.load()
         else:
             for config in self.configGenerator():
                 self.listOfMatches += self.getMatchesFromConfig(config)
-            pc.save(self.listOfMatches)
+            pc.dump(self.listOfMatches)
 
     def configGenerator(self):
         for config in self.getConfig()["configs"]:
