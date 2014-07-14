@@ -1,5 +1,6 @@
 import logging
 
+
 def log_exceptions(func):
     def _log_exceptions(*args, **kwargs):
         try:

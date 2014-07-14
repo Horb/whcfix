@@ -14,10 +14,10 @@ class YorkshireHockeyAssociationDivisionAdapter(object):
         self.leagueId = leagueId
         self.sectionName = sectionName
 
-    def get_table_rows(self):
-        for table_row in self._get_table_rows_from_HTML(self._get_HTML()):
-            yield table_row
-    
+    def get_divisions(self):
+        for d in self._get_divisions_from_HTML(self._get_HTML()):
+            yield d
+
     def _get_HTML(self):
         url = "http://yorkshireha.org.uk/e107_plugins/league_manager/index.php?tables"
         payload = {
@@ -26,21 +26,40 @@ class YorkshireHockeyAssociationDivisionAdapter(object):
         r = requests.post(url, data=payload)
         return r.content
 
-    def _get_table_rows_from_HTML(self, html):
+    def _get_divisions_from_HTML(self, html):
         soup = BeautifulSoup(html)
-        list_of_table_rows = []
+        division = None
         for tr in soup("tr"):
-            table_row = self._parse_row(tr)
-            if table_row is not None:
-                list_of_table_rows.append(table_row)
-        return list_of_table_rows
+            division_name = self.try_parse_division_header(tr)
+            if division_name is not None:
+                if division is not None:
+                    yield division
+                logging.debug(division_name)
+                division = Division(division_name)
+
+            division_row = self.try_parse_division_row(tr)
+            if division_row is not None:
+                logging.debug("%s %s" % (division_row.pos, division_row.team))
+                division.rows.append(division_row)
+        if division is not None:
+            yield division
+
+    def try_parse_division_header(self, tr):
+        try:
+            ths = tr("th")
+            if len(ths) != 10:
+                return None
+            name_th = ths[0]
+            return name_th.text
+        except:
+            logging.exception("")
+            return None
     
-    def _parse_row(self, tr):
+    def try_parse_division_row(self, tr):
         try:
             tds = tr("td")
             if len(tds) != 11:
                 return None
-
             pos_td, team_td, played_td, won_td, drawn_td, lost_td, goals_for_td, goals_against_td, goals_difference_td, points_td, max_points_td = tds
             pos = self._parse_int_from_td(pos_td)
             is_promotion = self._parse_is_promotion(team_td)
@@ -55,23 +74,9 @@ class YorkshireHockeyAssociationDivisionAdapter(object):
             goals_difference = self._parse_int_from_td(goals_difference_td)
             points = self._parse_int_from_td(points_td)
             max_points = self._parse_int_from_td(max_points_td)
-
-            return_dict = {
-                            "pos" : pos,
-                            "team" : team,
-                            "is_promotion" : is_promotion,
-                            "is_relegation" : is_relegation,
-                            "played" : played,  
-                            "won" : won,
-                            "drawn" : drawn,
-                            "lost" : lost,
-                            "goals_for" : goals_for,
-                            "goals_against" : goals_against,
-                            "goals_difference" : goals_difference,
-                            "points" : points,
-                            "max_points" : max_points,
-                          }
-            return return_dict
+            return DivisionRow(pos, team, is_promotion, is_relegation, played, 
+                               won, drawn, lost, goals_for, goals_against, 
+                               goals_difference, points, max_points)
         except Exception as ex:
             logging.exception("")
             return None
@@ -82,7 +87,7 @@ class YorkshireHockeyAssociationDivisionAdapter(object):
 
     @utils.catch_log_return_None
     def _parse_team_td(self, team_td):
-        return team_td.text
+        return "%s %s" % (team_td.text, self.sectionName)
 
     @utils.catch_log_return_None
     def _parse_is_promotion(self, team_td):
@@ -103,11 +108,3 @@ class YorkshireHockeyAssociationDivisionAdapter(object):
             if attribute == 'src' and "divdown.gif" in value:
                 return True
         return False
-
-
-if __name__ == '__main__':
-    import logging
-    logging.basicConfig(level=logging.DEBUG)
-    y = YorkshireHockeyAssociationDivisionAdapter(138, "Mens")
-    print len([row for row in y.get_table_rows()])
-

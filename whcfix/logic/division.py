@@ -21,7 +21,9 @@ class DivisionRow(object):
 
 class Division(object):
 
-    def __init__(self, name, table_rows):
+    def __init__(self, name):
         self.name = name
-        self.table_rows = table_rows
-        
+        self.rows = []
+
+    def doesFeatureTeam(self, team):
+        return len([r for r in self.rows if team == r.team]) > 0
