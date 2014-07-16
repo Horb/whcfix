@@ -1,37 +1,37 @@
-    <h3>{{ division.name }}</h3>
-    <table class="table">
-        <thead>
-            <tr>
-                <td class="hidden-sm hidden-xs">Pos.</td>
-                <td>Team</td>
-                <td>P</td>
-                <td class="hidden-sm hidden-xs">W</td>
-                <td class="hidden-sm hidden-xs">D</td>
-                <td class="hidden-sm hidden-xs">L</td>
-                <td>GD</td>
-                <td>Pts.</td>
-                <td class="hidden-sm hidden-xs">Max.</td>
-            </tr>
-        </thead>
-        <tbody>                    
-            {% for row in division.rows %}
-            <tr class="
-                {% if row.is_promotion %}
-                    text-success
-                {% elif row.is_relegation %}
-                    text-danger
-                {% endif %}
-                    ">
-                <td class="hidden-sm hidden-xs">{{row.pos}}</td>
-                <td>{{row.team}}</td>
-                <td>{{row.played}}</td>
-                <td class="hidden-sm hidden-xs">{{row.won}}</td>
-                <td class="hidden-sm hidden-xs">{{row.drawn}}</td>
-                <td class="hidden-sm hidden-xs">{{row.lost}}</td>
-                <td>{{row.goals_difference}}</td>
-                <td>{{row.points}}</td>
-                <td class="hidden-sm hidden-xs">{{row.max_points}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>                
-    </table>
+<h3>{{ division.name }}</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <td>Pos.</td>
+            <td>Team</td>
+            <td>P</td>
+            <td class="hidden-sm hidden-xs">W</td>
+            <td class="hidden-sm hidden-xs">D</td>
+            <td class="hidden-sm hidden-xs">L</td>
+            <td>GD</td>
+            <td>Pts.</td>
+            <td class="hidden-sm hidden-xs">Max.</td>
+        </tr>
+    </thead>
+    <tbody>                    
+        {% for row in division.rows %}
+        <tr class="
+            {% if row.is_promotion %}
+                text-success
+            {% elif row.is_relegation %}
+                text-danger
+            {% endif %}
+                ">
+            <td>{{row.pos}}</td>
+            <td>{{row.team}}</td>
+            <td>{{row.played}}</td>
+            <td class="hidden-sm hidden-xs">{{row.won}}</td>
+            <td class="hidden-sm hidden-xs">{{row.drawn}}</td>
+            <td class="hidden-sm hidden-xs">{{row.lost}}</td>
+            <td>{{row.goals_difference}}</td>
+            <td>{{row.points}}</td>
+            <td class="hidden-sm hidden-xs">{{row.max_points}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>                
+</table>

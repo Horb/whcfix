@@ -120,6 +120,39 @@ def team(team):
         logging.exception("")
         return render_template("501.html")
 
+@app.route("/teams/<team>/compact/")
+def teamBrief(team):
+    try:
+        m = Matches()
+        d = Divisions()
+        matches = m.get_matches(lambda m: m.doesFeature(team))
+
+        last_result = m.lastResult(team)
+        if last_result:
+            last_result_index = matches.index(last_result)
+            matches = [match for n, match in enumerate(matches) 
+                       if abs(last_result_index - n) <= 2]
+        else:
+            matches = matches[:5]
+
+        divisions=d.get_divisions(lambda d: d.doesFeatureTeam(team))
+        if len(divisions) == 1:
+            division = divisions[0]
+            row_of_interest = None
+            for n, row in enumerate(division.rows):
+                if row.team == team:
+                    row_of_interest = n
+            if row_of_interest is not None:
+                division.rows = [row for n, row in enumerate(division.rows) 
+                                 if abs(row_of_interest - n) <= 2]
+
+        return render_template("teamDump.html", 
+                               team=team,
+                               matches=matches,
+                               divisions=divisions)
+    except Exception:
+        logging.exception("")
+        return render_template("501.html")
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)

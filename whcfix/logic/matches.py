@@ -34,15 +34,17 @@ class Matches(MatchesBase):
                     names.append(match.away)
         return names
 
+
+    def lastResult(self, teamName):
+        for match in self.listOfMatches[::-1]:
+            if match.doesFeature(teamName) and match.isResult():
+                return match
+        return None
+
     def getLastResults(self, listOfTeamNames):
-        def _lastResult(team):
-            for match in self.listOfMatches[::-1]:
-                if match.doesFeature(team) and match.isResult():
-                    return match
-            return None
         lastResults = []
         for team in listOfTeamNames:
-            lastResults.append(_lastResult(team))
+            lastResults.append(self.lastResult(team))
         return [match for match in lastResults if match is not None]
 
     def getNextMatches(self, listOfTeamNames):
