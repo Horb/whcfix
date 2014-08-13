@@ -157,6 +157,6 @@ def teamBrief(team):
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     app.debug = True
-    app.run('0.0.0.0')
+    app.run()
 else:
     logging.basicConfig(level=logging.INFO)
