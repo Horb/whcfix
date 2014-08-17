@@ -15,50 +15,8 @@ app = Flask(__name__,
             static_url_path='/static')
 
 
-# @app.route("/maintenance")
-# def maintenance():
-#     try:
-#         return render_template("maintenance.html",
-#                                strings=ApplicationStrings())
-#     except Exception:
-#         logging.exception("")
-#         return render_template("501.html")
-
-@app.route("/divisions/")
-def divisions_list():
-    try:
-        divisions = Divisions().get_divisions()
-        return render_template("divisions.html", divisions=divisions)
-    except:
-        logging.exception("")
-        return render_template("501.html")
-
-@app.route("/divisions/<division>/")
-def division_filtered(division):
-    try:
-        d = Divisions()
-        cond = lambda d: d.name == division
-        divisions = Divisions().get_divisions(cond)
-        return render_template("divisions.html", divisions=divisions)
-    except Exception:
-        logging.exception("")
-        return render_template("501.html")
-
-@app.route("/teams/")
-def teams():
-    try:
-        matches = Matches()
-        teams = matches.teamNames("Wakefield")
-        return render_template("teams.html",
-                               teams=teams,
-                               strings=ApplicationStrings())
-    except Exception:
-        logging.exception("")
-        return render_template("501.html")
-
-
 @app.route("/")
-def hello():
+def home():
     try:
         matches = Matches()
         teams = matches.teamNames("Wakefield")
@@ -72,37 +30,14 @@ def hello():
         return render_template("501.html")
 
 
-@app.route("/recent_form/")
-def recent_form():
+@app.route("/teams/")
+def teams():
     try:
         matches = Matches()
         teams = matches.teamNames("Wakefield")
-        return render_template("recent_form.html",
-                               recent_form=matches.recentForm(teams))
-    except Exception:
-        logging.exception("")
-        return render_template("501.html")
-
-
-@app.route("/last_result/")
-def last_result():
-    try:
-        matches = Matches()
-        teams = matches.teamNames("Wakefield")
-        return render_template("last_result.html",
-                               lastResults=matches.getLastResults(teams))
-    except Exception:
-        logging.exception("")
-        return render_template("501.html")
-
-
-@app.route("/next_match/")
-def next_match():
-    try:
-        matches = Matches()
-        teams = matches.teamNames("Wakefield")
-        return render_template("next_match.html",
-                               nextMatches=matches.getNextMatches(teams))
+        return render_template("teams.html",
+                               teams=teams,
+                               strings=ApplicationStrings())
     except Exception:
         logging.exception("")
         return render_template("501.html")
@@ -120,9 +55,6 @@ def team(team):
         logging.exception("")
         return render_template("501.html")
 
-@app.route("/about/")
-def about():
-    return render_template("about.html")
 
 @app.route("/teams/<team>/compact/")
 def teamBrief(team):
@@ -157,6 +89,48 @@ def teamBrief(team):
     except Exception:
         logging.exception("")
         return render_template("501.html")
+
+
+@app.route("/next_match/")
+def next_match():
+    try:
+        matches = Matches()
+        teams = matches.teamNames("Wakefield")
+        return render_template("next_match.html",
+                               nextMatches=matches.getNextMatches(teams))
+    except Exception:
+        logging.exception("")
+        return render_template("501.html")
+
+
+@app.route("/last_result/")
+def last_result():
+    try:
+        matches = Matches()
+        teams = matches.teamNames("Wakefield")
+        return render_template("last_result.html",
+                               lastResults=matches.getLastResults(teams))
+    except Exception:
+        logging.exception("")
+        return render_template("501.html")
+
+
+@app.route("/recent_form/")
+def recent_form():
+    try:
+        matches = Matches()
+        teams = matches.teamNames("Wakefield")
+        return render_template("recent_form.html",
+                               recent_form=matches.recentForm(teams))
+    except Exception:
+        logging.exception("")
+        return render_template("501.html")
+
+
+@app.route("/about/")
+def about():
+    return render_template("about.html")
+
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
