@@ -2,17 +2,52 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         {% block head %}
-            <title>WFC Fix</title>
+            <title>whcfix: Wakefield Hockey Club Fixtures and Results</title>
         {% endblock %}
         <link href="/static/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style type="text/css">
+            /* Bootstrap overrides here */
+            a:hover {color:#cb0505;}
+            .nav {
+                border: none;
+            }
+            .nav > li > a {
+                color:#EEE;
+                border:thin solid;
+            }
+            .nav > li > a:focus,
+            .nav > li > a:hover {
+                color:#cb0505;
+                background:white;
+            }
             {% block pageCSS %}
             {% endblock %}
         </style>
     </head>
     <body>
         <div class="container">
+            <div class="row" style="background:#333;">
+                <div class="col-xs-3">
+                    <img style="margin-top:auto;margin-bottom:auto;" src="http://www.wakefieldhockeyclub.co.uk/templates/ja_purity/images/logo.png"/>
+                </div>
+                <div class="col-xs-9">
+                    <h1 class="hidden-xs" style="color:#EEE;">whcfix</h1>
+                    <p class="hidden-xs" style="color:#EEE;">Wakefield Hockey Club Fixtures and Results</p>
+                </div>
+            </div>
+            <div class="row" style="background:#333;">
+                <div class="col-sm-12">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/teams/">Teams</a></li>
+                        <li><a href="/next_match/">Fixtures</a></li>
+                        <li><a href="/last_result/">Results</a></li>
+                        <li><a href="/recent_form/">Form Table</a></li>
+                        <li><a href="/about/">About</a></li>
+                    </ul>
+                </div>
+            </div>
             {% block breadcrumbs %}
             {% endblock %}
             {% block body %}

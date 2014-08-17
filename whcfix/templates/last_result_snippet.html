@@ -1,37 +1,35 @@
-<div class="col-xs-12">
-    <h3><a href="/last_result">Last Result</a></h3>
-    {% if lastResults %}
-    <table class="table">
-        <thead>
-            <tr>
-                <td class="hidden-sm hidden-xs">Date</td>
-                <td class="hidden-sm hidden-xs">Time</td>
-                <td>Home</td>
-                <td>Score</td>
-                <td>Away</td>
-            </tr>
-        </thead>
-        <tbody>
-            {% for match in lastResults %}
-            <tr>
-                <td class="hidden-sm hidden-xs">{{match.date}}</td>
-                <td class="hidden-sm hidden-xs">{{match.time}}</td>
-                {% if "Wakefield" in match.home %}
-                <td><a href="/teams/{{match.home}}/">{{match.home}}</a></td>
-                {% else %}
-                <td>{{match.home}}</td>
-                {% endif %}
-                <td style="white-space:nowrap;">{{match.homeGoals}} - {{match.awayGoals}}</td>
-                {% if "Wakefield" in match.away %}
-                <td><a href="/teams/{{match.away}}/">{{match.away}}</a></td>
-                {% else %}
-                <td>{{match.away}}</td>
-                {% endif %}
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p>No results found!</p>
-    {% endif %}
-</div>
+<h3>Last Result</h3>
+{% if lastResults %}
+<table class="table">
+    <thead>
+        <tr>
+            <td class="hidden-sm hidden-xs">Date</td>
+            <td class="hidden-sm hidden-xs">Time</td>
+            <td>Home</td>
+            <td>Score</td>
+            <td>Away</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for match in lastResults %}
+        <tr>
+            <td class="hidden-sm hidden-xs">{{match.date}}</td>
+            <td class="hidden-sm hidden-xs">{{match.time}}</td>
+            {% if "Wakefield" in match.home %}
+            <td><a href="/teams/{{match.home}}/">{{match.home}}</a></td>
+            {% else %}
+            <td>{{match.home}}</td>
+            {% endif %}
+            <td style="white-space:nowrap;">{{match.homeGoals}} - {{match.awayGoals}}</td>
+            {% if "Wakefield" in match.away %}
+            <td><a href="/teams/{{match.away}}/">{{match.away}}</a></td>
+            {% else %}
+            <td>{{match.away}}</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No results found!</p>
+{% endif %}

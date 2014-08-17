@@ -1,39 +1,30 @@
 {% extends "base.html" %}
-
-{% block head %}
-    <title>Wakefield Hockey Club Fixtures and Results</title>
-{% endblock %}
-
 {% block breadcrumbs %}
 {% endblock %}
 
 {% block body %}
-    <div class="row">
-        <div class="col-sm-12">
-            <h1>Wakefield Hockey Club Fixtures</h1>
+    {% if nextMatches %}
+        <div class="row">
+            <div class="col-xs-12 col-md-9">
+                {% include "next_match_snippet.html" %}
+            </div>
+            <div class="col-xs-12 col-md-3">
+                {% include "whc_twitter_feed.html" %}
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12 col-md-4">
-            <h3>{{strings.hPageDesc}}</h3>
-            <p>{{strings.pPageDesc}}</p>
-        </div>
-        <div class="col-sm-12 col-md-4">
-            <h3>{{strings.hRecentForm}}</h3>
-            <p>{{strings.pRecentForm}}</p>
-        </div>
-        <div class="col-sm-12 col-md-4">
-            <h3>{{strings.hFixtures}}</h3>
-            <p>{{strings.pFixtures}}</p>
-        </div>
-    </div>
+    {% endif %}
     {% if recent_form %}
-    <div class="row">{% include "recent_form_snippet.html" %}</div>
+        <div class="row">
+            <div class="col-xs-9">
+            {% include "recent_form_snippet.html" %}
+            </div>
+        </div>
     {% endif %}
     {% if lastResults %}
-    <div class="row">{% include "last_result_snippet.html" %}</div>
-    {% endif %}
-    {% if nextMatches %}
-    <div class="row">{% include "next_match_snippet.html" %}</div>
+        <div class="row">
+            <div class="col-xs-12">
+            {% include "last_result_snippet.html" %}
+            </div>
+        </div>
     {% endif %}
 {% endblock %}

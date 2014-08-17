@@ -120,6 +120,10 @@ def team(team):
         logging.exception("")
         return render_template("501.html")
 
+@app.route("/about/")
+def about():
+    return render_template("about.html")
+
 @app.route("/teams/<team>/compact/")
 def teamBrief(team):
     try:

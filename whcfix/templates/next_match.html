@@ -1,20 +1,8 @@
 {% extends "base.html" %}
-
-{% block head %}
-    <title>Wakefield Hockey Club Fixtures and Results</title>
-{% endblock %}
-
-{% block breadcrumbs %}
+{% block body %}
 <div class="row">
-    <div class="col-sm-12 col-md-12">
-        <ol class="breadcrumb">
-            <li><a href="/">WHC Fix</a></li>
-            <li>Next Match</li>
-        </ol>
+    <div class="col-xs-12">
+        {% include "next_match_snippet.html" %}
     </div>
 </div>
-{% endblock %}
-
-{% block body %}
-    {% include "next_match_snippet.html" %}
 {% endblock %}

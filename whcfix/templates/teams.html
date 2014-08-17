@@ -8,26 +8,11 @@
 {% endblock %}
 
 {% block body %}
-    <div class="row">
-        <div class="col-sm-12">
-            <h1>Wakefield Hockey Club Fixtures</h1>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12 col-md-4">
-            <h3>{{strings.hPageDesc}}</h3>
-            <p>{{strings.pPageDesc}}</p>
-        </div>
-        <div class="col-sm-12 col-md-4">
-            <h3>{{strings.hRecentForm}}</h3>
-            <p>{{strings.pRecentForm}}</p>
-        </div>
-        <div class="col-sm-12 col-md-4">
-            <h3>{{strings.hFixtures}}</h3>
-            <p>{{strings.pFixtures}}</p>
-        </div>
-    </div>
     {% if teams %}
-        <div class="row">{% include "teams_snippet.html" %}</div>
+        <div class="row">
+            <div class="col-xs-12">
+                {% include "teams_snippet.html" %}
+            </div>
+        </div>
     {% endif %}
 {% endblock %}
