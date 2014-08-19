@@ -68,8 +68,10 @@ class Match(object):
         try:
             if self._date != other._date:
                 return self._date > other._date
-            else:
+            elif self._time != other._time:
                 return self._time > other._time
+            else:
+                return self._home > other._home
         except:
             return False
 

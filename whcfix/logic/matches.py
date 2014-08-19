@@ -65,8 +65,13 @@ class Matches(MatchesBase):
         nextMatches = [match 
                 for match in nextMatches 
                 if match.isMatchInTheFuture()]
-        nextMatches = set(nextMatches)
-        return nextMatches
+        
+        uniqueMatches = []
+        for match in nextMatches:
+            if match not in uniqueMatches:
+                uniqueMatches.append(match)
+        uniqueMatches.sort()
+        return uniqueMatches
 
     def recentForm(self, listOfTeamNames):
         def _getLastFourResults(name):
