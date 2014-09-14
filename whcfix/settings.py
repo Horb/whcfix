@@ -4,6 +4,15 @@ CONFIGS = {
     "configs": [
         {
             "dataSource": {
+                "code": "4173", 
+                "name": "Wakefield-Ladies-2s", 
+                "source": "FixturesLive"
+            }, 
+            "teamName": "Wakefield 2", 
+            "sectionName": "Ladies"
+        }, 
+        {
+            "dataSource": {
                 "code": "4221", 
                 "name": "Wakefield-Ladies-3s", 
                 "source": "FixturesLive"
