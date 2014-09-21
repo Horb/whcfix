@@ -1,0 +1,37 @@
+{% if dashboard_item.listOfMatches %}
+<h3>{{ dashboard_item.title }}</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <td class="hidden-sm hidden-xs">Date</td>
+            <td class="hidden-sm hidden-xs">Time</td>
+            <td>Home</td>
+            {% if dashboard_item.show_result_column %}
+            <td>Score</td>
+            {% endif %}
+            <td>Away</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for match in dashboard_item.listOfMatches %}
+        <tr>
+            <td class="hidden-sm hidden-xs">{{match.date}}</td>
+            <td class="hidden-sm hidden-xs">{{match.time}}</td>
+            {% if "Wakefield" in match.home %}
+            <td><a href="/teams/{{match.home}}/">{{match.home}}</a></td>
+            {% else %}
+            <td>{{match.home}}</td>
+            {% endif %}
+            {% if dashboard_item.show_result_column %}
+            <td style="white-space:nowrap;">{{match.homeGoals}} - {{match.awayGoals}}</td>
+            {% endif %}
+            {% if "Wakefield" in match.away %}
+            <td><a href="/teams/{{match.away}}/">{{match.away}}</a></td>
+            {% else %}
+            <td>{{match.away}}</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}

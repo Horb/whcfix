@@ -3,28 +3,22 @@
 {% endblock %}
 
 {% block body %}
-    {% if nextMatches %}
-        <div class="row">
-            <div class="col-xs-12 col-md-9">
-                {% include "next_match_snippet.html" %}
+    {% for dashboard_item in dashboard_items|sort(reverse=True) %}
+        {% if loop.first %}
+            <div class="row">
+                <div class="col-xs-12 col-md-9">
+                    {% include dashboard_item.template %}
+                </div>
+                <div class="col-xs-12 col-md-3">
+                    {% include "whc_twitter_feed.html" %}
+                </div>
             </div>
-            <div class="col-xs-12 col-md-3">
-                {% include "whc_twitter_feed.html" %}
+        {% else %}
+            <div class="row">
+                <div class="col-xs-9">
+                {% include dashboard_item.template %}
+                </div>
             </div>
-        </div>
-    {% endif %}
-    {% if recent_form %}
-        <div class="row">
-            <div class="col-xs-9">
-            {% include "recent_form_snippet.html" %}
-            </div>
-        </div>
-    {% endif %}
-    {% if lastResults %}
-        <div class="row">
-            <div class="col-xs-12">
-            {% include "last_result_snippet.html" %}
-            </div>
-        </div>
-    {% endif %}
+        {% endif %}
+    {% endfor %}
 {% endblock %}
