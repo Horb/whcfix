@@ -34,7 +34,6 @@ class Matches(MatchesBase):
                     names.append(match.away)
         return names
 
-
     def lastResult(self, teamName):
         for match in self.listOfMatches[::-1]:
             if match.doesFeature(teamName) and match.isResult():
@@ -47,31 +46,23 @@ class Matches(MatchesBase):
             lastResults.append(self.lastResult(team))
         return [match for match in lastResults if match is not None]
 
-    def getNextMatches(self, listOfTeamNames):
-        def _nextMatch(team):
-            teamFixtures = [match for match in self.listOfMatches[::-1] if match.doesFeature(team)]
-            for n, match in enumerate(teamFixtures):
-                if match.isResult():
-                    return teamFixtures[n-1]
-            return match
+    def nextMatch(self, team):
+        teamFixtures = [m for m in self.listOfMatches 
+                        if m.doesFeature(team) and m.isMatchInTheFuture()]
+        if teamFixtures:
+            teamFixtures.sort()
+            return teamFixtures[0]
+        else:
+            return None
 
+    def getNextMatches(self, listOfTeamNames):
         nextMatches = []
         for team in listOfTeamNames:
-            nextMatches.append(_nextMatch(team))
+            match = self.nextMatch(team)
+            if match is not None and match not in nextMatches:
+                nextMatches.append(match)
         nextMatches.sort()
-        nextMatches = [match 
-                       for match in nextMatches 
-                       if match is not None]
-        nextMatches = [match 
-                for match in nextMatches 
-                if match.isMatchInTheFuture()]
-        
-        uniqueMatches = []
-        for match in nextMatches:
-            if match not in uniqueMatches:
-                uniqueMatches.append(match)
-        uniqueMatches.sort()
-        return uniqueMatches
+        return nextMatches
 
     def recentForm(self, listOfTeamNames):
         def _getLastFourResults(name):
