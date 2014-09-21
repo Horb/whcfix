@@ -64,11 +64,12 @@ class FixturesLiveAdapter(AdapterBase):
                 # it's a draw, we cant return the wrong number of goals
                 return goals[0]
             else:
-                if "emerald" in str(resultIndicator.text):
-                    # this indicates a win for the club
-                    return max(goals)
-                else:
-                    return min(goals)
+                src_nodes = resultIndicator.findAll('src')
+                if len(src_nodes) > 0:
+                    if src_nodes[0].text == "singpixred":
+                        # this indicates a loss for the club
+                        return min(goals)
+                return max(goals)
         return None
 
     def _parse_awayGoals(self, score_td, resultIndicator):
@@ -79,11 +80,12 @@ class FixturesLiveAdapter(AdapterBase):
                 # it's a draw, we cant return the wrong number of goals
                 return min(goals)
             else:
-                if "emerald" in str(resultIndicator.text):
-                    # this indicates a win for the club
-                    return min(goals)
-                else:
-                    return max(goals)
+                src_nodes = resultIndicator.findAll('src')
+                if len(src_nodes) > 0:
+                    if src_nodes[0].text == "singpixred":
+                        # this indicates a loss for the club
+                        return max(goals)
+                return min(goals)
         return None
 
     def _parse_date(self, date_time_td):
