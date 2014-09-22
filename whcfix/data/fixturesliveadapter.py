@@ -56,7 +56,7 @@ class FixturesLiveAdapter(AdapterBase):
         else:
             return team_td.text
 
-    def _parse_homeGoals(self, score_td, resultIndicator):
+    def _parse_homeGoals(self, score_td, home_away):
         if ":" in score_td.text:
             goals = score_td.text.split(":")
             goals = map(int, goals)
@@ -64,15 +64,17 @@ class FixturesLiveAdapter(AdapterBase):
                 # it's a draw, we cant return the wrong number of goals
                 return goals[0]
             else:
-                src_nodes = resultIndicator.findAll('src')
-                if len(src_nodes) > 0:
-                    if src_nodes[0].text == "singpixred":
-                        # this indicates a loss for the club
-                        return min(goals)
-                return max(goals)
+                teamOfInterestGoals = goals[0]
+                opositionGoals = goals[1]
+                if "H" in home_away.text:
+                    return teamOfInterestGoals
+                elif "A" in home_away.text:
+                    return opositionGoals
+                else:
+                    return None
         return None
 
-    def _parse_awayGoals(self, score_td, resultIndicator):
+    def _parse_awayGoals(self, score_td, home_away):
         if ":" in score_td.text:
             goals = score_td.text.split(":")
             goals = map(int, goals)
@@ -80,12 +82,14 @@ class FixturesLiveAdapter(AdapterBase):
                 # it's a draw, we cant return the wrong number of goals
                 return min(goals)
             else:
-                src_nodes = resultIndicator.findAll('src')
-                if len(src_nodes) > 0:
-                    if src_nodes[0].text == "singpixred":
-                        # this indicates a loss for the club
-                        return max(goals)
-                return min(goals)
+                teamOfInterestGoals = goals[0]
+                opositionGoals = goals[1]
+                if "H" in home_away.text:
+                    return opositionGoals
+                elif "A" in home_away.text:
+                    return teamOfInterestGoals
+                else:
+                    return None
         return None
 
     def _parse_date(self, date_time_td):
@@ -118,13 +122,14 @@ class FixturesLiveAdapter(AdapterBase):
 
     def _parse_row(self, tr):
         try:
-            if len(tr) != 9:
+            tds = tr("td")
+            if len(tds) != 9:
                 return None
-            _, oposition, resultIndicator, score, league, date_time, home_away, venue, _ = [child for child in tr.childGenerator()]
+            _, oposition, _, score, league, date_time, home_away, venue, _ = tds
             home = self._parse_home(home_away, oposition)
-            homeGoals = self._parse_homeGoals(score, resultIndicator)
+            homeGoals = self._parse_homeGoals(score, home_away)
             away = self._parse_away(home_away, oposition)
-            awayGoals = self._parse_awayGoals(score, resultIndicator)
+            awayGoals = self._parse_awayGoals(score, home_away)
             date = self._parse_date(date_time)
             time = self._parse_time(date_time)
             venue = self._parse_venue(venue)
@@ -136,5 +141,3 @@ class FixturesLiveAdapter(AdapterBase):
         except Exception as ex:
             logging.exception("")
             return None
-
-
