@@ -19,19 +19,17 @@ class Matches(MatchesBase):
              if match.doesFeature(teamName) and match.isResult()]
         return l[len(l)-4:]
 
-    def teamNames(self, teamNameFilter):
+    def teamNames(self, teamNameFilter, section=None):
         names = []
-        for match in self.listOfMatches:
-            if match.home in names:
-                continue
-            else:
-                if teamNameFilter in match.home:
-                    names.append(match.home)
-            if match.away in names:
-                continue
-            else:
-                if teamNameFilter in match.away:
-                    names.append(match.away)
+        names = [ m.home for m 
+                  in self.listOfMatches 
+                  if teamNameFilter in m.home]
+        names += [ m.away for m 
+                  in self.listOfMatches 
+                  if teamNameFilter in m.away]
+        names = set(names)
+        names = [ n for n in names if section is None or section in n]
+        names.sort()
         return names
 
     def lastResult(self, teamName):
@@ -40,11 +38,17 @@ class Matches(MatchesBase):
                 return match
         return None
 
-    def getLastResults(self, listOfTeamNames):
+    def getLastResults(self, listOfTeamNames, section=None):
         lastResults = []
         for team in listOfTeamNames:
-            lastResults.append(self.lastResult(team))
-        return [match for match in lastResults if match is not None]
+            if section is not None:
+                if section not in team:
+                    continue
+            lastResult = self.lastResult(team)
+            if lastResult is not None:
+                lastResults.append(lastResult)
+        lastResults.sort()
+        return lastResults
 
     def nextMatch(self, team):
         teamFixtures = [m for m in self.listOfMatches 
@@ -55,16 +59,18 @@ class Matches(MatchesBase):
         else:
             return None
 
-    def getNextMatches(self, listOfTeamNames):
+    def getNextMatches(self, listOfTeamNames, section=None):
         nextMatches = []
         for team in listOfTeamNames:
             match = self.nextMatch(team)
             if match is not None and match not in nextMatches:
                 nextMatches.append(match)
+        if section is not None:
+            nextMatches = [m for m in nextMatches if section in m.home or section in m.away]
         nextMatches.sort()
         return nextMatches
 
-    def recentForm(self, listOfTeamNames):
+    def recentForm(self, listOfTeamNames, section=None):
         def _getLastFourResults(name):
             results = []
             for match in self.listOfMatches[::-1]:
@@ -81,6 +87,9 @@ class Matches(MatchesBase):
                     return results
         team_forms = []
         for team in listOfTeamNames:
+            if section is not None:
+                if section not in team:
+                    continue
             if len(self.get_matches(condition=lambda m: m.doesFeature(team) 
                                                     and m.isResult())) < 4:
                 continue
