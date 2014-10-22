@@ -1,4 +1,5 @@
 import logging
+import datetime
 from whcfix.logic.teamform import TeamForm, Result
 from whcfix.logic.matchesbase import MatchesBase
 
@@ -31,6 +32,19 @@ class Matches(MatchesBase):
         names = [ n for n in names if section is None or section in n]
         names.sort()
         return names
+
+    def getTodaysMatches(self, listOfTeamNames, section=None):
+        todaysMatches = []
+        today = datetime.date.today()
+        for team in listOfTeamNames:
+            if section is not None:
+                if section not in team:
+                    continue
+            todaysMatches += [m for m in self.listOfMatches 
+                              if m.doesFeature(team) 
+                                  and m._date.date() == today]
+        todaysMatches.sort()
+        return todaysMatches
 
     def lastResult(self, teamName):
         for match in self.listOfMatches[::-1]:

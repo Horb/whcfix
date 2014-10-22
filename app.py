@@ -3,6 +3,7 @@ import logging
 from whcfix.data.applicationstrings import ApplicationStrings
 from whcfix.logic.matches import Matches
 from whcfix.logic.divisions import Divisions
+from whcfix.ui.elements import LastResultDashboardItem, NextMatchDashboardItem, TodaysMatchesDashboardItem
 import os
 
 if __name__ == '__main__':
@@ -21,11 +22,16 @@ def home():
         matches = Matches()
         teams = matches.teamNames("Wakefield")
         kwargs = request.args.to_dict()
+        nextMatches = matches.getNextMatches(teams, **kwargs)
+        lastResults = matches.getLastResults(teams, **kwargs)
+        todaysMatches = matches.getTodaysMatches(teams, **kwargs)
+        dashboard_items = [LastResultDashboardItem(lastResults), 
+                           NextMatchDashboardItem(nextMatches), 
+                           TodaysMatchesDashboardItem(todaysMatches)]
+
         return render_template("dashboard.html",
                                strings=ApplicationStrings(),
-                               recent_form=matches.recentForm(teams, **kwargs),
-                               nextMatches=matches.getNextMatches(teams, **kwargs),
-                               lastResults=matches.getLastResults(teams, **kwargs))
+                               dashboard_items=dashboard_items)
     except Exception:
         logging.exception("")
         return render_template("501.html")
