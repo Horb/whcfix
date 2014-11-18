@@ -16,6 +16,7 @@ app = Flask(__name__,
             static_url_path='/static')
 
 
+
 @app.route("/")
 def home():
     try:
@@ -38,7 +39,6 @@ def home():
     except Exception:
         logging.exception("")
         return render_template("501.html")
-
 
 @app.route("/teams/", methods=['GET',])
 def teams():
