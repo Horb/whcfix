@@ -1,8 +1,9 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import logging
 from whcfix.data.applicationstrings import ApplicationStrings
 from whcfix.logic.matches import Matches
 from whcfix.logic.divisions import Divisions
+from whcfix.ui.elements import LastResultDashboardItem, NextMatchDashboardItem, TodaysMatchesDashboardItem
 import os
 
 if __name__ == '__main__':
@@ -15,26 +16,35 @@ app = Flask(__name__,
             static_url_path='/static')
 
 
+
 @app.route("/")
 def home():
     try:
         matches = Matches()
         teams = matches.teamNames("Wakefield")
+        kwargs = request.args.to_dict()
+        nextMatches = matches.getNextMatches(teams, **kwargs)
+        lastResults = matches.getLastResults(teams, **kwargs)
+        todaysMatches = matches.getTodaysMatches(teams, **kwargs)
+        dashboard_items = [LastResultDashboardItem(lastResults), 
+                           NextMatchDashboardItem(nextMatches), 
+                           TodaysMatchesDashboardItem(todaysMatches)]
+        # Only include dashboard items that have content to display.
+        dashboard_items = [ di for di in dashboard_items
+                            if di.listOfMatches ]
+
         return render_template("dashboard.html",
                                strings=ApplicationStrings(),
-                               recent_form=matches.recentForm(teams),
-                               nextMatches=matches.getNextMatches(teams),
-                               lastResults=matches.getLastResults(teams))
+                               dashboard_items=dashboard_items)
     except Exception:
         logging.exception("")
         return render_template("501.html")
 
-
-@app.route("/teams/")
+@app.route("/teams/", methods=['GET',])
 def teams():
     try:
         matches = Matches()
-        teams = matches.teamNames("Wakefield")
+        teams = matches.teamNames("Wakefield", **request.args.to_dict())
         return render_template("teams.html",
                                teams=teams,
                                strings=ApplicationStrings())
@@ -46,11 +56,15 @@ def teams():
 @app.route("/teams/<team>/")
 def team(team):
     try:
-        m = Matches()
-        d = Divisions()
+        matches = Matches().get_matches(
+                lambda m: m.doesFeature(team)
+                )
+        divisions = Divisions().get_divisions(
+                lambda d: d.doesFeatureTeam(team)
+                )
         return render_template("teamDump.html", team=team,
-                               matches=m.get_matches(lambda m: m.doesFeature(team)),
-                               divisions=d.get_divisions(lambda d: d.doesFeatureTeam(team)))
+                               matches=matches,
+                               divisions=divisions)
     except Exception:
         logging.exception("")
         return render_template("501.html")
@@ -91,37 +105,37 @@ def teamBrief(team):
         return render_template("501.html")
 
 
-@app.route("/next_match/")
+@app.route("/next_match/", methods=['GET',])
 def next_match():
     try:
         matches = Matches()
         teams = matches.teamNames("Wakefield")
-        return render_template("next_match.html",
-                               nextMatches=matches.getNextMatches(teams))
+        nextMatches = matches.getNextMatches(teams, **request.args.to_dict())
+        return render_template("next_match.html", nextMatches=nextMatches)
     except Exception:
         logging.exception("")
         return render_template("501.html")
 
 
-@app.route("/last_result/")
+@app.route("/last_result/", methods=['GET',])
 def last_result():
     try:
         matches = Matches()
         teams = matches.teamNames("Wakefield")
-        return render_template("last_result.html",
-                               lastResults=matches.getLastResults(teams))
+        lastResults = matches.getLastResults(teams, **request.args.to_dict())
+        return render_template("last_result.html", lastResults=lastResults)
     except Exception:
         logging.exception("")
         return render_template("501.html")
 
 
-@app.route("/recent_form/")
+@app.route("/recent_form/", methods=['GET',])
 def recent_form():
     try:
         matches = Matches()
         teams = matches.teamNames("Wakefield")
-        return render_template("recent_form.html",
-                               recent_form=matches.recentForm(teams))
+        recent_form = matches.recentForm(teams, **request.args.to_dict())
+        return render_template("recent_form.html", recent_form=recent_form)
     except Exception:
         logging.exception("")
         return render_template("501.html")

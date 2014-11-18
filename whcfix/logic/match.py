@@ -27,10 +27,14 @@ class Match(object):
     def isMatchInTheFuture(self):
         if self._date is None:
             return False
+
+        if self._date.date() == datetime.date.today():
+            return True
+
         if self._date > datetime.datetime.now():
             return True
-        else:
-            return False
+
+        return False
 
     @property
     @utils.nz

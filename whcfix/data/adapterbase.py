@@ -24,4 +24,3 @@ class AdapterBase(object):
         return Match(date, time, venue, 
                 home, homeGoals, awayGoals, away,
                      isPostponed, self.sectionName)
-
