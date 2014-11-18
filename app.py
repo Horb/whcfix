@@ -28,6 +28,9 @@ def home():
         dashboard_items = [LastResultDashboardItem(lastResults), 
                            NextMatchDashboardItem(nextMatches), 
                            TodaysMatchesDashboardItem(todaysMatches)]
+        # Only include dashboard items that have content to display.
+        dashboard_items = [ di for di in dashboard_items
+                            if di.listOfMatches ]
 
         return render_template("dashboard.html",
                                strings=ApplicationStrings(),
@@ -53,11 +56,15 @@ def teams():
 @app.route("/teams/<team>/")
 def team(team):
     try:
-        m = Matches()
-        d = Divisions()
+        matches = Matches().get_matches(
+                lambda m: m.doesFeature(team)
+                )
+        divisions = Divisions().get_divisions(
+                lambda d: d.doesFeatureTeam(team)
+                )
         return render_template("teamDump.html", team=team,
-                               matches=m.get_matches(lambda m: m.doesFeature(team)),
-                               divisions=d.get_divisions(lambda d: d.doesFeatureTeam(team)))
+                               matches=matches,
+                               divisions=divisions)
     except Exception:
         logging.exception("")
         return render_template("501.html")

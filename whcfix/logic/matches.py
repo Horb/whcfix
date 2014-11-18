@@ -36,6 +36,7 @@ class Matches(MatchesBase):
     def getTodaysMatches(self, listOfTeamNames, section=None):
         todaysMatches = []
         today = datetime.date.today()
+        #today = datetime.date(2014, 11, 23)
         for team in listOfTeamNames:
             if section is not None:
                 if section not in team:
