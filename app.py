@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for, g, abort, flash, redirect, session
 import logging
 from whcfix.data.applicationstrings import ApplicationStrings
 from whcfix.logic.matches import Matches
 from whcfix.logic.divisions import Divisions
 from whcfix.ui.elements import LastResultDashboardItem, NextMatchDashboardItem, TodaysMatchesDashboardItem
+import whcfix.settings as settings
 import os
 
 if __name__ == '__main__':
@@ -15,7 +16,55 @@ app = Flask(__name__,
             static_folder='whcfix/static',
             static_url_path='/static')
 
+app.config.update(dict(
+    SECRET_KEY=settings.DEVELOPMENT_KEY,
+))
 
+from whcfix.data.database import Session, init_db, test_post
+from whcfix.data.models import Post
+
+@app.before_first_request
+def before_request():
+    init_db()
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        if (request.form['username'] != settings.BLOG_USER 
+                or request.form['password'] != settings.BLOG_PASSWORD):
+            error = 'Invalid username or password!'
+        else:
+            session['logged_in'] = True
+            flash('You were logged in!')
+            return redirect(url_for('news'))
+    return render_template('login.html', error=error)
+
+@app.route("/news")
+def news():
+    try:
+        posts = Session().query(Post).all()
+        return render_template("news.html", posts=posts)
+    except Exception:
+        logging.exception("")
+        return render_template("501.html")
+
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)
+    flash("You were logged out!")
+    return redirect(url_for("news"))
+
+@app.route("/news/new", methods=['POST'])
+def add_news():
+    if not session.get('logged_in'):
+        abort(401)
+    post = Post(title=request.form['title'], body=request.form['body'])
+    s = Session()
+    s.add(post)
+    s.commit()
+    flash("New entry was successfully posted!")
+    return redirect(url_for('news'))
 
 @app.route("/")
 def home():

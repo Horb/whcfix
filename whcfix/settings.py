@@ -1,3 +1,7 @@
+BLOG_USER = 'BLOG_USER'
+BLOG_PASSWORD = 'BLOG_PASSWORD'
+DEVELOPMENT_KEY = 'DEVELOPMENT_KEY'
+
 LOG_FORMAT = '%(module)s %(funcName)s %(lineno)s %(message)s'
 
 CONFIGS = {
