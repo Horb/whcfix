@@ -1,9 +1,10 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from whcfix.data.models import Base
+import whcfix.settings as settings
 
 # The driver that talks to the db
-engine = create_engine('sqlite:///:memory:', echo=True, convert_unicode=True)
+engine = create_engine(settings.CONNECTION_STRING, echo=True, convert_unicode=True)
 
 # A session class that the application can user to talk to the driver
 Session = scoped_session(sessionmaker(engine))

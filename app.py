@@ -27,7 +27,7 @@ from whcfix.data.models import Post
 def before_request():
     init_db()
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
     error = None
     if request.method == 'POST':
@@ -40,7 +40,7 @@ def login():
             return redirect(url_for('news'))
     return render_template('login.html', error=error)
 
-@app.route("/news")
+@app.route("/news/")
 def news():
     try:
         posts = Session().query(Post).all()
@@ -49,13 +49,13 @@ def news():
         logging.exception("")
         return render_template("501.html")
 
-@app.route('/logout')
+@app.route('/logout/')
 def logout():
     session.pop('logged_in', None)
     flash("You were logged out!")
     return redirect(url_for("news"))
 
-@app.route("/news/new", methods=['POST'])
+@app.route("/news/new/", methods=['POST'])
 def add_news():
     if not session.get('logged_in'):
         abort(401)
