@@ -23,6 +23,13 @@
             </div>
             <div  class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
+                    <div class="checkbox">
+                        <label><input type="checkbox" name="published"></input>Publish?</label>
+                    </div>
+                </div>
+            </div>
+            <div  class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
                     <button type="submit" class="btn btn-default">Submit</button>
                 </div>
             </div>
@@ -37,6 +44,8 @@
                 <h1>{{post.title}}</h1><a>Edit {{post.title}}</a>
                 <p>{{post.created_date}}</p>
                 <p>{{post.body}}</p>
+                <p>{{post.published}}</p>
+                <p>{{post.first_published_date}}</p>
             </div>
         </div>
         {% endfor %}

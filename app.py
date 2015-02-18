@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, url_for, g, abort, flash, redirect, session
+import datetime
 import logging
 from whcfix.data.applicationstrings import ApplicationStrings
 from whcfix.logic.matches import Matches
@@ -59,7 +60,12 @@ def logout():
 def add_news():
     if not session.get('logged_in'):
         abort(401)
-    post = Post(title=request.form['title'], body=request.form['body'])
+    print request.form
+    post = Post(title=request.form['title'], 
+                body=request.form['body'],
+                is_published='published' in request.form)
+    if post.is_published and post.first_published_date is None:
+        post.first_published_date = datetime.datetime.now()
     s = Session()
     s.add(post)
     s.commit()

@@ -1,5 +1,6 @@
 BLOG_USER = 'BLOG_USER'
-CONNECTION_STRING = 'sqlite:////tmp/whcfix.db'
+#CONNECTION_STRING = 'sqlite:////tmp/whcfix.db'
+CONNECTION_STRING = 'sqlite:///:memory:'
 BLOG_PASSWORD = 'BLOG_PASSWORD'
 DEVELOPMENT_KEY = 'DEVELOPMENT_KEY'
 
