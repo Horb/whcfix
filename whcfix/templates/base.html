@@ -43,13 +43,18 @@
             <div class="row" style="background:#333;">
                 <div class="col-sm-9">
                     <ul class="nav nav-tabs" role="tablist">
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/news/">News</a></li>
-                        <li><a href="/teams/">Teams</a></li>
-                        <li><a href="/next_match/">Fixtures</a></li>
-                        <li><a href="/last_result/">Results</a></li>
-                        <li><a href="/recent_form/">Form Table</a></li>
-                        <li><a href="/about/">About</a></li>
+                        <li><a href="{{url_for('home')}}">Home</a></li>
+                        <li><a href="{{url_for('news')}}">News</a></li>
+                        <li><a href="{{url_for('teams')}}">Teams</a></li>
+                        <li><a href="{{url_for('next_match')}}">Fixtures</a></li>
+                        <li><a href="{{url_for('last_result')}}">Results</a></li>
+                        <li><a href="{{url_for('recent_form')}}">Form Table</a></li>
+                        <li><a href="{{url_for('about')}}">About</a></li>
+                        {% if session.logged_in %}
+                            <li><a href="{{url_for('logout')}}">Log Out</a></li>
+                        {% else %}
+                            <li><a href="{{url_for('login')}}">Log In</a></li>
+                        {%  endif %}
                         <li><a href="http://www.wakefieldhockeyclub.co.uk/">Official Site</a></li>
                     </ul>
                 </div>

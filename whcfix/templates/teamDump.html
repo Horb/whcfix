@@ -7,12 +7,12 @@
     <div style="text-align:center;" class="col-xs-12">
         <a role="button" 
            class="btn btn-default" 
-           href="/teams/{{team}}/">
+           href="{{ url_for('team', team=team)}}/">
             Full
         </a>
         <a role="button" 
            class="btn btn-default" 
-           href="/teams/{{team}}/compact/">
+           href="{{ url_for('teamBrief', team=team)}}">
             Compact
         </a>
     </div>
