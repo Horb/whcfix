@@ -86,7 +86,7 @@ def add_news():
                 body=request.form['body'],
                 is_published='published' in request.form)
     if 'published' in request.form:
-        publish_post(post)
+        post.publish()
     s = Session()
     s.add(post)
     s.commit()
