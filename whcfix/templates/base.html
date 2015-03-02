@@ -51,6 +51,11 @@
                         <li><a href="/recent_form/">Form Table</a></li>
                         <li><a href="/about/">About</a></li>
                         <li><a href="http://www.wakefieldhockeyclub.co.uk/">Official Site</a></li>
+                        {% if session.logged_in %}
+                        <li><a href="/logout/">Logout</a></li>
+                        {% else %}
+                        <li><a href="/login/">Log In</a></li>
+                        {% endif %}
                     </ul>
                 </div>
                 <div class="col-sm-3">
