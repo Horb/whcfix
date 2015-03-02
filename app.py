@@ -32,7 +32,6 @@ def before_request():
 def post_detail(post_id):
     s = Session()
     post = s.query(Post).filter(Post.id == post_id).first()
-    print post
     if post:
         logging.debug("Found post with id=%s" % post.id)
         if request.method == 'POST':
@@ -42,7 +41,6 @@ def post_detail(post_id):
             post.is_published = 'published' in request.form
             if 'published' in request.form:
                 post.publish()
-            print post
             s.commit()
             flash("Successfully Saved!")
             return redirect(url_for('post_detail', post_id=post.id))
@@ -78,18 +76,17 @@ def news():
 def logout():
     session.pop('logged_in', None)
     flash("You were logged out!")
-    return redirect(url_for("news"))
+    return redirect(url_for("home"))
 
 @app.route("/news/new/", methods=['POST'])
 def add_news():
     if not session.get('logged_in'):
         abort(401)
-    print request.form
     post = Post(title=request.form['title'], 
                 body=request.form['body'],
                 is_published='published' in request.form)
     if 'published' in request.form:
-        post.publish()
+        publish_post(post)
     s = Session()
     s.add(post)
     s.commit()
