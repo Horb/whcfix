@@ -15,7 +15,7 @@
     <tbody>                    
         {% for team_form in recent_form|sort(True) %}
         <tr>
-            <td><a href="/teams/{{team_form.teamName}}/">{{team_form.teamName}}</a></td>
+            <td><a href="/beta/teams/{{team_form.teamName}}/">{{team_form.teamName}}</a></td>
             <td>{{team_form.played()}}</td>
             <td>{{team_form.wins()}}</td>
             <td>{{team_form.draws()}}</td>
