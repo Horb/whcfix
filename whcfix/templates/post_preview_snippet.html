@@ -1,0 +1,2 @@
+<h4>{{post.title}}</h4>
+<p>{{post.body[:249]}}{% if post.body[249:] %}<a href="{{ url_for('post_detail', post_id=post.id )}}">... read more</a>{% endif %}</p>
