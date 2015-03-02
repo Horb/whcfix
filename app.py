@@ -4,7 +4,7 @@ import logging
 from whcfix.data.applicationstrings import ApplicationStrings
 from whcfix.logic.matches import Matches
 from whcfix.logic.divisions import Divisions
-from whcfix.ui.elements import LastResultDashboardItem, NextMatchDashboardItem, TodaysMatchesDashboardItem
+from whcfix.ui.elements import LastResultDashboardItem, NextMatchDashboardItem, TodaysMatchesDashboardItem, NewsPostsDashboardItem, TwitterFeedDashboardItem
 import whcfix.settings as settings
 import os
 
@@ -28,6 +28,30 @@ from whcfix.data.models import Post
 def before_request():
     init_db()
 
+@app.route('/news/post/<int:post_id>/', methods=['GET', 'POST'])
+def post_detail(post_id):
+    s = Session()
+    post = s.query(Post).filter(Post.id == post_id).first()
+    print post
+    if post:
+        logging.debug("Found post with id=%s" % post.id)
+        if request.method == 'POST':
+            logging.debug("POST recieved")
+            post.title = request.form['title']
+            post.body = request.form['body']
+            post.is_published = 'published' in request.form
+            if 'published' in request.form:
+                post.publish()
+            print post
+            s.commit()
+            flash("Successfully Saved!")
+            return redirect(url_for('post_detail', post_id=post.id))
+        else:
+            logging.debug("GET recieved")
+            return render_template('post_detail.html', post=post)
+    else:
+        abort(404)
+
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
     error = None
@@ -44,7 +68,7 @@ def login():
 @app.route("/news/")
 def news():
     try:
-        posts = Session().query(Post).all()
+        posts = Session().query(Post).order_by(Post.first_published_date, Post.id).all()[::-1]
         return render_template("news.html", posts=posts)
     except Exception:
         logging.exception("")
@@ -64,8 +88,8 @@ def add_news():
     post = Post(title=request.form['title'], 
                 body=request.form['body'],
                 is_published='published' in request.form)
-    if post.is_published and post.first_published_date is None:
-        post.first_published_date = datetime.datetime.now()
+    if 'published' in request.form:
+        publish_post(post)
     s = Session()
     s.add(post)
     s.commit()
@@ -78,15 +102,17 @@ def home():
         matches = Matches()
         teams = matches.teamNames("Wakefield")
         kwargs = request.args.to_dict()
+        posts = Session().query(Post).filter(Post.is_published==True).order_by(Post.first_published_date).all()[::-1]
         nextMatches = matches.getNextMatches(teams, **kwargs)
         lastResults = matches.getLastResults(teams, **kwargs)
         todaysMatches = matches.getTodaysMatches(teams, **kwargs)
         dashboard_items = [LastResultDashboardItem(lastResults), 
                            NextMatchDashboardItem(nextMatches), 
+                           NewsPostsDashboardItem(posts), 
+                           TwitterFeedDashboardItem(), 
                            TodaysMatchesDashboardItem(todaysMatches)]
         # Only include dashboard items that have content to display.
-        dashboard_items = [ di for di in dashboard_items
-                            if di.listOfMatches ]
+        dashboard_items = [ di for di in dashboard_items if di.has_content() ]
 
         return render_template("dashboard.html",
                                strings=ApplicationStrings(),

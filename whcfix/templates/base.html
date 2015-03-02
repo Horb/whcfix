@@ -63,6 +63,20 @@
             </div>
             {% block breadcrumbs %}
             {% endblock %}
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <div class="row">
+                    <div>
+                        <h3>Notifications</h3>
+                        <ul>
+                            {% for message in messages %}
+                                <li>{{message}}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+            {% endwith %}
             {% block body %}
             <p>Page intentionally blank.</p>
             {% endblock %}

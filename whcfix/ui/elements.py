@@ -9,7 +9,6 @@ class DashboardItem(object):
     FRIDAY = 5
     SATURDAY = 6
     SUNDAY = 7
-    template = "dashboard_item_snippet.html"
     show_result_column = True
 
     def sort_priority(self, isoweekday):
@@ -21,6 +20,33 @@ class DashboardItem(object):
 
     def __lt__(self, other):
         return not self.__gt__(other)
+
+    @property
+    def template(self):
+        return 'dashboard_item_snippet.html'
+
+    def has_content(self):
+        ''' Override this method. '''
+        return False
+
+class NewsPostsDashboardItem(DashboardItem):
+    title = 'News'
+
+    def __init__(self, posts):
+        super(NewsPostsDashboardItem, self).__init__()
+        self.posts = posts
+
+    def sort_priority(self, isoweekday):
+        return 200
+
+    @property
+    def template(self):
+        return 'news_feed_snippet.html'
+
+    def has_content(self):
+        ''' Override this method. '''
+        return len(self.posts) > 0
+
 
 class NextMatchDashboardItem(DashboardItem):
     title = 'Next Match'
@@ -36,6 +62,9 @@ class NextMatchDashboardItem(DashboardItem):
         else:
             return 10
 
+    def has_content(self):
+        return len(self.listOfMatches) > 0
+
 
 class LastResultDashboardItem(DashboardItem):
     title = 'Last Result'
@@ -50,6 +79,8 @@ class LastResultDashboardItem(DashboardItem):
         else:
             return 10
 
+    def has_content(self):
+        return len(self.listOfMatches) > 0
 
 class TodaysMatchesDashboardItem(DashboardItem):
     title = "Today"
@@ -60,3 +91,18 @@ class TodaysMatchesDashboardItem(DashboardItem):
 
     def sort_priority(self, isoweekday):
         return 1000
+    
+    def has_content(self):
+        return len(self.listOfMatches) > 0
+
+class TwitterFeedDashboardItem(DashboardItem):
+    template = 'whc_twitter_feed.html'
+
+    def __init__(self):
+        super(TwitterFeedDashboardItem, self).__init__()
+        
+    def sort_priority(self, isoweekday):
+        return 75
+
+    def has_content(self):
+        return True
