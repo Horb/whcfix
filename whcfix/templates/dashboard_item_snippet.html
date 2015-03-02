@@ -18,7 +18,7 @@
             <td class="hidden-sm hidden-xs">{{match.date}}</td>
             <td class="hidden-sm hidden-xs">{{match.time}}</td>
             {% if "Wakefield" in match.home %}
-            <td><a href="/beta/teams/{{match.home}}/">{{match.home}}</a></td>
+            <td><a href="{{url_for('team', team=match.home)}}">{{match.home}}</a></td>
             {% else %}
             <td>{{match.home}}</td>
             {% endif %}
@@ -26,7 +26,7 @@
             <td style="white-space:nowrap;">{{match.homeGoals}} - {{match.awayGoals}}</td>
             {% endif %}
             {% if "Wakefield" in match.away %}
-            <td><a href="/beta/teams/{{match.away}}/">{{match.away}}</a></td>
+            <td><a href="{{url_for('team', team=match.away)}}">{{match.away}}</a></td>
             {% else %}
             <td>{{match.away}}</td>
             {% endif %}

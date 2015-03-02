@@ -1,7 +1,6 @@
 {% if dashboard_item.posts %}
 <h3>{{ dashboard_item.title }}</h3>
     {% for post in dashboard_item.posts %}
-        <h4>{{post.title}}</h4>
-        <p>{{post.body[:249]}}{% if post.body[249:] %}<a href="">... read more</a>{% endif %}</p>
+            {% include 'post_preview_snippet.html' %}
     {% endfor %}
 {% endif %}
