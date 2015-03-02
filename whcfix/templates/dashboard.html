@@ -3,22 +3,11 @@
 {% endblock %}
 
 {% block body %}
-    {% for dashboard_item in dashboard_items|sort(reverse=True) %}
-        {% if loop.first %}
-            <div class="row">
-                <div class="col-xs-12 col-md-9">
-                    {% include dashboard_item.template %}
-                </div>
-                <div class="col-xs-12 col-md-3">
-                    {% include "whc_twitter_feed.html" %}
-                </div>
+    <div class="row">
+        {% for dashboard_item in dashboard_items|sort(reverse=True) %}
+            <div class="col-sm-12 col-md-6">
+            {% include dashboard_item.template %}
             </div>
-        {% else %}
-            <div class="row">
-                <div class="col-xs-9">
-                {% include dashboard_item.template %}
-                </div>
-            </div>
-        {% endif %}
-    {% endfor %}
+        {% endfor %}
+    </div>
 {% endblock %}

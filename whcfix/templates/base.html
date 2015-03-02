@@ -44,11 +44,18 @@
                 <div class="col-sm-9">
                     <ul class="nav nav-tabs" role="tablist">
                         <li><a href="/beta">Home</a></li>
+                        <li><a href="/beta/news/">News</a></li>
                         <li><a href="/beta/teams/">Teams</a></li>
                         <li><a href="/beta/next_match/">Fixtures</a></li>
                         <li><a href="/beta/last_result/">Results</a></li>
                         <li><a href="/beta/recent_form/">Form Table</a></li>
                         <li><a href="/beta/about/">About</a></li>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/teams/">Teams</a></li>
+                        <li><a href="/next_match/">Fixtures</a></li>
+                        <li><a href="/last_result/">Results</a></li>
+                        <li><a href="/recent_form/">Form Table</a></li>
+                        <li><a href="/about/">About</a></li>
                         <li><a href="http://www.wakefieldhockeyclub.co.uk/">Official Site</a></li>
                     </ul>
                 </div>
@@ -62,6 +69,20 @@
             </div>
             {% block breadcrumbs %}
             {% endblock %}
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <div class="row">
+                    <div>
+                        <h3>Notifications</h3>
+                        <ul>
+                            {% for message in messages %}
+                                <li>{{message}}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+            {% endwith %}
             {% block body %}
             <p>Page intentionally blank.</p>
             {% endblock %}

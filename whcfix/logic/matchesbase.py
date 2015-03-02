@@ -1,3 +1,4 @@
+import logging
 import whcfix.settings as settings
 from whcfix.data.yorkshirehockeyassociationadapter import YorkshireHockeyAssociationAdapter
 from whcfix.data.fixturesliveadapter import FixturesLiveAdapter
@@ -8,8 +9,11 @@ class MatchesBase(object):
 
     def __init__(self, auto_init_data=True):
         self.listOfMatches = []
-        if auto_init_data:
-            self.init_data()
+        try:
+            if auto_init_data:
+                self.init_data()
+        except Exception as ex:
+            logging.exception("Failed to initialise MatchesBase.")
 
     def init_data(self):
         pc = PickleCache('cache', 60 * 60)
