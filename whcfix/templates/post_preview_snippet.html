@@ -1,2 +1,5 @@
 <h4>{{post.title}}</h4>
-<p>{{post.body[:249]}}{% if post.body[249:] %}<a href="{{ url_for('post_detail', post_id=post.id )}}">... read more</a>{% endif %}</p>
+{% if post.image_file_name and show_image %}
+<img width="100%" src="{{url_for('uploads', filename=post.image_file_name)}}"/>
+{% endif %}
+<p>{{post.body[:249]}}<a href="{{ url_for('post_detail', post_id=post.id )}}">{% if post.body[249:] %}...{% endif %}read more</a></p>

@@ -1,6 +1,11 @@
 {% if dashboard_item.posts %}
 <h3>{{ dashboard_item.title }}</h3>
-    {% for post in dashboard_item.posts %}
-            {% include 'post_preview_snippet.html' %}
+    {% for post in dashboard_item.posts[:3] %}
+        {% if loop.first %}
+            {% set show_image = True %}
+        {% else %}
+            {% set show_image = False %}
+        {% endif %}
+        {% include 'post_preview_snippet.html' %}
     {% endfor %}
 {% endif %}

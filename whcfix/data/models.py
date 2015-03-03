@@ -15,6 +15,7 @@ class Post(Base):
     body = Column(Text)
     is_published = Column(Boolean, nullable=False)
     first_published_date = Column(DateTime)
+    image_file_name = Column(String(250))
     
     def __repr__(self):
         return "<Post (id='%s' title='%s')>" % (self.id, self.title)

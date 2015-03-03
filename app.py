@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, url_for, g, abort, flash, redirect, session
+from flask import Flask, render_template, request, url_for, g, abort, flash, redirect, session, send_from_directory
+from werkzeug import secure_filename
 import datetime
 import logging
 from whcfix.data.applicationstrings import ApplicationStrings
@@ -21,12 +22,20 @@ app.config.update(dict(
     SECRET_KEY=settings.DEVELOPMENT_KEY,
 ))
 
+
+app.config['UPLOAD_FOLDER'] = settings.UPLOAD_FOLDER
+
+
 from whcfix.data.database import init_db, get_db
 from whcfix.data.models import Post
 
 @app.before_first_request
 def before_first_request():
     init_db()
+
+@app.route('/uploads/<filename>/')
+def uploads(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 @app.route('/news/post/<int:post_id>/', methods=['GET', 'POST'])
 def post_detail(post_id):
@@ -78,15 +87,25 @@ def logout():
     flash("You were logged out!")
     return redirect(url_for("home"))
 
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1] in settings.ALLOWED_UPLOAD_EXTENSIONS
+
 @app.route("/news/new/", methods=['POST'])
 def add_news():
     if not session.get('logged_in'):
         abort(401)
-    post = Post(title=request.form['title'], 
-                body=request.form['body'],
-                is_published='published' in request.form)
+    post = Post()
+    post.title=request.form['title']
+    post.body=request.form['body']
+    post.is_published='published' in request.form
     if 'published' in request.form:
         post.publish()
+    file = request.files['image']
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        image_file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(image_file_path)
+        post.image_file_name = filename
     with get_db() as db:
         db.add(post)
     flash("New entry was successfully posted!")

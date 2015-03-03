@@ -5,6 +5,9 @@ CONNECTION_STRING = 'mysql://whcfix_user:whcfix_password@localhost/DEV_whcfix'
 BLOG_PASSWORD = 'BLOG_PASSWORD'
 DEVELOPMENT_KEY = 'DEVELOPMENT_KEY'
 
+UPLOAD_FOLDER  = '/var/www/uploads'
+ALLOWED_UPLOAD_EXTENSIONS = ('png', 'jpg', 'jpeg', 'gif')
+
 LOG_FORMAT = '%(module)s %(funcName)s %(lineno)s %(message)s'
 
 CONFIGS = {
