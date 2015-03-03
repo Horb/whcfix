@@ -21,34 +21,33 @@ app.config.update(dict(
     SECRET_KEY=settings.DEVELOPMENT_KEY,
 ))
 
-from whcfix.data.database import Session, init_db, test_post
+from whcfix.data.database import init_db, get_db
 from whcfix.data.models import Post
 
 @app.before_first_request
-def before_request():
+def before_first_request():
     init_db()
 
 @app.route('/news/post/<int:post_id>/', methods=['GET', 'POST'])
 def post_detail(post_id):
-    s = Session()
-    post = s.query(Post).filter(Post.id == post_id).first()
-    if post:
-        logging.debug("Found post with id=%s" % post.id)
-        if request.method == 'POST':
-            logging.debug("POST recieved")
-            post.title = request.form['title']
-            post.body = request.form['body']
-            post.is_published = 'published' in request.form
-            if 'published' in request.form:
-                post.publish()
-            s.commit()
-            flash("Successfully Saved!")
-            return redirect(url_for('post_detail', post_id=post.id))
+    with get_db() as db:
+        post = db.query(Post).filter(Post.id == post_id).first()
+        if post:
+            logging.debug("Found post with id=%s" % post.id)
+            if request.method == 'POST':
+                logging.debug("POST recieved")
+                post.title = request.form['title']
+                post.body = request.form['body']
+                post.is_published = 'published' in request.form
+                if 'published' in request.form:
+                    post.publish()
+                flash("Successfully Saved!")
+                return redirect(url_for('post_detail', post_id=post.id))
+            else:
+                logging.debug("GET recieved")
+                return render_template('post_detail.html', post=post)
         else:
-            logging.debug("GET recieved")
-            return render_template('post_detail.html', post=post)
-    else:
-        abort(404)
+            abort(404)
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
@@ -66,8 +65,9 @@ def login():
 @app.route("/news/")
 def news():
     try:
-        posts = Session().query(Post).order_by(Post.first_published_date, Post.id).all()[::-1]
-        return render_template("news.html", posts=posts)
+        with get_db() as db:
+            posts = db.query(Post).order_by(Post.first_published_date, Post.id).all()[::-1]
+            return render_template("news.html", posts=posts)
     except Exception:
         logging.exception("")
         return render_template("501.html")
@@ -87,33 +87,33 @@ def add_news():
                 is_published='published' in request.form)
     if 'published' in request.form:
         post.publish()
-    s = Session()
-    s.add(post)
-    s.commit()
+    with get_db() as db:
+        db.add(post)
     flash("New entry was successfully posted!")
     return redirect(url_for('news'))
 
 @app.route("/")
 def home():
     try:
-        matches = Matches()
-        teams = matches.teamNames("Wakefield")
-        kwargs = request.args.to_dict()
-        posts = Session().query(Post).filter(Post.is_published==True).order_by(Post.first_published_date).all()[::-1]
-        nextMatches = matches.getNextMatches(teams, **kwargs)
-        lastResults = matches.getLastResults(teams, **kwargs)
-        todaysMatches = matches.getTodaysMatches(teams, **kwargs)
-        dashboard_items = [LastResultDashboardItem(lastResults), 
-                           NextMatchDashboardItem(nextMatches), 
-                           NewsPostsDashboardItem(posts), 
-                           TwitterFeedDashboardItem(), 
-                           TodaysMatchesDashboardItem(todaysMatches)]
-        # Only include dashboard items that have content to display.
-        dashboard_items = [ di for di in dashboard_items if di.has_content() ]
+        with get_db() as db:
+            matches = Matches()
+            teams = matches.teamNames("Wakefield")
+            kwargs = request.args.to_dict()
+            posts = db.query(Post).filter(Post.is_published==True).order_by(Post.first_published_date).all()[::-1]
+            nextMatches = matches.getNextMatches(teams, **kwargs)
+            lastResults = matches.getLastResults(teams, **kwargs)
+            todaysMatches = matches.getTodaysMatches(teams, **kwargs)
+            dashboard_items = [LastResultDashboardItem(lastResults), 
+                               NextMatchDashboardItem(nextMatches), 
+                               NewsPostsDashboardItem(posts), 
+                               TwitterFeedDashboardItem(), 
+                               TodaysMatchesDashboardItem(todaysMatches)]
+            # Only include dashboard items that have content to display.
+            dashboard_items = [ di for di in dashboard_items if di.has_content() ]
 
-        return render_template("dashboard.html",
-                               strings=ApplicationStrings(),
-                               dashboard_items=dashboard_items)
+            return render_template("dashboard.html",
+                                   strings=ApplicationStrings(),
+                                   dashboard_items=dashboard_items)
     except Exception:
         logging.exception("")
         return render_template("501.html")
