@@ -55,6 +55,11 @@
                     <td class="hidden-sm hidden-xs" style="white-space:nowrap;">{% if match.isResult() %}{{match.homeGoals}}{% endif %} - {% if match.isResult() %}{{match.awayGoals}}{% endif %}</td>
                     <td class="hidden-sm hidden-xs">{{match.away}}</td>
                     <td class="hidden-md hidden-lg">{{match.home}}<br/>{% if match.isResult() %}{{match.homeGoals}}{% endif %} - {% if match.isResult() %}{{match.awayGoals}}{% endif %}</br>{{match.away}}</td>
+                    <td><a href="{{url_for('submit_match_report', 
+                                           home=match.home,
+                                           away=match.away,
+                                           date=match.date,
+                                           time=match.time)}}">Submit Match Report</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

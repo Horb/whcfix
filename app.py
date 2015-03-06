@@ -18,10 +18,7 @@ app = Flask(__name__,
             static_folder='whcfix/static',
             static_url_path='/static')
 
-app.config.update(dict(
-    SECRET_KEY=settings.DEVELOPMENT_KEY,
-))
-
+app.secret_key = settings.DEVELOPMENT_KEY
 
 app.config['UPLOAD_FOLDER'] = settings.UPLOAD_FOLDER
 
@@ -36,6 +33,19 @@ def before_first_request():
 @app.route('/uploads/<filename>/')
 def uploads(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+@app.route('/submit_match_report/<home>/<away>/<date>/<time>/')
+def submit_match_report(home, away, date, time, methods=['GET', 'POST']):
+    if request.method == 'POST':
+        pass # parse and redirect to metch report
+        return redirect(url_for('match_report', id=match_report.id))
+    else: 
+        pass # return the form
+        return render_template("submit_match_report.html", 
+                               home=home, 
+                               away=away, 
+                               date=date,
+                               time=time) 
 
 @app.route('/news/post/<int:post_id>/', methods=['GET', 'POST'])
 def post_detail(post_id):
