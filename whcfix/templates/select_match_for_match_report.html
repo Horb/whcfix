@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="row">
+    <div class="xs-col-12">
+        <h3>Select a match.<h3>
+        <div role="group" class="btn-group-vertical">
+        {% for m in matches %}
+        {% if m.isResult() %}
+            <a type="button"
+                class="btn btn-default" href="{{url_for('submit_match_report', 
+                                           home=m.home, away=m.away, 
+                                           date=m.date, time=m.time)}}"
+                                           >{{m}}</a>
+
+        {% endif %}
+        {% endfor %}
+        </div>
+        </div>
+</div>
+{% endblock %}

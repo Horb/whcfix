@@ -5,35 +5,9 @@
 {% block body %}
     <div class="row">
     {% if session.logged_in %}
-            <div class="col-sm-12 col-md-6">
+        <div class="col-sm-12 col-md-6">
             <h3>Edit Post</h3>
-            <form action="{{ url_for('post_detail', post_id=post.id) }}" method="post" class="form-horizontal">
-                <div  class="form-group">
-                    <label for="Title" class="col-sm-2 control-label">Title</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="Title" 
-                        value="{{post.title}}" name="title"></input>
-                    </div>
-                </div>
-                <div  class="form-group">
-                    <label for="Body" class="col-sm-2 control-label">Body</label>
-                    <div class="col-sm-10">
-                        <textarea style="height:400px;" type="text" class="form-control" id="Body" name="body">{{post.body}}</textarea>
-                    </div>
-                </div>
-                <div  class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <div class="checkbox">
-                            <label><input type="checkbox" name="published" {% if post.is_published %} checked="checked"{% endif %}></input>Publish?</label>
-                        </div>
-                    </div>
-                </div>
-                <div  class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-default">Submit</button>
-                    </div>
-                </div>
-            </form>
+            {% include 'post_form.html' %}
         </div>
         <div class="col-sm-12 col-md-6">
             <h3>Writing Your Post</h3>
@@ -44,10 +18,7 @@
             </ul>
         </div>
     {% else %}
-        <div class="col-sm-12 col-md-6">
-            <h1>{{post.title}}</h1>
-            <p style="white-space:pre-line;">{{post.body}}</p>
-        </div>
+        {% include 'post_detail_snippet.html' %}
     {% endif %}
     {% if not session.logged_in %}
         <div class="col-sm-12 col-md-6">

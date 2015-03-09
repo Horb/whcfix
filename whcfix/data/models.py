@@ -5,7 +5,6 @@ from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, Foreign
 # A base class such that models can be declared in the application
 Base = declarative_base()
 
-
 class Post(Base):
 
     __tablename__ = 'posts'
@@ -21,6 +20,9 @@ class Post(Base):
     def __repr__(self):
         return "<Post (id='%s' title='%s')>" % (self.id, self.title)
 
+    def unpublish(self):
+        self.is_published = False
+
     def publish(self):
         self.is_published = True
         if self.first_published_date is None:
@@ -30,7 +32,13 @@ class Post(Base):
             'polymorphic_identity' : 'post',
             }
 
-class MatchReport(Base):
+
+def match_reports_for(team, db):
+    match_reports = db.query(MatchReport).all()
+    match_reports = [mr for mr in match_reports if mr.doesFeature(team)]
+    return match_reports
+
+class MatchReport(Post):
 
     __tablename__ = 'matchreports'
 
@@ -43,3 +51,6 @@ class MatchReport(Base):
             'polymorphic_identity' : 'match_report',
             }
 
+    def doesFeature(self, team):
+        r = team in (self.home, self.away)
+        return r 

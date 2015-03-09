@@ -1,5 +1,30 @@
-<h4>{{post.title}}</h4>
+{% if post.is_published or session.logged_in %}
+<h4>{% if not post.is_published %}[Unpublished] {% endif %}{{post.title}}</h4>
 {% if post.image_file_name and show_image %}
 <img width="100%" src="{{url_for('uploads', filename=post.image_file_name)}}"/>
 {% endif %}
-<p>{{post.body[:249]}}<a href="{{ url_for('post_detail', post_id=post.id )}}">{% if post.body[249:] %}...{% endif %}read more</a></p>
+{% if session.logged_in %}
+<div class="btn-group" role="group" aria-label="...">
+    {% if post.is_published %}
+    <a 
+        type="button" 
+        class="btn btn-default" 
+        href="{{url_for('unpublish_post', post_id=post.id)}}">Unpublish</a>
+    {% else %}
+    <a 
+        type="button" 
+        class="btn btn-default" 
+        href="{{url_for('publish_post', post_id=post.id)}}">Publish</a>
+    {% endif  %}
+    <a 
+        type="button" 
+        class="btn btn-default" 
+        href="{{url_for('post_detail', post_id=post.id)}}">Edit</a>
+    <a 
+        type="button" 
+        class="btn btn-default" 
+        href="{{url_for('delete_post', post_id=post.id)}}">Delete</a>
+</div>
+{% endif %}
+<p style="white-space:pre-line;">{{post.body[:249]}}<a href="{{ url_for('post_detail', post_id=post.id )}}">{% if post.body[249:] %}...{% endif %} read more</a></p>
+{% endif %}
