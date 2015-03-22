@@ -36,6 +36,8 @@ class Post(Base):
 def match_reports_for(team, db):
     match_reports = db.query(MatchReport).all()
     match_reports = [mr for mr in match_reports if mr.doesFeature(team)]
+    match_reports.sort(key=lambda mr: mr.push_back)
+    match_reports.reverse()
     return match_reports
 
 class MatchReport(Post):
