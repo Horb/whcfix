@@ -1,5 +1,19 @@
 import logging
+from werkzeug import secure_filename
+from flask import request
 
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1] in settings.ALLOWED_UPLOAD_EXTENSIONS
+
+def save_image_from_form(form, image_field):
+    file = request.files[image_field]
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        image_file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(image_file_path)
+        return filename
+    else:
+        return None
 
 def log_exceptions(func):
     def _log_exceptions(*args, **kwargs):
