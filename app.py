@@ -1,15 +1,11 @@
-from flask import Flask, render_template, request, url_for, g, abort, flash, redirect, session, send_from_directory
-import datetime
 import logging
-from whcfix.data.applicationstrings import ApplicationStrings
-from whcfix.data.database import init_db, get_db
-from whcfix.data.models import Post, MatchReport, match_reports_for
-from whcfix.logic.matches import Matches
-from whcfix.logic.divisions import Divisions
-from whcfix.ui.elements import LastResultDashboardItem, NextMatchDashboardItem, TodaysMatchesDashboardItem, NewsPostsDashboardItem, TwitterFeedDashboardItem
+from flask import Flask, render_template
+from whcfix.data.database import init_db
+from whcfix.fixtures import fixtures
+from whcfix.base import base
+from whcfix.news import news
 import whcfix.settings as settings
-from whcfix.utils import lookup_and_do, save_image_from_form
-import os
+
 
 app = Flask(__name__, template_folder='whcfix/templates',
             static_folder='whcfix/static', static_url_path='/static')
@@ -25,7 +21,12 @@ def handle_exception(err):
 def before_first_request():
     init_db()
 
+app.register_blueprint(base)
+app.register_blueprint(fixtures)
+app.register_blueprint(news)
+
 if __name__ == '__main__':
+    import os
     current_directory = os.path.dirname(os.path.realpath(__file__))
     os.chdir(current_directory)
     logging.basicConfig(level=logging.DEBUG)

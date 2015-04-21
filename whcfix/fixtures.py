@@ -1,4 +1,5 @@
 from whcfix.logic.matches import Matches
+from whcfix.logic.divisions import Divisions
 from flask import render_template, request, Blueprint
 from whcfix.data.database import get_db
 from whcfix.data.models import Post, match_reports_for

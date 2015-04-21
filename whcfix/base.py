@@ -7,9 +7,9 @@ from whcfix.data.applicationstrings import ApplicationStrings
 import whcfix.settings as settings
 from flask import url_for, flash, redirect, session, send_from_directory
 
-whcfix_base = Blueprint('whcfix_base', __name__, template_folder='whcfix/templates')
+base = Blueprint('base', __name__, template_folder='whcfix/templates')
 
-@whcfix_base.route('/')
+@base.route('/')
 def home():
     with get_db() as db:
         matches = Matches()
@@ -29,15 +29,15 @@ def home():
         return render_template("dashboard.html", strings=ApplicationStrings(),
                                dashboard_items=dashboard_items)
 
-@whcfix_base.route("/about/")
+@base.route("/about/")
 def about():
     return render_template("about.html")
 
-@whcfix_base.route('/uploads/<filename>/')
+@base.route('/uploads/<filename>/')
 def uploads(filename):
     return send_from_directory(settings.UPLOAD_FOLDER, filename)
 
-@whcfix_base.route('/login/', methods=['GET', 'POST'])
+@base.route('/login/', methods=['GET', 'POST'])
 def login():
     error = None
     if request.method == 'POST':
@@ -47,11 +47,11 @@ def login():
         else:
             session['logged_in'] = True
             flash('You were logged in!')
-            return redirect(url_for('news'))
+            return redirect(url_for('news.news_home'))
     return render_template('login.html', error=error)
 
-@whcfix_base.route('/logout/')
+@base.route('/logout/')
 def logout():
     session.pop('logged_in', None)
     flash("You were logged out!")
-    return redirect(url_for("home"))
+    return redirect(url_for("base.home"))

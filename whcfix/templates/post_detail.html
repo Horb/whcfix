@@ -24,7 +24,7 @@
         <div class="col-sm-12 col-md-6">
             <h3>Log In</h3>
             <p>Log in to add and edit content.</p>
-            <form action="{{ url_for('login') }}" method="POST">
+            <form action="{{ url_for('base.login') }}" method="POST">
                 <label for="UsernameInput">Username</label>
                 <input type="text" class="form-control" id="UsernameInput" placeholder="Enter Username" name="username"></input>
                 <label for="PasswordInput">Password</label>

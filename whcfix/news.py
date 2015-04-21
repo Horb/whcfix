@@ -1,11 +1,24 @@
+import logging
+import datetime
+from whcfix.logic.matches import Matches
+from flask import render_template, request, Blueprint
+from whcfix.data.database import get_db
+from whcfix.data.models import Post, match_reports_for
+import whcfix.ui.elements as elements 
+from whcfix.data.applicationstrings import ApplicationStrings
+import whcfix.settings as settings
+from flask import url_for, flash, redirect, session, send_from_directory
 
-@app.route("/select_match_for_match_report/<team>/")
+news = Blueprint('news', __name__, template_folder='whcfix/templates')
+
+
+@news.route("/select_match_for_match_report/<team>/")
 def select_match_for_match_report(team):
     matches = Matches().get_matches(lambda m: m.doesFeature(team))
     return render_template('select_match_for_match_report.html', 
                            matches=matches, team=team)
 
-@app.route('/submit_match_report/<home>/<away>/<date>/<time>/', methods=['GET', 'POST'])
+@news.route('/submit_match_report/<home>/<away>/<date>/<time>/', methods=['GET', 'POST'])
 def submit_match_report(home, away, date, time):
     if request.method == 'POST':
         title = "Match Report: %s vs %s" % (home, away)
@@ -23,12 +36,12 @@ def submit_match_report(home, away, date, time):
         with get_db() as db:
             db.add(match_report)
         flash("Thank you for your submission.")
-        return redirect(url_for('home'))
+        return redirect(url_for('news.news_home'))
     else: 
         return render_template("submit_match_report.html", home=home, 
                                away=away, date=date, time=time) 
 
-@app.route('/news/post/<int:post_id>/', methods=['GET', 'POST'])
+@news.route('/news/post/<int:post_id>/', methods=['GET', 'POST'])
 def post_detail(post_id):
     with get_db() as db:
         post = db.query(Post).filter(Post.id == post_id).first()
@@ -43,14 +56,14 @@ def post_detail(post_id):
                     post.publish()
                 post.image_file_name = save_image_from_form(request.form, 'image')
                 flash("Successfully Saved!")
-                return redirect(url_for('post_detail', post_id=post.id))
+                return redirect(url_for('news.post_detail', post_id=post.id))
             else:
                 logging.debug("GET recieved")
                 return render_template('post_detail.html', post=post)
         else:
             abort(404)
 
-@app.route("/delete_post/<int:post_id>/")
+@news.route("/delete_post/<int:post_id>/")
 def delete_post(post_id):
     kwargs = request.args.to_dict()
     with get_db() as db:
@@ -69,7 +82,7 @@ def delete_post(post_id):
         else:
             db.delete(post)
             flash("Post deleted.")
-            return redirect(url_for("news"))
+            return redirect(url_for("news.news_home"))
 
 def lookup_and_do(Model, id, action, redirect_url, redirect_parameters):
     if not session['logged_in']:
@@ -79,29 +92,29 @@ def lookup_and_do(Model, id, action, redirect_url, redirect_parameters):
             instance = db.query(Model).filter(Model.id == id).first()
             if instance:
                 action(instance)
-                return redirect(url_for(redirect_url, **redirect_parameters))
+                return redirect(url_for("news." + redirect_url, **redirect_parameters))
             else:
                 abort(404)
 
-@app.route("/unpublish_post/<int:post_id>/")
+@news.route("/unpublish_post/<int:post_id>/")
 def unpublish_post(post_id):
     return lookup_and_do(Post, post_id, 
                          lambda p: p.unpublish(), 
                          'news', { 'post_id': post_id})
 
-@app.route("/publish_post/<int:post_id>/")
+@news.route("/publish_post/<int:post_id>/")
 def publish_post(post_id):
     return lookup_and_do(Post, post_id,
                          lambda p: p.publish(),
                          'news', { 'post_id' : post_id})
 
-@app.route("/news/")
-def news():
+@news.route("/news/")
+def news_home():
     with get_db() as db:
         posts = db.query(Post).order_by(Post.first_published_date, Post.id).all()[::-1]
         return render_template("news.html", posts=posts)
 
-@app.route("/news/new/", methods=['POST'])
+@news.route("/news/new/", methods=['POST'])
 def add_news():
     post = Post()
     post.title=request.form['title']
@@ -113,4 +126,4 @@ def add_news():
     with get_db() as db:
         db.add(post)
     flash("New entry was successfully posted!")
-    return redirect(url_for('news'))
+    return redirect(url_for('news.news_home'))

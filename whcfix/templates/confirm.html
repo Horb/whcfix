@@ -4,7 +4,7 @@
     <div class="col-xs-12">
         <h3>Please Confirm</h3>
         <p>{{message}}</p>
-        <p><a href="{{url_for('delete_post', post_id=post.id)}}?confirmed=True">{{action_message}}</a></p>
+        <p><a href="{{url_for('news.delete_post', post_id=post.id)}}?confirmed=True">{{action_message}}</a></p>
     </div>
 </div>
 {% endblock %}

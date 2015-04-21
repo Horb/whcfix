@@ -1,8 +1,8 @@
 <form 
     {% if post is defined %}
-      action="{{ url_for('post_detail', post_id=post.id)}}"
+      action="{{ url_for('news.post_detail', post_id=post.id)}}"
     {% else %}
-      action="{{ url_for('add_news') }}" 
+      action="{{ url_for('news.add_news') }}" 
     {% endif %}
       class="form-horizontal"
       enctype="multipart/form-data" 

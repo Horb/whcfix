@@ -4,7 +4,7 @@
         {% for team in teams|sort %}
         <tr>
             <td>
-                <a href="{{ url_for('team', team=team)}}">{{ team }}</a>
+                <a href="{{ url_for('fixtures.team', team=team)}}">{{ team }}</a>
             </td>
         </tr>
         {% endfor %}

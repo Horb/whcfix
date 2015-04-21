@@ -8,7 +8,7 @@
         <div class="jumbotron">
             <h3>Create A Match Report</h3>
             <p>Create a match report for a recent {{ team }} game.</p>
-            <p><a class="btn btn-primary btn-lg" href="{{url_for('select_match_for_match_report', team=team)}}" role="button">Create</a></p>
+            <p><a class="btn btn-primary btn-lg" href="{{url_for('news.select_match_for_match_report', team=team)}}" role="button">Create</a></p>
         </div>
         {% if match_reports %}
             {% for report in match_reports[:3] %}
@@ -20,12 +20,12 @@
     <div style="text-align:center;" class="col-xs-12">
         <a role="button" 
            class="btn btn-default" 
-           href="{{ url_for('team', team=team)}}">
+           href="{{ url_for('fixtures.team', team=team)}}">
             Full
         </a>
         <a role="button" 
            class="btn btn-default" 
-           href="{{ url_for('teamBrief', team=team)}}">
+           href="{{ url_for('fixtures.teamBrief', team=team)}}">
             Compact
         </a>
     </div>

@@ -44,18 +44,18 @@
             <div class="row" style="background:#333;">
                 <div class="col-sm-9">
                     <ul class="nav nav-tabs" role="tablist">
-                        <li><a href="{{url_for('home')}}">Home</a></li>
-                        <li><a href="{{url_for('news')}}">News</a></li>
-                        <li><a href="{{url_for('teams')}}">Teams</a></li>
-                        <li><a href="{{url_for('next_match')}}">Fixtures</a></li>
-                        <li><a href="{{url_for('last_result')}}">Results</a></li>
-                        <li><a href="{{url_for('recent_form')}}">Form Table</a></li>
+                        <li><a href="{{url_for('base.home')}}">Home</a></li>
+                        <li><a href="{{url_for('news.news_home')}}">News</a></li>
+                        <li><a href="{{url_for('fixtures.teams')}}">Teams</a></li>
+                        <li><a href="{{url_for('fixtures.next_match')}}">Fixtures</a></li>
+                        <li><a href="{{url_for('fixtures.last_result')}}">Results</a></li>
+                        <li><a href="{{url_for('fixtures.recent_form')}}">Form Table</a></li>
                         {% if session.logged_in %}
-                            <li><a href="{{url_for('logout')}}">Logout</a></li>
+                            <li><a href="{{url_for('base.logout')}}">Logout</a></li>
                         {% else %}
-                            <li><a href="{{url_for('login')}}">Login</a></li>
+                            <li><a href="{{url_for('base.login')}}">Login</a></li>
                         {% endif %}
-                        <li><a href="{{url_for('about')}}">About</a></li>
+                        <li><a href="{{url_for('base.about')}}">About</a></li>
                         <li><a href="http://www.wakefieldhockeyclub.co.uk/">Official Site</a></li>
                     </ul>
                 </div>

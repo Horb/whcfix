@@ -7,7 +7,7 @@
         {% for m in matches %}
         {% if m.isResult() %}
             <a type="button"
-                class="btn btn-default" href="{{url_for('submit_match_report', 
+                class="btn btn-default" href="{{url_for('news.submit_match_report', 
                                            home=m.home, away=m.away, 
                                            date=m.date, time=m.time)}}"
                                            >{{m}}</a>
