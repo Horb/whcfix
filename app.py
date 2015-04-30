@@ -7,6 +7,7 @@ from whcfix.news import news
 from whcfix.tournament import tournaments
 import whcfix.settings as settings
 
+import os
 
 app = Flask(__name__, template_folder='whcfix/templates',
             static_folder='whcfix/static', static_url_path='/static')
