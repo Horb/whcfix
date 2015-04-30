@@ -1,17 +1,23 @@
 {% extends 'base.html' %}
 {% block body %}
 <div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-6">
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
         <h1>Summer League 2015</h1>
+        <p>Summer League is here again!</p>
+        <p>Starting on the 7th of May, 16 teams across 4 divisions will compete fortnightly over 6 Thursdays throughout the summer. Promotions and relegations will occur on the 4th of June and decide the final 3 fixtures.</p>
+        <p>Check back soon to see results, tables and fixtures.</p>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <h2>Fixtures</h2>
         <table class="table" style="text-align: center;">
             <tr>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Pitch</th>
-                <th class="hidden-xs hidden-sm">Home</th>
-                <th class="hidden-xs hidden-sm">Away</th>
-                <th class="hidden-md hidden-lg">Home/Away</th>
-            </th>
+                <td>Date</td>
+                <td>Time</td>
+                <td>Pitch</td>
+                <td class="hidden-xs hidden-sm">Home</td>
+                <td class="hidden-xs hidden-sm">Away</td>
+                <td class="hidden-md hidden-lg">Home/Away</td>
+            </tr>
             {% for match in matches %}
                 <tr>
                     <td>{{ match.date }}</td>
@@ -19,7 +25,9 @@
                     <td>{{ match.venue }}</td>
                     <td class="hidden-xs hidden-sm">{{ match.home }}</td>
                     <td class="hidden-xs hidden-sm">{{ match.away }}</td>
-                    <td class="hidden-md hidden-lg">{{ match.home }}<br/>vs<br/>{{ match.away }}</td>
+                    <td class="hidden-md hidden-lg">
+                        {{ match.home }}<br/>vs<br/>{{ match.away }}
+                    </td>
                 </tr>
             {% endfor %}
         </table>
