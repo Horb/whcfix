@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-6">
+        <h1>Summer League 2015</h1>
+        <table class="table" style="text-align: center;">
+            <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Pitch</th>
+                <th class="hidden-xs hidden-sm">Home</th>
+                <th class="hidden-xs hidden-sm">Away</th>
+                <th class="hidden-md hidden-lg">Home/Away</th>
+            </th>
+            {% for match in matches %}
+                <tr>
+                    <td>{{ match.date }}</td>
+                    <td>{{ match.time }}</td>
+                    <td>{{ match.venue }}</td>
+                    <td class="hidden-xs hidden-sm">{{ match.home }}</td>
+                    <td class="hidden-xs hidden-sm">{{ match.away }}</td>
+                    <td class="hidden-md hidden-lg">{{ match.home }}<br/>vs<br/>{{ match.away }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}
