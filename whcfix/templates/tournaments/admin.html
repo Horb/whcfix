@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block body %}
+<h1>Tournament Admin</h1>
+<h2>Tournaments</h2>
+<a href="{{ url_for('tournaments.tournament_new') }}">Add Tournament</a>
+{% for tournament in tournaments %}
+<h3>{{ tournament.name }}<h3>
+<h4>Divisions<h4>
+<a href="{{ url_for('tournaments.division_new')}}">Add Division</a>
+{% for division in tournament.divisions %}
+<h5>{{ division }}</h5>
+{% endfor %}
+{% endfor %}
+{% endblock %}

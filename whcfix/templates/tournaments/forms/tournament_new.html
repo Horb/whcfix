@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block body %}
+<h2>Add Tournament</h2>
+<form 
+      action="{{ url_for('tournaments.tournament_new')}}"
+      class="form-horizontal"
+      enctype="multipart/form-data" 
+      method="post" 
+      >
+    <div  class="form-group">
+        <label for="Name" class="col-sm-2 control-label">Name</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="Name" 
+            placeholder="News Tournament Name" 
+            name="name" 
+            ></input>
+        </div>
+    </div>
+    <div  class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-default">Submit</button>
+        </div>
+    </div>
+</form>
+{% endblock %}

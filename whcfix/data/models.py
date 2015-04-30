@@ -56,3 +56,26 @@ class MatchReport(Post):
     def doesFeature(self, team):
         r = team in (self.home, self.away)
         return r 
+
+class Tournament(Base):
+
+    __tablename__ = 'tournaments'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250))
+
+class Division(Base):
+
+    __tablename__ = 'divisions'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250))
+    league_id = Column(Integer, ForeignKey('tournaments.id'))
+
+class Team(Base):
+
+    __tablename__ = 'teams'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250))
+    league_id = Column(Integer, ForeignKey('divisions.id'))
