@@ -8,7 +8,7 @@ from whcfix.logic.matches import Matches
 from whcfix.logic.divisions import Divisions
 from whcfix.ui.elements import LastResultDashboardItem, NextMatchDashboardItem, TodaysMatchesDashboardItem, NewsPostsDashboardItem, TwitterFeedDashboardItem
 import whcfix.settings as settings
-from whcfix.utils import lookup_and_do, save_image_from_form
+from whcfix.utils import save_image_from_form
 import os
 
 app = Flask(__name__, template_folder='whcfix/templates',
