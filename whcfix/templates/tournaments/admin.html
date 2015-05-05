@@ -6,9 +6,13 @@
 {% for tournament in tournaments %}
 <h3>{{ tournament.name }}<h3>
 <h4>Divisions<h4>
-<a href="{{ url_for('tournaments.division_new')}}">Add Division</a>
+<a href="{{ url_for('tournaments.division_new', league_id=tournament.id)}}">Add Division</a>
 {% for division in tournament.divisions %}
 <h5>{{ division }}</h5>
+<a href="{{ url_for('tournaments.team_new', division_id=division.id)}}">Add Team</a>
+{% for team in division.teams %}
+<p>{{ team }}</p>
+{% endfor %}
 {% endfor %}
 {% endfor %}
 {% endblock %}

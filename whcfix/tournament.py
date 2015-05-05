@@ -1,3 +1,4 @@
+import logging
 from flask import Blueprint, render_template, request, abort, url_for, redirect
 from whcfix.data.models import Team, Division, Tournament
 from whcfix.data.database import get_db
@@ -22,15 +23,11 @@ def log_result():
 def team_home(team_id):
     ''' Render a dashboard for the team. '''
 
-@tournaments.route('/team/new/', methods=['GET', 'POST'])
-def team_new():
-    ''' Serve or parse a form to add a team. '''
-    return ''' Serve or parse a form to add a team. '''
-
-def serve_or_parse_form(template_name, get_object_from_form, redirect_url):
+def serve_or_parse_form(template_name, get_object_from_form, redirect_url, **kwargs):
     ''' Serve or parse a form. '''
+    logging.debug("%s %s %s" % (template_name, get_object_from_form, redirect_url))
     if request.method == 'GET':
-        return render_template(template_name)
+        return render_template(template_name, **kwargs)
     elif request.method == 'POST':
         with get_db() as db:
             form = request.form
@@ -39,13 +36,21 @@ def serve_or_parse_form(template_name, get_object_from_form, redirect_url):
     else:
         abort(405)
 
-@tournaments.route('/tournament/new/', methods=['GET', 'POST'])
-def division_new():
+@tournaments.route('/division/new/<int:league_id>/', methods=['GET', 'POST'])
+def division_new(league_id):
     ''' Serve or parse a form to add a division. '''
     return serve_or_parse_form('tournaments/forms/division_new.html',
-                               lambda f: Division(name=f['name']),
-                               url_for('tournaments.admin'))
+                               lambda f: Division(name=f['name'], league_id=league_id),
+                               url_for('tournaments.admin'),
+                               league_id=league_id)
 
+@tournaments.route('/team/new/<int:division_id>/', methods=['GET', 'POST'])
+def team_new(division_id):
+    ''' Serve or parse a form to add a team. '''
+    return serve_or_parse_form('tournaments/forms/team_new.html',
+                               lambda f: Team(name=f['name'], league_id=division_id),
+                               url_for('tournaments.admin'),
+                               division_id=division_id)
 
 @tournaments.route('/tournament/new/', methods=['GET', 'POST'])
 def tournament_new():

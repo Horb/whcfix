@@ -1,6 +1,7 @@
 import datetime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, ForeignKey
+from sqlalchemy.orm import relationship
 
 # A base class such that models can be declared in the application
 Base = declarative_base()
@@ -63,6 +64,7 @@ class Tournament(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(250))
+    divisions = relationship('Division')
 
 class Division(Base):
 
@@ -71,6 +73,10 @@ class Division(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(250))
     league_id = Column(Integer, ForeignKey('tournaments.id'))
+    teams = relationship('Team')
+
+    def __str__(self):
+        return self.name
 
 class Team(Base):
 
@@ -79,3 +85,25 @@ class Team(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(250))
     league_id = Column(Integer, ForeignKey('divisions.id'))
+
+    def __str__(self):
+        return self.name
+
+class Fixture(Base):
+
+    __tablename__ = 'fixtures'
+
+    id = Column(Integer, primary_key=True)
+    home_team_id = Column(Integer, ForeignKey('teams.id'))
+    away_team_id = Column(Integer, ForeignKey('teams.id'))
+    push_back = Column(DateTime)
+
+class Result(Base):
+
+    __tablename__ = 'results'
+
+    id = Column(Integer, primary_key=True)
+    fixture_id = Column(Integer, ForeignKey('fixtures.id'))
+    home_goals = Column(Integer)
+    away_goals = Column(Integer)
+    is_official = Column(Boolean, default=False)

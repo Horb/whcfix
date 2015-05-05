@@ -28,7 +28,7 @@ def before_first_request():
 app.register_blueprint(base)
 app.register_blueprint(fixtures)
 app.register_blueprint(news)
-#app.register_blueprint(tournaments, url_prefix='/tournaments')
+app.register_blueprint(tournaments, url_prefix='/tournaments')
 
 def icsv(fn):
     with open(fn, 'r') as csvf:
