@@ -1,4 +1,5 @@
 import datetime
+import itertools
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, ForeignKey
 from sqlalchemy.orm import relationship
@@ -66,17 +67,20 @@ class Tournament(Base):
     name = Column(String(250))
     divisions = relationship('Division')
 
+    def __str__(self):
+        return self.name
+
 class Division(Base):
 
     __tablename__ = 'divisions'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(250))
-    league_id = Column(Integer, ForeignKey('tournaments.id'))
-    teams = relationship('Team')
+    tournament_id = Column(Integer, ForeignKey('tournaments.id'))
 
     def __str__(self):
         return self.name
+
 
 class Team(Base):
 
@@ -84,7 +88,12 @@ class Team(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(250))
-    league_id = Column(Integer, ForeignKey('divisions.id'))
+    division_id = Column(Integer, ForeignKey('divisions.id'))
+    division = relationship("Division", backref="teams")
+
+    @property
+    def fixtures(self):
+        return self.away_fixtures + self.home_fixtures
 
     def __str__(self):
         return self.name
@@ -96,7 +105,15 @@ class Fixture(Base):
     id = Column(Integer, primary_key=True)
     home_team_id = Column(Integer, ForeignKey('teams.id'))
     away_team_id = Column(Integer, ForeignKey('teams.id'))
+    division_id = Column(Integer, ForeignKey('divisions.id'))
     push_back = Column(DateTime)
+
+    division = relationship("Division", backref="fixtures")
+    home_team = relationship("Team", foreign_keys=[home_team_id], backref='home_fixtures')
+    away_team = relationship("Team", foreign_keys=[away_team_id], backref='away_fixtures')
+
+    def __str__(self):
+        return "%s vs %s" % (self.home_team, self.away_team)
 
 class Result(Base):
 

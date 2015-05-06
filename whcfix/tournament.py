@@ -9,7 +9,16 @@ tournaments = Blueprint('tournaments', __name__, template_folder='whcfix/templat
 @tournaments.route('/')
 def tournament_home():
     ''' A list of the active tournaments. '''
-    return ''' A list of the active tournaments. '''
+    with get_db() as db:
+        tournaments = db.query(Tournament).all()
+        return render_template('tournaments/main.html', tournaments=tournaments)
+
+@tournaments.route('/tournaments/<int:tournament_id>/')
+def tournament_detail(tournament_id):
+    ''' A list of the active tournaments. '''
+    with get_db() as db:
+        t = db.query(Tournament).filter(Tournament.id==tournament_id).first()
+        return render_template('tournaments/dashboard.html', tournament=t)
 
 @tournaments.route('/division/<int:division_id>/')
 def division_home(division_id):
@@ -36,19 +45,19 @@ def serve_or_parse_form(template_name, get_object_from_form, redirect_url, **kwa
     else:
         abort(405)
 
-@tournaments.route('/division/new/<int:league_id>/', methods=['GET', 'POST'])
-def division_new(league_id):
+@tournaments.route('/division/new/<int:tournament_id>/', methods=['GET', 'POST'])
+def division_new(tournament_id):
     ''' Serve or parse a form to add a division. '''
     return serve_or_parse_form('tournaments/forms/division_new.html',
-                               lambda f: Division(name=f['name'], league_id=league_id),
+                               lambda f: Division(name=f['name'], tournament_id=tournament_id),
                                url_for('tournaments.admin'),
-                               league_id=league_id)
+                               tournament_id=tournament_id)
 
 @tournaments.route('/team/new/<int:division_id>/', methods=['GET', 'POST'])
 def team_new(division_id):
     ''' Serve or parse a form to add a team. '''
     return serve_or_parse_form('tournaments/forms/team_new.html',
-                               lambda f: Team(name=f['name'], league_id=division_id),
+                               lambda f: Team(name=f['name'], division_id=division_id),
                                url_for('tournaments.admin'),
                                division_id=division_id)
 

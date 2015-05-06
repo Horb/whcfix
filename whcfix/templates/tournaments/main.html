@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block body %}
+{% for tournament in tournaments  %}
+<h1 />{{ tournament }}</h1>
+<ul>
+    <li><a href="{{ url_for('tournaments.tournament_detail', tournament_id=tournament.id) }}">Dashboard</a></li>
+</ul>
+{% endfor %}
+{% endblock %}

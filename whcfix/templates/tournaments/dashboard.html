@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block body %}
+<h1>{{ tournament }}</h1>
+{% for division in tournament.divisions %}
+    <h2>{{ division }}</h2>
+    {% include 'tournaments/division_fixtures_snippet.html' %}
+    {% include 'tournaments/division_table_snippet.html' %}
+{% endfor %}
+{% endblock %}

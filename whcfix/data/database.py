@@ -5,7 +5,7 @@ import whcfix.settings as settings
 from contextlib import contextmanager
 
 # The driver that talks to the db
-engine = create_engine(settings.CONNECTION_STRING, echo=True, convert_unicode=True)
+engine = create_engine(settings.CONNECTION_STRING, convert_unicode=True)
 
 # A session class that the application can user to talk to the driver
 Session = scoped_session(sessionmaker(engine))

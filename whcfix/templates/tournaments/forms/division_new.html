@@ -2,7 +2,7 @@
 {% block body %}
 <h2>Add Division</h2>
 <form 
-      action="{{ url_for('tournaments.division_new', league_id=league_id)}}"
+      action="{{ url_for('tournaments.division_new', tournament_id=tournament_id)}}"
       class="form-horizontal"
       enctype="multipart/form-data" 
       method="post" 
