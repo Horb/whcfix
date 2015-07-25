@@ -28,24 +28,7 @@ def before_first_request():
 app.register_blueprint(base)
 app.register_blueprint(fixtures)
 app.register_blueprint(news)
-#app.register_blueprint(tournaments, url_prefix='/tournaments')
 
-def icsv(fn):
-    with open(fn, 'r') as csvf:
-        reader = csv.reader(csvf)
-        for line in reader:
-            yield line
-
-def line_to_match(line):
-    logging.debug(line)
-    y, m, d, h, n, s, venue, home, away = line
-    y, m, d, h, n, s = map(int, [y, m, d, h, n, s])
-    return Match(datetime(y, m, d), time(h, n, s), venue, home, None, None, away, False, "")
-
-@app.route('/summer_league/')
-def summer_league():
-    matches = list(map(line_to_match, icsv('whcfix/summerleaguefixtures1.csv')))
-    return render_template('static_summer_league.html', matches=matches)
 
 if __name__ == '__main__':
     import os
