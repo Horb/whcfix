@@ -60,7 +60,15 @@ CONFIGS = {
         {
             "dataSource": {
                 "club": "66", 
-                "league": "138", 
+                "league": "179", 
+                "source": "YorkshireHA"
+            }, 
+            "sectionName": "Mens Development"
+        }, 
+        {
+            "dataSource": {
+                "club": "66", 
+                "league": "177", 
                 "source": "YorkshireHA"
             }, 
             "sectionName": "Mens"
@@ -68,7 +76,7 @@ CONFIGS = {
         {
             "dataSource": {
                 "club": "66", 
-                "league": "137", 
+                "league": "178", 
                 "source": "YorkshireHA"
             }, 
             "sectionName": "Ladies"
