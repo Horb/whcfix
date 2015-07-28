@@ -8,6 +8,7 @@ import whcfix.ui.elements as elements
 from whcfix.data.applicationstrings import ApplicationStrings
 import whcfix.settings as settings
 from flask import url_for, flash, redirect, session, send_from_directory
+from whcfix.utils import save_image_from_form
 
 news = Blueprint('news', __name__, template_folder='whcfix/templates')
 
@@ -100,13 +101,13 @@ def lookup_and_do(Model, id, action, redirect_url, redirect_parameters):
 def unpublish_post(post_id):
     return lookup_and_do(Post, post_id, 
                          lambda p: p.unpublish(), 
-                         'news', { 'post_id': post_id})
+                         'news_home', { 'post_id': post_id})
 
 @news.route("/publish_post/<int:post_id>/")
 def publish_post(post_id):
     return lookup_and_do(Post, post_id,
                          lambda p: p.publish(),
-                         'news', { 'post_id' : post_id})
+                         'news_home', { 'post_id' : post_id})
 
 @news.route("/news/")
 def news_home():
