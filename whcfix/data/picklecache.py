@@ -19,8 +19,10 @@ class PickleCache(object):
 
     def exists(self):
         if os.path.exists(self._path_to_cache_file):
-            ageOfCacheInSeconds = time.time() - os.path.getctime(self._path_to_cache_file)
-            if  ageOfCacheInSeconds > self.seconds_duration:
+            now = time.time()
+            file_created = os.path.getctime(self._path_to_cache_file)
+            ageOfCacheInSeconds = now - file_created
+            if ageOfCacheInSeconds > self.seconds_duration:
                 # The cache is out of date
                 return False
             return True
@@ -30,4 +32,3 @@ class PickleCache(object):
     @property
     def _path_to_cache_file(self):
         return os.path.join(os.getcwd(), self.ref + '.pickle')
-

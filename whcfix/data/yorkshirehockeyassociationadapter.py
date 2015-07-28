@@ -2,9 +2,6 @@ import requests
 import logging
 from BeautifulSoup import BeautifulSoup
 import datetime
-import json
-import os
-import whcfix.utils as utils
 from whcfix.data.adapterbase import AdapterBase
 
 
@@ -14,27 +11,21 @@ class YorkshireHockeyAssociationAdapter(AdapterBase):
         super(YorkshireHockeyAssociationAdapter, self).__init__(sectionName)
         self.leagueId = leagueId
         self.clubId = clubId
-    
+
     def get_matches(self):
         dicts = self._get_match_dicts_from_HTML(self._get_HTML())
         return [self._getMatchObjectFromDict(d) for d in dicts]
 
     def _get_HTML(self):
         url = "http://www.yorkshireha.org.uk/e107_plugins/league_manager/index.php?fixtures"
-        payload = {
-                "leagman_club":self.clubId,
-                "leagman_date":"",
-                "leagman_division":"",
-                "leagman_fixtures_search_form":"1",
-                "leagman_fixtures_search_form":"1",
-                "leagman_game":"0",
-                "leagman_home_away":"0,",
-                "leagman_league_id":self.leagueId,
-                "leagman_team":"",
-                "leagman_venue":"0",
-                }
-        r = requests.post(url, 
-                          headers={'user-agent':'whcfix.com/1.0'},
+        payload = {"leagman_club": self.clubId, "leagman_date": "",
+                   "leagman_division": "", "leagman_fixtures_search_form": "1",
+                   "leagman_fixtures_search_form": "1", "leagman_game": "0",
+                   "leagman_home_away": "0,",
+                   "leagman_league_id": self.leagueId, "leagman_team": "",
+                   "leagman_venue": "0"}
+        r = requests.post(url,
+                          headers={'user-agent': 'whcfix.com/1.0'},
                           data=payload)
         return r.content
 
@@ -46,7 +37,7 @@ class YorkshireHockeyAssociationAdapter(AdapterBase):
             if matchDict is not None:
                 listOfMatches.append(matchDict)
         return listOfMatches
-    
+
     def _parse_row(self, tr):
         try:
             tds = tr("td")
@@ -61,26 +52,24 @@ class YorkshireHockeyAssociationAdapter(AdapterBase):
             awayGoals = self._parse_awayGoals(result_td)
             isPostponed = self._parse_isPostponed(result_td)
             away = self._parse_away(away_td)
-            
-            return_dict = {'date':date,
-                           'time':time,
-                           'venue':venue,
-                           'home':home,
-                           'homeGoals':homeGoals,
-                           'awayGoals':awayGoals,
-                           'isPostponed':isPostponed,
-                           'away':away
-                            }
+
+            return_dict = {'date': date,
+                           'time': time,
+                           'venue': venue,
+                           'home': home,
+                           'homeGoals': homeGoals,
+                           'awayGoals': awayGoals,
+                           'isPostponed': isPostponed,
+                           'away': away}
             return return_dict
-        except Exception as ex:
+        except Exception:
             logging.exception("")
             return None
-
 
     def _parse_date(self, date_td):
         try:
             return datetime.datetime.strptime(date_td.text, '%d %b %y')
-        except Exception as ex:
+        except Exception:
             logging.exception(date_td.text)
             return None
 
@@ -89,7 +78,7 @@ class YorkshireHockeyAssociationAdapter(AdapterBase):
             if time_td.text == '--:--':
                 return None
             return datetime.datetime.strptime(time_td.text, '%H:%M')
-        except Exception as ex: 
+        except Exception:
             logging.exception(time_td.text)
             return None
 
@@ -97,23 +86,23 @@ class YorkshireHockeyAssociationAdapter(AdapterBase):
         try:
             s = venue_td.text
             return " ".join(s.split(self.nbsp))
-        except Exception as ex:
-            logging.exception(away_td.text)
+        except Exception:
+            logging.exception(venue_td.text)
             return None
 
     def _parse_home(self, home_td):
         try:
             s = home_td.text
             return " ".join(s.split(self.nbsp))
-        except Exception as ex:
-            logging.exception(away_td.text)
+        except Exception:
+            logging.exception(home_td.text)
             return None
 
     def _parse_away(self, away_td):
         try:
             s = away_td.text
             return " ".join(s.split(self.nbsp))
-        except Exception as ex:
+        except Exception:
             logging.exception(away_td.text)
             return None
 
@@ -128,7 +117,7 @@ class YorkshireHockeyAssociationAdapter(AdapterBase):
                     return None
                 else:
                     return int(scores[0])
-        except Exception as ex:
+        except Exception:
             logging.exception(result_td.text)
             return None
 
@@ -143,7 +132,7 @@ class YorkshireHockeyAssociationAdapter(AdapterBase):
                     return None
                 else:
                     return int(scores[-1])
-        except Exception as ex:
+        except Exception:
             logging.exception(result_td.text)
             return None
 
@@ -154,6 +143,6 @@ class YorkshireHockeyAssociationAdapter(AdapterBase):
                 return True
             else:
                 return False
-        except Exception as ex:
+        except Exception:
             logging.exception(result_td.text)
             return False

@@ -1,11 +1,11 @@
 BLOG_USER = 'BLOG_USER'
-#CONNECTION_STRING = 'sqlite:////tmp/whcfix.db'
-#CONNECTION_STRING = 'sqlite:///:memory:'
+# CONNECTION_STRING = 'sqlite:////tmp/whcfix.db'
+# CONNECTION_STRING = 'sqlite:///:memory:'
 CONNECTION_STRING = 'mysql://whcfix_user:whcfix_password@localhost/DEV_whcfix'
 BLOG_PASSWORD = 'BLOG_PASSWORD'
 DEVELOPMENT_KEY = 'DEVELOPMENT_KEY'
 
-UPLOAD_FOLDER  = '/var/www/uploads'
+UPLOAD_FOLDER = '/var/www/uploads'
 ALLOWED_UPLOAD_EXTENSIONS = ('png', 'jpg', 'jpeg', 'gif')
 
 LOG_FORMAT = '%(module)s %(funcName)s %(lineno)s %(message)s'
@@ -14,72 +14,72 @@ CONFIGS = {
     "configs": [
         {
             "dataSource": {
-                "code": "4173", 
-                "name": "Wakefield-Ladies-2s", 
+                "code": "4173",
+                "name": "Wakefield-Ladies-2s",
                 "source": "FixturesLive"
-            }, 
-            "teamName": "Wakefield 2", 
+            },
+            "teamName": "Wakefield 2",
             "sectionName": "Ladies"
-        }, 
+        },
         {
             "dataSource": {
-                "code": "4221", 
-                "name": "Wakefield-Ladies-3s", 
+                "code": "4221",
+                "name": "Wakefield-Ladies-3s",
                 "source": "FixturesLive"
-            }, 
-            "teamName": "Wakefield 3", 
+            },
+            "teamName": "Wakefield 3",
             "sectionName": "Ladies"
-        }, 
+        },
         {
             "dataSource": {
-                "code": "4160", 
-                "name": "Wakefield-Ladies-1s", 
+                "code": "4160",
+                "name": "Wakefield-Ladies-1s",
                 "source": "FixturesLive"
-            }, 
-            "teamName": "Wakefield 1", 
+            },
+            "teamName": "Wakefield 1",
             "sectionName": "Ladies"
-        }, 
+        },
         {
             "dataSource": {
-                "code": "1131", 
-                "name": "Wakefield-Mens-2s", 
+                "code": "1131",
+                "name": "Wakefield-Mens-2s",
                 "source": "FixturesLive"
-            }, 
-            "teamName": "Wakefield 2", 
+            },
+            "teamName": "Wakefield 2",
             "sectionName": "Mens"
-        }, 
+        },
         {
             "dataSource": {
-                "code": "1031", 
-                "name": "Wakefield-Mens-1s", 
+                "code": "1031",
+                "name": "Wakefield-Mens-1s",
                 "source": "FixturesLive"
-            }, 
-            "teamName": "Wakefield 1", 
+            },
+            "teamName": "Wakefield 1",
             "sectionName": "Mens"
-        }, 
+        },
         {
             "dataSource": {
-                "club": "66", 
-                "league": "179", 
+                "club": "66",
+                "league": "179",
                 "source": "YorkshireHA"
-            }, 
+            },
             "sectionName": "Mens Development"
-        }, 
+        },
         {
             "dataSource": {
-                "club": "66", 
-                "league": "177", 
+                "club": "66",
+                "league": "177",
                 "source": "YorkshireHA"
-            }, 
+            },
             "sectionName": "Mens"
-        }, 
+        },
         {
             "dataSource": {
-                "club": "66", 
-                "league": "178", 
+                "club": "66",
+                "league": "178",
                 "source": "YorkshireHA"
-            }, 
+            },
             "sectionName": "Ladies"
-        } 
+        }
     ]
 }

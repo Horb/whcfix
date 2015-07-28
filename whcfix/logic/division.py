@@ -2,8 +2,8 @@
 
 class DivisionRow(object):
 
-    def __init__(self, pos, team, is_promotion, is_relegation, played, won, 
-                 drawn, lost, goals_for, goals_against, goals_difference, 
+    def __init__(self, pos, team, is_promotion, is_relegation, played, won,
+                 drawn, lost, goals_for, goals_against, goals_difference,
                  points, max_points):
         self.pos = pos
         self.team = team
@@ -18,6 +18,7 @@ class DivisionRow(object):
         self.goals_difference = goals_difference
         self.points = points
         self.max_points = max_points
+
 
 class Division(object):
 

@@ -1,13 +1,10 @@
 import logging
-import datetime
+from datetime import datetime
 from whcfix.logic.matches import Matches
-from flask import render_template, request, Blueprint
+from whcfix.data.models import MatchReport, Post
+from flask import render_template, request, Blueprint, abort
 from whcfix.data.database import get_db
-from whcfix.data.models import Post, match_reports_for
-import whcfix.ui.elements as elements 
-from whcfix.data.applicationstrings import ApplicationStrings
-import whcfix.settings as settings
-from flask import url_for, flash, redirect, session, send_from_directory
+from flask import url_for, flash, redirect, session
 from whcfix.utils import save_image_from_form
 
 news = Blueprint('news', __name__, template_folder='whcfix/templates')
@@ -16,10 +13,12 @@ news = Blueprint('news', __name__, template_folder='whcfix/templates')
 @news.route("/select_match_for_match_report/<team>/")
 def select_match_for_match_report(team):
     matches = Matches().get_matches(lambda m: m.doesFeature(team))
-    return render_template('select_match_for_match_report.html', 
+    return render_template('select_match_for_match_report.html',
                            matches=matches, team=team)
 
-@news.route('/submit_match_report/<home>/<away>/<date>/<time>/', methods=['GET', 'POST'])
+
+@news.route('/submit_match_report/<home>/<away>/<date>/<time>/',
+            methods=['GET', 'POST'])
 def submit_match_report(home, away, date, time):
     if request.method == 'POST':
         title = "Match Report: %s vs %s" % (home, away)
@@ -30,17 +29,18 @@ def submit_match_report(home, away, date, time):
         match_report.title = title
         match_report.home = home
         match_report.away = away
-        match_report.push_back = datetime.datetime.strptime("%s %s" % (date, time),
-                                                            "%d-%m-%y %H:%M")
+        match_report.push_back = datetime.strptime("%s %s" % (date, time),
+                                                   "%d-%m-%y %H:%M")
         match_report.body = body
         match_report.image_file_name = image_file_name
         with get_db() as db:
             db.add(match_report)
         flash("Thank you for your submission.")
         return redirect(url_for('news.news_home'))
-    else: 
-        return render_template("submit_match_report.html", home=home, 
-                               away=away, date=date, time=time) 
+    else:
+        return render_template("submit_match_report.html", home=home,
+                               away=away, date=date, time=time)
+
 
 @news.route('/news/post/<int:post_id>/', methods=['GET', 'POST'])
 def post_detail(post_id):
@@ -55,7 +55,8 @@ def post_detail(post_id):
                 post.is_published = 'published' in request.form
                 if 'published' in request.form:
                     post.publish()
-                post.image_file_name = save_image_from_form(request.form, 'image')
+                post.image_file_name = save_image_from_form(request.form,
+                                                            'image')
                 flash("Successfully Saved!")
                 return redirect(url_for('news.post_detail', post_id=post.id))
             else:
@@ -63,6 +64,7 @@ def post_detail(post_id):
                 return render_template('post_detail.html', post=post)
         else:
             abort(404)
+
 
 @news.route("/delete_post/<int:post_id>/")
 def delete_post(post_id):
@@ -73,17 +75,19 @@ def delete_post(post_id):
             abort(401)
         elif not post:
             abort(404)
-        elif not kwargs.has_key('confirmed'):
-            message = "You're about to delete the post: %s. Are you sure?" % (post.title,)
+        elif 'confirmed' not in kwargs:
+            template = "You're about to delete the post: %s. Are you sure?"
+            message = template % (post.title,)
             action_message = "Delete Post."
-            return render_template('confirm.html', 
-                                   message=message, 
+            return render_template('confirm.html',
+                                   message=message,
                                    action_message=action_message,
                                    post=post)
         else:
             db.delete(post)
             flash("Post deleted.")
             return redirect(url_for("news.news_home"))
+
 
 def lookup_and_do(Model, id, action, redirect_url, redirect_parameters):
     if not session['logged_in']:
@@ -93,34 +97,40 @@ def lookup_and_do(Model, id, action, redirect_url, redirect_parameters):
             instance = db.query(Model).filter(Model.id == id).first()
             if instance:
                 action(instance)
-                return redirect(url_for("news." + redirect_url, **redirect_parameters))
+                return redirect(url_for("news." + redirect_url,
+                                        **redirect_parameters))
             else:
                 abort(404)
 
+
 @news.route("/unpublish_post/<int:post_id>/")
 def unpublish_post(post_id):
-    return lookup_and_do(Post, post_id, 
-                         lambda p: p.unpublish(), 
-                         'news_home', { 'post_id': post_id})
+    return lookup_and_do(Post, post_id,
+                         lambda p: p.unpublish(),
+                         'news_home', {'post_id': post_id})
+
 
 @news.route("/publish_post/<int:post_id>/")
 def publish_post(post_id):
     return lookup_and_do(Post, post_id,
                          lambda p: p.publish(),
-                         'news_home', { 'post_id' : post_id})
+                         'news_home', {'post_id': post_id})
+
 
 @news.route("/news/")
 def news_home():
     with get_db() as db:
-        posts = db.query(Post).order_by(Post.first_published_date, Post.id).all()[::-1]
+        posts = db.query(Post).order_by(Post.first_published_date,
+                                        Post.id).all()[::-1]
         return render_template("news.html", posts=posts)
+
 
 @news.route("/news/new/", methods=['POST'])
 def add_news():
     post = Post()
-    post.title=request.form['title']
-    post.body=request.form['body']
-    post.is_published='published' in request.form
+    post.title = request.form['title']
+    post.body = request.form['body']
+    post.is_published = 'published' in request.form
     if 'published' in request.form:
         post.publish()
     post.image_file_name = save_image_from_form(request.form, 'image')

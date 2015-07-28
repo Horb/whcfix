@@ -4,13 +4,14 @@ from whcfix.data.fixturesliveadapter import FixturesLiveAdapter
 from BeautifulSoup import BeautifulSoup
 import whcfix.settings as settings
 
+
 class FixturesLiveAdapterTests(unittest.TestCase):
 
     def setUp(self):
         fixLiveNumber = None
         fixLiveName = None
-        self.adapter = FixturesLiveAdapter(fixLiveNumber, fixLiveName, 
-                                           'ClubName' , 'SectionName') 
+        self.adapter = FixturesLiveAdapter(fixLiveNumber, fixLiveName,
+                                           'ClubName', 'SectionName')
 
     def test_parse_home(self):
         team_td = BeautifulSoup("<td>OppositionName</td>")

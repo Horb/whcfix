@@ -1,7 +1,7 @@
 import whcfix.settings as settings
-from whcfix.logic.division import Division
 from whcfix.data.yorkshirehockeyassociationdivisionadapter import YorkshireHockeyAssociationDivisionAdapter as YHADivAdapter
 from whcfix.data.picklecache import PickleCache
+
 
 class Divisions(object):
 

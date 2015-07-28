@@ -1,9 +1,11 @@
 import datetime
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text
+from sqlalchemy import ForeignKey
 
 # A base class such that models can be declared in the application
 Base = declarative_base()
+
 
 class Post(Base):
 
@@ -16,7 +18,7 @@ class Post(Base):
     first_published_date = Column(DateTime)
     image_file_name = Column(String(250))
     signature = Column(String(250))
-    
+
     def __repr__(self):
         return "<Post (id='%s' title='%s')>" % (self.id, self.title)
 
@@ -28,9 +30,7 @@ class Post(Base):
         if self.first_published_date is None:
             self.first_published_date = datetime.datetime.now()
 
-    __mapper_args__ = {
-            'polymorphic_identity' : 'post',
-            }
+    __mapper_args__ = {'polymorphic_identity': 'post'}
 
 
 def match_reports_for(team, db):
@@ -39,6 +39,7 @@ def match_reports_for(team, db):
     match_reports.sort(key=lambda mr: mr.push_back)
     match_reports.reverse()
     return match_reports
+
 
 class MatchReport(Post):
 
@@ -49,13 +50,12 @@ class MatchReport(Post):
     away = Column(String(250))
     push_back = Column(DateTime)
 
-    __mapper_args__ = {
-            'polymorphic_identity' : 'match_report',
-            }
+    __mapper_args__ = {'polymorphic_identity': 'match_report'}
 
     def doesFeature(self, team):
         r = team in (self.home, self.away)
-        return r 
+        return r
+
 
 class Tournament(Base):
 
@@ -64,6 +64,7 @@ class Tournament(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(250))
 
+
 class Division(Base):
 
     __tablename__ = 'divisions'
@@ -71,6 +72,7 @@ class Division(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(250))
     league_id = Column(Integer, ForeignKey('tournaments.id'))
+
 
 class Team(Base):
 

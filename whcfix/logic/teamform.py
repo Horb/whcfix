@@ -1,7 +1,7 @@
 
 
 class TeamForm(object):
-    
+
     def __init__(self, teamName, results):
         self.results = results
         self.teamName = teamName
@@ -44,10 +44,9 @@ class TeamForm(object):
 
 
 class Result(object):
-    def __init__(self, resultInitial, resultIndicatorCssClass, points, goalDifference):
+    def __init__(self, resultInitial, resultIndicatorCssClass, points,
+                 goalDifference):
         self.resultInitial = resultInitial
         self.resultIndicatorCssClass = resultIndicatorCssClass
         self.points = points
         self.goalDifference = goalDifference
-
-

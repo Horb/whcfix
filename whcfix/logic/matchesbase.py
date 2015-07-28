@@ -4,6 +4,7 @@ from whcfix.data.yorkshirehockeyassociationadapter import YorkshireHockeyAssocia
 from whcfix.data.fixturesliveadapter import FixturesLiveAdapter
 from whcfix.data.picklecache import PickleCache
 
+
 class MatchesBase(object):
     '''MatchBase handles initiating the class and making the data available.'''
 
@@ -12,7 +13,7 @@ class MatchesBase(object):
         try:
             if auto_init_data:
                 self.init_data()
-        except Exception as ex:
+        except Exception:
             logging.exception("Failed to initialise MatchesBase.")
 
     def init_data(self):
@@ -36,7 +37,8 @@ class MatchesBase(object):
             leagueId = config['dataSource']['league']
             clubId = config['dataSource']['club']
             sectionName = config['sectionName']
-            adapter = YorkshireHockeyAssociationAdapter(leagueId, clubId, sectionName)
+            adapter = YorkshireHockeyAssociationAdapter(leagueId,
+                                                        clubId, sectionName)
             return adapter.get_matches()
         elif config['dataSource']['source'] == 'FixturesLive':
             code = config['dataSource']['code']

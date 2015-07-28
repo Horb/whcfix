@@ -14,8 +14,8 @@ class YorkshireHockeyAssociationAdapterTests(unittest.TestCase):
     def test_parse_2013_2014_mens(self):
         mens_14_15 = 138
         wakefield_hockey_club = 66
-        self.adapter = YorkshireHockeyAssociationAdapter(mens_14_15, 
-                                                         wakefield_hockey_club, 
+        self.adapter = YorkshireHockeyAssociationAdapter(mens_14_15,
+                                                         wakefield_hockey_club,
                                                          "Mens")
         match_objects = self.adapter.get_matches()
         self.assertTrue(len(match_objects) > 0)
@@ -23,8 +23,8 @@ class YorkshireHockeyAssociationAdapterTests(unittest.TestCase):
     def test_parse_2013_2014_ladies(self):
         ladies_14_15 = 137
         wakefield_hockey_club = 66
-        self.adapter = YorkshireHockeyAssociationAdapter(ladies_14_15, 
-                                                         wakefield_hockey_club, 
+        self.adapter = YorkshireHockeyAssociationAdapter(ladies_14_15,
+                                                         wakefield_hockey_club,
                                                          "Mens")
         match_objects = self.adapter.get_matches()
         self.assertTrue(len(match_objects) > 0)
@@ -40,14 +40,11 @@ class YorkshireHockeyAssociationAdapterTests(unittest.TestCase):
         html += '</tr>'
         tr = BeautifulSoup(html)
         actual = self.adapter._parse_row(tr)
-        expected = {'date': datetime.datetime.strptime('27 Oct 14', '%d %b %y')
-                    , 'time': datetime.datetime.strptime('15:00', '%H:%M')
-                    , 'venue': 'Blue Pitch'
-                    , 'home':'Blue Rovers'
-                    , 'homeGoals':1
-                    , 'awayGoals':2
-                    , 'isPostponed':False
-                    , 'away':'Red Rovers'
+        expected = {
+                    'date': datetime.datetime.strptime('27 Oct 14', '%d %b %y'),
+                    'time': datetime.datetime.strptime('15:00', '%H:%M'),
+                    'venue': 'Blue Pitch', 'home':'Blue Rovers', 'homeGoals':1,
+                    'awayGoals':2, 'isPostponed':False, 'away':'Red Rovers'
                     }
         self.assertEqual(actual, expected)
 

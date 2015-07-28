@@ -13,7 +13,7 @@ class UtilsTests(unittest.TestCase):
         expected = ""
         actual = function_that_returns_None()
         self.assertEqual(expected, actual)
-        
+
     def test_nz_returns_results_that_are_not_None(self):
         @utils.nz
         def function_that_returns_foo():
@@ -26,4 +26,3 @@ class UtilsTests(unittest.TestCase):
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG, format=settings.LOG_FORMAT)
     unittest.main()
-

@@ -1,28 +1,36 @@
 import logging
 from werkzeug import secure_filename
 from flask import request
+import os
+import whcfix.settings as settings
+
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1] in settings.ALLOWED_UPLOAD_EXTENSIONS
+    return ('.' in filename
+            and filename.rsplit('.', 1)[1]
+            in settings.ALLOWED_UPLOAD_EXTENSIONS)
+
 
 def save_image_from_form(form, image_field):
     file = request.files[image_field]
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        image_file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        image_file_path = os.path.join(settings.UPLOAD_FOLDER, filename)
         file.save(image_file_path)
         return filename
     else:
         return None
 
+
 def log_exceptions(func):
     def _log_exceptions(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except Exception as ex:
+        except Exception:
             logging.exception("args: %s, kwargs %s" % (args, kwargs))
             raise
     return _log_exceptions
+
 
 def nz(func):
     def _nz(*args, **kwargs):
@@ -32,6 +40,7 @@ def nz(func):
         else:
             return result
     return _nz
+
 
 def catch_log_return_None(func):
     def _catch_log_return_None(*args, **kwargs):

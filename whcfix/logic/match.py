@@ -2,10 +2,11 @@ import datetime
 import logging
 import whcfix.utils as utils
 
+
 class Match(object):
 
-    def __init__(self, date, time, venue, 
-                 home, homeGoals, awayGoals, 
+    def __init__(self, date, time, venue,
+                 home, homeGoals, awayGoals,
                  away, isPostponed, section):
         self._date = date
         self._time = time
@@ -67,7 +68,7 @@ class Match(object):
     @utils.nz
     def home(self):
         return self._home
-        
+
     def __gt__(self, other):
         try:
             if self._date != other._date:
@@ -94,7 +95,7 @@ class Match(object):
         except:
             logging.critical("Couldn't format date as string.")
             return ""
-    
+
     @property
     @utils.nz
     def time(self):
@@ -110,9 +111,9 @@ class Match(object):
         return self.__str__()
 
     def __str__(self):
-        return "%s %s - %s %s" % (self.home, 
+        return "%s %s - %s %s" % (self.home,
                                   self.homeGoals,
-                                  self.awayGoals, 
+                                  self.awayGoals,
                                   self.away)
 
     def isFixture(self):

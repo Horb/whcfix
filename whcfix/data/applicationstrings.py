@@ -2,7 +2,7 @@
 class ApplicationStrings(object):
 
     def __init__(self):
-        self.hPageDesc="Always Up To Date"
+        self.hPageDesc = "Always Up To Date"
         self.pPageDesc = "The fixtures and results are drawn directly from the Yorkshire Hockey Association so they're always up to date."
         self.hRecentForm = "Compare Sides Recent Form"
         self.pRecentForm = "You can compare all the Wakefield sides recent form in the Recent Form table. It uses the last four results to construct a Wakefield mini league."

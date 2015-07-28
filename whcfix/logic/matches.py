@@ -1,4 +1,3 @@
-import logging
 import datetime
 from whcfix.logic.teamform import TeamForm, Result
 from whcfix.logic.matchesbase import MatchesBase
@@ -10,7 +9,7 @@ class Matches(MatchesBase):
         super(Matches, self).__init__(auto_init_data)
 
     def get_matches(self, condition=None):
-        if condition == None:
+        if condition is None:
             return self.listOfMatches
         else:
             return [m for m in self.listOfMatches if condition(m)]
@@ -22,28 +21,27 @@ class Matches(MatchesBase):
 
     def teamNames(self, teamNameFilter, section=None):
         names = []
-        names = [ m.home for m 
-                  in self.listOfMatches 
-                  if teamNameFilter in m.home]
-        names += [ m.away for m 
-                  in self.listOfMatches 
+        names = [m.home for m
+                 in self.listOfMatches
+                 if teamNameFilter in m.home]
+        names += [m.away for m
+                  in self.listOfMatches
                   if teamNameFilter in m.away]
         names = set(names)
-        names = [ n for n in names if section is None or section in n]
+        names = [n for n in names if section is None or section in n]
         names.sort()
         return names
 
     def getTodaysMatches(self, listOfTeamNames, section=None):
         todaysMatches = []
         today = datetime.date.today()
-        #today = datetime.date(2014, 11, 23)
         for team in listOfTeamNames:
             if section is not None:
                 if section not in team:
                     continue
-            todaysMatches += [m for m in self.listOfMatches 
-                              if m.doesFeature(team) 
-                                  and m._date.date() == today]
+            todaysMatches += [m for m in self.listOfMatches
+                              if m.doesFeature(team)
+                              and m._date.date() == today]
         todaysMatches.sort()
         return todaysMatches
 
@@ -66,7 +64,7 @@ class Matches(MatchesBase):
         return lastResults
 
     def nextMatch(self, team):
-        teamFixtures = [m for m in self.listOfMatches 
+        teamFixtures = [m for m in self.listOfMatches
                         if m.doesFeature(team) and m.isMatchInTheFuture()]
         if teamFixtures:
             teamFixtures.sort()
@@ -81,7 +79,8 @@ class Matches(MatchesBase):
             if match is not None and match not in nextMatches:
                 nextMatches.append(match)
         if section is not None:
-            nextMatches = [m for m in nextMatches if section in m.home or section in m.away]
+            nextMatches = [m for m in nextMatches
+                           if section in m.home or section in m.away]
         nextMatches.sort()
         return nextMatches
 
@@ -91,11 +90,14 @@ class Matches(MatchesBase):
             for match in self.listOfMatches[::-1]:
                 if match.doesFeature(name) and match.isResult():
                     if match.didWin(name):
-                        results.append(Result('W', 'win', 3, match.teamGoalDifference(name)))
+                        results.append(Result('W', 'win', 3,
+                                       match.teamGoalDifference(name)))
                     elif match.didLose(name):
-                        results.append(Result('L', 'lose', 0, match.teamGoalDifference(name)))
+                        results.append(Result('L', 'lose', 0,
+                                       match.teamGoalDifference(name)))
                     elif match.isDraw():
-                        results.append(Result('D', 'draw', 1, match.teamGoalDifference(name)))
+                        results.append(Result('D', 'draw', 1,
+                                       match.teamGoalDifference(name)))
                     else:
                         assert False
                 if len(results) == 4:
@@ -105,8 +107,8 @@ class Matches(MatchesBase):
             if section is not None:
                 if section not in team:
                     continue
-            if len(self.get_matches(condition=lambda m: m.doesFeature(team) 
-                                                    and m.isResult())) < 4:
+            c = lambda m: m.doesFeature(team) and m.isResult()
+            if len(self.get_matches(condition=c)) < 4:
                 continue
             else:
                 team_forms.append(TeamForm(team, _getLastFourResults(team)))

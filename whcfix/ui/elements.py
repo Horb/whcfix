@@ -29,6 +29,7 @@ class DashboardItem(object):
         ''' Override this method. '''
         return False
 
+
 class NewsPostsDashboardItem(DashboardItem):
     title = 'News'
 
@@ -74,13 +75,15 @@ class LastResultDashboardItem(DashboardItem):
         self.listOfMatches = listOfMatches
 
     def sort_priority(self, isoweekday):
-        if isoweekday in [self.SATURDAY, self.SUNDAY, self.MONDAY, self.TUESDAY]:
+        if isoweekday in [self.SATURDAY, self.SUNDAY,
+                          self.MONDAY, self.TUESDAY]:
             return 100
         else:
             return 10
 
     def has_content(self):
         return len(self.listOfMatches) > 0
+
 
 class TodaysMatchesDashboardItem(DashboardItem):
     title = "Today"
@@ -91,16 +94,17 @@ class TodaysMatchesDashboardItem(DashboardItem):
 
     def sort_priority(self, isoweekday):
         return 1000
-    
+
     def has_content(self):
         return len(self.listOfMatches) > 0
+
 
 class TwitterFeedDashboardItem(DashboardItem):
     template = 'whc_twitter_feed.html'
 
     def __init__(self):
         super(TwitterFeedDashboardItem, self).__init__()
-        
+
     def sort_priority(self, isoweekday):
         return 75
 

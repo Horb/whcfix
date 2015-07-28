@@ -1,9 +1,6 @@
 import requests
 import logging
 from BeautifulSoup import BeautifulSoup
-import datetime
-import json
-import os
 import whcfix.utils as utils
 from whcfix.logic.division import Division, DivisionRow
 
@@ -20,11 +17,9 @@ class YorkshireHockeyAssociationDivisionAdapter(object):
 
     def _get_HTML(self):
         url = "http://yorkshireha.org.uk/e107_plugins/league_manager/index.php?tables"
-        payload = {
-                "leagman_league_id":self.leagueId,
-                }
-        r = requests.post(url, 
-                          headers={'user-agent':'whcfix.com/1.0'},
+        payload = {"leagman_league_id": self.leagueId}
+        r = requests.post(url,
+                          headers={'user-agent': 'whcfix.com/1.0'},
                           data=payload)
         return r.content
 
@@ -37,7 +32,8 @@ class YorkshireHockeyAssociationDivisionAdapter(object):
                 if division is not None:
                     yield division
                 logging.debug(division_name)
-                division = Division("%s %s" % (self.sectionName, division_name))
+                division = Division("%s %s" % (self.sectionName,
+                                               division_name))
 
             division_row = self.try_parse_division_row(tr)
             if division_row is not None:
@@ -56,13 +52,15 @@ class YorkshireHockeyAssociationDivisionAdapter(object):
         except:
             logging.exception("")
             return None
-    
+
     def try_parse_division_row(self, tr):
         try:
             tds = tr("td")
             if len(tds) != 11:
                 return None
-            pos_td, team_td, played_td, won_td, drawn_td, lost_td, goals_for_td, goals_against_td, goals_difference_td, points_td, max_points_td = tds
+            (pos_td, team_td, played_td, won_td, drawn_td, lost_td,
+             goals_for_td, goals_against_td, goals_difference_td, points_td,
+             max_points_td) = tds
             pos = self._parse_int_from_td(pos_td)
             is_promotion = self._parse_is_promotion(team_td)
             is_relegation = self._parse_is_relegation(team_td)
@@ -76,10 +74,10 @@ class YorkshireHockeyAssociationDivisionAdapter(object):
             goals_difference = self._parse_int_from_td(goals_difference_td)
             points = self._parse_int_from_td(points_td)
             max_points = self._parse_int_from_td(max_points_td)
-            return DivisionRow(pos, team, is_promotion, is_relegation, played, 
-                               won, drawn, lost, goals_for, goals_against, 
+            return DivisionRow(pos, team, is_promotion, is_relegation, played,
+                               won, drawn, lost, goals_for, goals_against,
                                goals_difference, points, max_points)
-        except Exception as ex:
+        except Exception:
             logging.exception("")
             return None
 

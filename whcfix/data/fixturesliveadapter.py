@@ -2,9 +2,6 @@ import requests
 import logging
 from BeautifulSoup import BeautifulSoup
 import datetime
-import json
-import os
-import whcfix.utils as utils
 from whcfix.data.adapterbase import AdapterBase
 
 
@@ -100,10 +97,10 @@ class FixturesLiveAdapter(AdapterBase):
             else:
                 date_fragment = date_time_td.text
                 return datetime.datetime.strptime(date_fragment, '%d.%m.%y')
-        except ValueError as valErr:
+        except ValueError:
             logging.exception("")
             return None
-        except Exception as ex:
+        except Exception:
             logging.exception("")
             return None
 
@@ -113,10 +110,10 @@ class FixturesLiveAdapter(AdapterBase):
                 date_fragment = date_time_td.text.split(" ")[1]
                 return datetime.datetime.strptime(date_fragment, '%H:%M')
             return None
-        except ValueError as valErr:
+        except ValueError:
             logging.exception(date_time_td.text)
             return None
-        except Exception as ex:
+        except Exception:
             logging.exception(date_time_td.text)
             return None
 
@@ -125,7 +122,8 @@ class FixturesLiveAdapter(AdapterBase):
             tds = tr("td")
             if len(tds) != 9:
                 return None
-            _, oposition, _, score, league, date_time, home_away, venue, _ = tds
+            (_, oposition, _, score, league,
+             date_time, home_away, venue, _) = tds
             home = self._parse_home(home_away, oposition)
             homeGoals = self._parse_homeGoals(score, home_away)
             away = self._parse_away(home_away, oposition)
@@ -133,11 +131,12 @@ class FixturesLiveAdapter(AdapterBase):
             date = self._parse_date(date_time)
             time = self._parse_time(date_time)
             venue = self._parse_venue(venue)
-            return_me =  {'date':date, 'time':time, 'venue':venue, 
-                          'home':home, 'homeGoals':homeGoals, 
-                          'awayGoals':awayGoals, 'isPostponed':False, 'away':away}
+            return_me = {'date': date, 'time': time, 'venue': venue,
+                         'home': home, 'homeGoals': homeGoals,
+                         'awayGoals': awayGoals, 'isPostponed': False,
+                         'away': away}
             return return_me
 
-        except Exception as ex:
+        except Exception:
             logging.exception("")
             return None
