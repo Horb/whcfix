@@ -7,6 +7,7 @@ from whcfix.data.models import Post, match_reports_for
 import whcfix.ui.elements as elements 
 from whcfix.data.applicationstrings import ApplicationStrings
 import whcfix.settings as settings
+from whcfix.utils import save_image_from_form
 from flask import url_for, flash, redirect, session, send_from_directory
 
 news = Blueprint('news', __name__, template_folder='whcfix/templates')
