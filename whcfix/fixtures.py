@@ -12,6 +12,8 @@ fixtures = Blueprint('fixtures', __name__, template_folder='whcfix/templates')
 def teams():
     matches = Matches()
     teams = matches.teamNames("Wakefield", **request.args.to_dict())
+    # TODO Remove this hack
+    teams = filter(lambda t: "Wanderers" not in t, teams)
     return render_template("teams.html",
                            teams=teams,
                            strings=ApplicationStrings())
