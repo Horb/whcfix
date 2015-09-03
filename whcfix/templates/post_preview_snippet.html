@@ -1,7 +1,7 @@
 {% if post.is_published or session.logged_in %}
 <h4>{% if not post.is_published %}[Unpublished] {% endif %}{{post.title}}</h4>
 {% if post.image_file_name and show_image %}
-<img width="100%" src="{{url_for('news.uploads', filename=post.image_file_name)}}"/>
+<img width="100%" src="{{url_for('base.uploads', filename=post.image_file_name)}}"/>
 {% endif %}
 {% if session.logged_in %}
 <div class="btn-group" role="group" aria-label="...">
