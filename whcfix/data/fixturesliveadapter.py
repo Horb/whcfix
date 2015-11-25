@@ -36,8 +36,7 @@ class FixturesLiveAdapter(AdapterBase):
         return " ".join(s.split(self.nbsp))
 
     def _get_HTML(self):
-        url = "http://w.fixtureslive.com/team/%s/fixtures/%s"
-        url = url % (self.fixLiveNumber, self.fixLiveName)
+        url = 'http://w.fixtureslive.com/staticAPI.aspx?Operation=LoadData&a=team_view.ashx%3fteamid%3d' + str(self.fixLiveNumber)
         r = requests.get(url)
         return r.content
 
