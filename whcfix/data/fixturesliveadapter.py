@@ -8,6 +8,7 @@ from whcfix.data.adapterbase import AdapterBase
 class FixturesLiveAdapter(AdapterBase):
 
     def __init__(self, fixLiveNumber, fixLiveName, clubName, sectionName):
+        logging.info("FixturesLiveAdapter %s %s" % (fixLiveNumber, fixLiveNumber))
         super(FixturesLiveAdapter, self).__init__(sectionName)
         self.fixLiveNumber = fixLiveNumber
         self.fixLiveName = fixLiveName
@@ -117,9 +118,12 @@ class FixturesLiveAdapter(AdapterBase):
             return None
 
     def _parse_row(self, tr):
+        logging.info("_parse_row")
         try:
             tds = tr("td")
-            if len(tds) != 9:
+            number_of_cells = len(tds)
+            logging.info("expect 9 cells, number_of_cells=%s" % number_of_cells)
+            if number_of_cells != 9:
                 return None
             (_, oposition, _, score, league,
              date_time, home_away, venue, _) = tds
