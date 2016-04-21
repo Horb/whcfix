@@ -27,12 +27,3 @@ def get_db():
         raise
     finally:
         session.close()
-
-
-def test_post():
-    from whcfix.data.models import Post
-    p = Post(title='Hello', body='World')
-    s = Session()
-    s.add(p)
-    s.commit()
-    print s.query(Post).all()

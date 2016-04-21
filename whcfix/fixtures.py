@@ -22,7 +22,6 @@ def teams():
 @fixtures.route("/teams/<team>/")
 def team(team):
     with get_db() as db:
-        match_reports = match_reports_for(team, db)
         matches = Matches().get_matches(lambda m: m.doesFeature(team))
         d_cond = lambda d: d.doesFeatureTeam(team)
         divisions = Divisions().get_divisions(d_cond)
