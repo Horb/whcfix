@@ -36,6 +36,9 @@ class Team(Base):
 
     division = relationship("Division", back_populates="teams")
 
+    home_fixtures = relationship("Fixture", back_populates="home_team", primaryjoin="Team.id==Fixture.home_team_id")
+    away_fixtures = relationship("Fixture", back_populates="away_team", primaryjoin="Team.id==Fixture.away_team_id")
+
 
 class Venue(Base):
 
@@ -56,8 +59,17 @@ class Fixture(Base):
     away_team_id = Column(Integer, ForeignKey("teams.id"))
     venue_id = Column(Integer, ForeignKey("venues.id"))
 
-    home_team = relationship("Team", foreign_keys=[home_team_id])
-    away_team = relationship("Team",  foreign_keys=[away_team_id])
+    home_team = relationship("Team", foreign_keys=[home_team_id], back_populates="home_fixtures")
+    away_team = relationship("Team",  foreign_keys=[away_team_id], back_populates="away_fixtures")
     venue = relationship("Venue", back_populates="fixtures")
 
+    result = relationship("Result")
+
+class Result(Base):
+    
+    __tablename__ = 'results'
+    fixture_id = Column(Integer, ForeignKey("fixtures.id"), primary_key=True)
+    home_goals = Column(Integer)
+    away_goals = Column(Integer)
+    fixture = relationship("Fixture")
 

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Summer League</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h2>Tables</h2>
+    </div>
+</div>
+<div class="row">
+    {% for division in divisions %}
+    <div class="col-md-6">
+        <h3>{{ division.name }}</h3>
+        <table class="table" style="text-align:left;">
+            <thead>
+                <tr>
+                    <td width="50%">Team</td>
+                    <td>W</td>
+                    <td>L</td>
+                    <td>D</td>
+                    <td>Pts.</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for team in division.teams|sort(attribute='points', reverse=True) %}
+                <tr>
+                    <td>{{ team.name }}</td>
+                    <td>{{ team.won }}</td>
+                    <td>{{ team.lost }}</td>
+                    <td>{{ team.drawn }}</td>
+                    <td>{{ team.points }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endfor %}
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h2>Fixtures</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>Date</td>
+                    <td>Venue</td>
+                    <td>Home</td>
+                    <td>-</td>
+                    <td>Away</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for push_back, dates_fixtures in fixtures|groupby('push_back') %}
+                <tr>
+                    <td colspan="5">{{ push_back.strftime("%a %d %b %H:%M") }}</td>
+                    <tr>
+                        {% for fixture in dates_fixtures %}
+                        {% if not fixture.result %}
+                        <tr>
+                            <td width="10%"></td>
+                            <td>{{ fixture.venue.name }}</td>
+                            <td>{{ fixture.home_team.name }}</td>
+                            <td>vs</td>
+                            <td>{{ fixture.away_team.name }}</td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                        {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h2>Results</h2>
+        {% if results %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>Date</td>
+                    <td>Venue</td>
+                    <td>Home</td>
+                    <td>-</td>
+                    <td>Away</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                <tr>
+                    <td>{{ result.fixture.push_back }}</td>
+                    <td>{{ result.fixture.venue.name }}</td>
+                    <td>{{ result.fixture.home_team.name }}</td>
+                    <td>{{ result.home_goals }} - {{ result.away_goals }}</td>
+                    <td>{{ result.fixture.away_team.name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>Check back soon for the results to come in!</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
