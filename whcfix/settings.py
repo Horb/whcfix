@@ -14,69 +14,74 @@ CONFIGS = {
     "configs": [
         {
             "dataSource": {
-                "code": "4173",
-                "name": "Wakefield-Ladies-2s",
-                "source": "FixturesLive"
+                "fixLiveNumber": "4173",
+                "club_name": "Wakefield 2",
+                "source": "FixturesLive",
+                "league" : "NTWHL Prem Div"
             },
             "teamName": "Wakefield 2",
             "sectionName": "Ladies"
         },
         {
             "dataSource": {
-                "code": "4221",
-                "name": "Wakefield-Ladies-3s",
-                "source": "FixturesLive"
+                "fixLiveNumber": "4221",
+                "club_name": "Wakefield 3",
+                "source": "FixturesLive",
+                "league" : "NTWHL D2SE"
             },
             "teamName": "Wakefield 3",
             "sectionName": "Ladies"
         },
         {
             "dataSource": {
-                "code": "4160",
-                "name": "Wakefield-Ladies-1s",
-                "source": "FixturesLive"
+                "fixLiveNumber": "4160",
+                "club_name": "Wakefield 1",
+                "source" : "FixturesLive",
+                "league" : "IWHL WCN"
             },
             "teamName": "Wakefield 1",
             "sectionName": "Ladies"
         },
         {
             "dataSource": {
-                "code": "1131",
-                "name": "Wakefield-Mens-2s",
-                "source": "FixturesLive"
+                "fixLiveNumber": "1131",
+                "club_name": "Wakefield 2",
+                "source": "FixturesLive",
+                "league" : "NHML 2 East"
             },
             "teamName": "Wakefield 2",
             "sectionName": "Mens"
         },
         {
             "dataSource": {
-                "code": "1031",
-                "name": "Wakefield-Mens-1s",
-                "source": "FixturesLive"
+                "fixLiveNumber": "1031",
+                "club_name": "Wakefield 1",
+                "source": "FixturesLive",
+                "league" : "NHML Prem"
             },
             "teamName": "Wakefield 1",
             "sectionName": "Mens"
         },
         {
             "dataSource": {
-                "club": "66",
-                "league": "179",
+                "clubId": "66",
+                "leagueId": "207",
                 "source": "YorkshireHA"
             },
             "sectionName": "Mens Development"
         },
         {
             "dataSource": {
-                "club": "66",
-                "league": "177",
+                "clubId": "66",
+                "leagueId": "204",
                 "source": "YorkshireHA"
             },
             "sectionName": "Mens"
         },
         {
             "dataSource": {
-                "club": "66",
-                "league": "178",
+                "clubId": "66",
+                "leagueId": "205",
                 "source": "YorkshireHA"
             },
             "sectionName": "Ladies"
