@@ -1,6 +1,5 @@
 import logging
 from flask import Flask, render_template
-from whcfix.data.database import init_db
 from whcfix.fixtures import fixtures
 from whcfix.base import base
 import whcfix.settings as settings
@@ -16,12 +15,6 @@ app.config['UPLOAD_FOLDER'] = settings.UPLOAD_FOLDER
 def handle_exception(err):
     logging.exception("")
     return render_template("501.html")
-
-
-@app.before_first_request
-def before_first_request():
-    init_db()
-
 
 app.register_blueprint(base)
 app.register_blueprint(fixtures)

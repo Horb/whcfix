@@ -1,7 +1,6 @@
 from whcfix.logic.matches import Matches
 from whcfix.logic.divisions import Divisions
 from flask import render_template, request, Blueprint
-from whcfix.data.database import get_db
 from whcfix.data.applicationstrings import ApplicationStrings
 
 fixtures = Blueprint('fixtures', __name__, template_folder='whcfix/templates')
@@ -20,13 +19,12 @@ def teams():
 
 @fixtures.route("/teams/<team>/")
 def team(team):
-    with get_db() as db:
-        matches = Matches().get_matches(lambda m: m.doesFeature(team))
-        d_cond = lambda d: d.doesFeatureTeam(team)
-        divisions = Divisions().get_divisions(d_cond)
-        return render_template("teamDump.html", team=team,
-                               matches=matches,
-                               divisions=divisions)
+    matches = Matches().get_matches(lambda m: m.doesFeature(team))
+    d_cond = lambda d: d.doesFeatureTeam(team)
+    divisions = Divisions().get_divisions(d_cond)
+    return render_template("teamDump.html", team=team,
+                           matches=matches,
+                           divisions=divisions)
 
 
 @fixtures.route("/teams/<team>/compact/")
