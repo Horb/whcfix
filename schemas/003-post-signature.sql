@@ -1,1 +1,0 @@
-ALTER TABLE posts ADD COLUMN signature NVARCHAR(250) null;
