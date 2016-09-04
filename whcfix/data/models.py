@@ -39,6 +39,21 @@ class Team(Base):
     home_fixtures = relationship("Fixture", back_populates="home_team", primaryjoin="Team.id==Fixture.home_team_id")
     away_fixtures = relationship("Fixture", back_populates="away_team", primaryjoin="Team.id==Fixture.away_team_id")
 
+    def __gt__(self, other):
+        '''
+        Some views will decorate the team with points and goal_difference and 
+        then expect to be able to sort based on those properties.
+        '''
+        assert isinstance(other, Team)
+        if hasattr(self, 'points') and hasattr(self, 'goal_difference'):
+            if self.points == other.points:
+                return self.goal_difference > other.goal_difference
+            return self.points > other.points
+        return self.id > other.id
+
+    def __lt__(self, other):
+        return not self.__gt__(other)
+
 
 class Venue(Base):
 

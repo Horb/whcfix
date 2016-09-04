@@ -122,7 +122,6 @@ class FixturesLiveAdapter(AdapterBase):
         try:
             tds = tr("td")
             number_of_cells = len(tds)
-            logging.info("expect 9 cells, number_of_cells=%s" % number_of_cells)
             if number_of_cells != 9:
                 return None
             (_, oposition, _, score, league,
