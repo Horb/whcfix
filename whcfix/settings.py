@@ -1,4 +1,4 @@
-DEVELOPMENT_KEY = 'daa55119-48b3-457b-9e8b-aac1b0ffffc8'
+DEVELOPMENT_KEY = ''
 
 UPLOAD_FOLDER = '/var/www/uploads'
 ALLOWED_UPLOAD_EXTENSIONS = ('png', 'jpg', 'jpeg', 'gif')
