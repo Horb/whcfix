@@ -1,4 +1,5 @@
 import datetime
+import whcfix.settings as settings
 from whcfix.logic.teamform import TeamForm, Result
 from whcfix.logic.matchesbase import MatchesBase
 
@@ -6,7 +7,7 @@ from whcfix.logic.matchesbase import MatchesBase
 class Matches(MatchesBase):
 
     def __init__(self, auto_init_data=True):
-        super(Matches, self).__init__(auto_init_data)
+        super(Matches, self).__init__(settings.CONFIGS, auto_init_data)
 
     def get_matches(self, condition=None):
         if condition is None:

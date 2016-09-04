@@ -30,25 +30,6 @@ class DashboardItem(object):
         return False
 
 
-class NewsPostsDashboardItem(DashboardItem):
-    title = 'News'
-
-    def __init__(self, posts):
-        super(NewsPostsDashboardItem, self).__init__()
-        self.posts = posts
-
-    def sort_priority(self, isoweekday):
-        return 200
-
-    @property
-    def template(self):
-        return 'news_feed_snippet.html'
-
-    def has_content(self):
-        ''' Override this method. '''
-        return len(self.posts) > 0
-
-
 class NextMatchDashboardItem(DashboardItem):
     title = 'Next Match'
     show_result_column = False

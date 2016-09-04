@@ -20,7 +20,7 @@ class Divisions(object):
     def iAdapters(self):
         for config in settings.CONFIGS['configs']:
             if config['dataSource']['source'] == 'YorkshireHA':
-                league_id = config['dataSource']['league']
+                league_id = config['dataSource']['leagueId']
                 section_name = config['sectionName']
                 yield league_id, section_name
 

@@ -3,7 +3,6 @@ from flask import Flask, render_template
 from whcfix.data.database import init_db
 from whcfix.fixtures import fixtures
 from whcfix.base import base
-from whcfix.summer import summer
 import whcfix.settings as settings
 import os
 
@@ -26,7 +25,6 @@ def before_first_request():
 
 app.register_blueprint(base)
 app.register_blueprint(fixtures)
-app.register_blueprint(summer)
 
 
 if __name__ == '__main__':
