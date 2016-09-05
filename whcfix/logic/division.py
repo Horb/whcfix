@@ -27,4 +27,9 @@ class Division(object):
         self.rows = []
 
     def doesFeatureTeam(self, team):
-        return len([r for r in self.rows if team == r.team]) > 0
+        doesFeature = len([r for r in self.rows if team == r.team]) > 0
+        if team in ("Wakefield 6 Mens", "Wakefield 7 Mens"):
+            print self.name
+            return doesFeature and self.name == "Mens Division 6 South"
+            
+        return doesFeature

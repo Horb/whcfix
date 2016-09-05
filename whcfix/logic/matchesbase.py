@@ -2,6 +2,7 @@ import logging
 import whcfix.settings as settings
 import whcfix.data.yorkshirehockeyassociationadapter as yha
 import whcfix.data.fixturesliveadapter as fl
+from itertools import groupby
 from whcfix.data.picklecache import PickleCache
 
 
@@ -35,10 +36,22 @@ class MatchesBase(object):
             leagueId = config['dataSource']['leagueId']
             clubId = config['dataSource']['clubId']
             sectionName = config['sectionName']
-            return yha.get_matches(sectionName, leagueId)
+            return self.yha_get_matches(sectionName, leagueId)
         elif config['dataSource']['source'] == 'FixturesLive':
             sectionName = config['sectionName']
             fixLiveNumber = config['dataSource']['fixLiveNumber']
             club_name = config['dataSource']['club_name']
             league = config['dataSource']['league']
             return fl.get_matches(sectionName, fixLiveNumber, club_name, league)
+
+    def yha_get_matches(self, sectionName, leagueId):
+        matches = yha.get_matches(sectionName, leagueId)
+        # need to filter out duplicates
+        keyfunc = lambda m: (m.date, m.home, m.away)
+        matches = [ list(m)[0] for k, m in groupby(matches, keyfunc) ]
+        return matches
+
+
+
+
+    
