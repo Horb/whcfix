@@ -2,11 +2,14 @@ from whcfix.logic.matches import Matches
 from whcfix.logic.divisions import Divisions
 from flask import render_template, request, Blueprint
 from whcfix.data.applicationstrings import ApplicationStrings
+from itertools import groupby
+from collections import OrderedDict
+from datetime import datetime
 
 fixtures = Blueprint('fixtures', __name__, template_folder='whcfix/templates')
 
 
-@fixtures.route("/teams/", methods=['GET'])
+@fixtures.route("/teams/")
 def teams():
     matches = Matches()
     teams = matches.teamNames("Wakefield", **request.args.to_dict())
@@ -15,6 +18,35 @@ def teams():
     return render_template("teams.html",
                            teams=teams,
                            strings=ApplicationStrings())
+
+@fixtures.route("/fixtures/by_date/")
+def fixtures_by_date():
+    matches = Matches()
+    teams = matches.teamNames("Wakefield", **request.args.to_dict())
+    matches = matches.get_matches(lambda m: m.home in teams or m.away in teams)
+    matches.sort()
+    # First date in the future
+    dates = { m._date for m in matches }
+    dates_in_the_future = { d for d in dates if d > datetime.now() }
+    if dates_in_the_future:
+        scroll_to_date = min(dates_in_the_future)
+    else:
+        scroll_to_date = min(dates)
+    return render_template("fixtures_by_date.html",
+                           matches = matches,
+                           scroll_to_date = scroll_to_date)
+
+@fixtures.route("/fixtures/by_team/")
+def fixtures_by_team():
+    matches = Matches()
+    teams = matches.teamNames("Wakefield", **request.args.to_dict())
+    matches_by_team = OrderedDict()
+    for team in teams:
+        team_matches = matches.get_matches(lambda m: m.doesFeature(team))
+        team_matches.sort()
+        matches_by_team[team] = team_matches
+    return render_template("fixtures_by_team.html",
+                           matches_by_team = matches_by_team)
 
 
 @fixtures.route("/teams/<team>/")

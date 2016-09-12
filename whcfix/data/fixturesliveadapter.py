@@ -20,13 +20,6 @@ def _getMatchObjectFromDict(matchDict, sectionName):
     return Match(date, time, venue, home, homeGoals, awayGoals, away,
                  isPostponed, sectionName)
 
-# ladies_ones = get_matches("Ladies", 4160, "Wakefield 1")
-# ladies_twos = get_matches("Ladies", 4173, "Wakefield 2")
-# ladies_threes = get_matches("Ladies", 4221, "Wakefield 3")
-
-# mens_ones = get_matches("Mens", 1031, "Wakefield 1")
-# mens_ones = get_matches("Mens", 1131, "Wakefield 2")
-
 def get_matches(sectionName, fixLiveNumber, club_name, league):
     dicts = _get_match_dicts(fixLiveNumber, club_name, league)
     return [_getMatchObjectFromDict(d, sectionName) for d in dicts]

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block body %}
+<h3>Fixtures By Team</h3>
+{% for team, matches in matches_by_team.iteritems() %}
+<h4>{{ team }}</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <td>Date</td>
+            <td>Time</td>
+            <td>Home</td>
+            <td>Away</td>
+            <td class="hidden-sm hidden-xs">Venue</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for match in matches|sort %}
+        <tr>
+            <td>{{match.date}}</td>
+            <td>{{match.time}}</td>
+            {% if "Wakefield" in match.home %}
+            <td><a href="/teams/{{match.home}}/">{{match.home}}</a></td>
+            {% else %}
+            <td>{{match.home}}</td>
+            {% endif %}
+            {% if "Wakefield" in match.away %}
+            <td><a href="/teams/{{match.away}}/">{{match.away}}</a></td>
+            {% else %}
+            <td>{{match.away}}</td>
+            {% endif %}
+            <td class="hidden-sm hidden-xs">{{match.venue}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endfor %}
+{% endblock %}

@@ -77,7 +77,8 @@ class Match(object):
                 return self._time > other._time
             else:
                 return self._home > other._home
-        except:
+        except Exception as ex:
+            logging.warning(ex)
             return False
 
     def __lt__(self, other):
