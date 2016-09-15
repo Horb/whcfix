@@ -1,10 +1,12 @@
 from whcfix.logic.matches import Matches
 from whcfix.logic.divisions import Divisions
-from flask import render_template, request, Blueprint
+from flask import render_template, request, Blueprint, Response
 from whcfix.data.applicationstrings import ApplicationStrings
 from itertools import groupby
 from collections import OrderedDict
-from datetime import datetime
+from datetime import datetime, time, timedelta
+from ics import Calendar, Event
+from md5 import md5
 
 fixtures = Blueprint('fixtures', __name__, template_folder='whcfix/templates')
 
@@ -35,6 +37,37 @@ def fixtures_by_date():
     return render_template("fixtures_by_date.html",
                            matches = matches,
                            scroll_to_date = scroll_to_date)
+
+def fixture_uid(m):
+    content = "%s vs %s %s%s%s" % (m.home, m.away, m._date.year, m._date.month, m._date.day)
+    hexdigest = md5(content).hexdigest()
+    return "%s@whcfix.com" % (hexdigest)
+
+@fixtures.route("/teams/<team>/calendar.ics")
+def team_ics(team):
+    matches = Matches().get_matches(lambda m: m.doesFeature(team))
+    c = Calendar()
+    for m in matches:
+        if not m._date:
+            continue
+
+        e = Event(uid=fixture_uid(m), location=m.venue)
+        e.name = "%s vs %s" % (m.home, m.away)
+
+
+        if not m._time:
+            m._time = time(0,0,0)
+
+        begin = datetime(m._date.year,
+                         m._date.month,
+                         m._date.day,
+                         m._time.hour,
+                         m._time.minute,
+                         m._time.second)
+        e.begin = begin
+        e.duration = timedelta(minutes=90)
+        c.events.append(e)
+    return Response(c, mimetype='text/calendar')
 
 @fixtures.route("/fixtures/by_team/")
 def fixtures_by_team():
