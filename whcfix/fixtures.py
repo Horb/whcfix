@@ -7,6 +7,7 @@ from collections import OrderedDict
 from datetime import datetime, time, timedelta
 from ics import Calendar, Event
 from md5 import md5
+import arrow
 
 fixtures = Blueprint('fixtures', __name__, template_folder='whcfix/templates')
 
@@ -64,6 +65,7 @@ def team_ics(team):
                          m._time.hour,
                          m._time.minute,
                          m._time.second)
+        begin = arrow.get(begin, 'Europe/London')
         e.begin = begin
         e.duration = timedelta(minutes=90)
         c.events.append(e)
