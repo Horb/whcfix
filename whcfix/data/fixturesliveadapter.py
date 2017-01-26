@@ -17,8 +17,9 @@ def _getMatchObjectFromDict(matchDict, sectionName):
     awayGoals = matchDict['awayGoals']
     isPostponed = matchDict['isPostponed']
     away = matchDict['away']
+    note = ""
     return Match(date, time, venue, home, homeGoals, awayGoals, away,
-                 isPostponed, sectionName)
+                 isPostponed, sectionName, note)
 
 def get_matches(sectionName, fixLiveNumber, club_name, league):
     dicts = _get_match_dicts(fixLiveNumber, club_name, league)

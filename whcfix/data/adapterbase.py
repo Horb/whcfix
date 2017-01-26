@@ -22,5 +22,9 @@ class AdapterBase(object):
         awayGoals = matchDict['awayGoals']
         isPostponed = matchDict['isPostponed']
         away = matchDict['away']
+        if "Note" in matchDict:
+            note = matchDict["Note"]
+        else:
+            note = ""
         return Match(date, time, venue, home, homeGoals, awayGoals, away,
-                     isPostponed, self.sectionName)
+                     isPostponed, self.sectionName, note)

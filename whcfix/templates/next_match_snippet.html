@@ -10,6 +10,7 @@
                 <td>Home</td>
                 <td>Away</td>
                 <td class="hidden-sm hidden-xs">Venue</td>
+                <td class="hidden-sm hidden-xs">Note</td>
             </tr>
         </thead>
         <tbody>
@@ -28,6 +29,7 @@
                 <td>{{match.away}}</td>
                 {% endif %}
                 <td class="hidden-sm hidden-xs">{{match.venue}}</td>
+                <td class="hidden-sm hidden-xs">{{match.note}}</td>
             </tr>
             {% endfor %}
         </tbody>

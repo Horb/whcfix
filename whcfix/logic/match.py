@@ -7,10 +7,11 @@ class Match(object):
 
     def __init__(self, date, time, venue,
                  home, homeGoals, awayGoals,
-                 away, isPostponed, section):
+                 away, isPostponed, section, note):
         self._date = date
         self._time = time
         self._venue = venue
+        self.note = note
         if home is not None:
             if section in home:
                 self._home = home

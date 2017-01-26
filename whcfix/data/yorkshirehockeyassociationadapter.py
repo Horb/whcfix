@@ -16,8 +16,12 @@ def _getMatchObjectFromDict(matchDict, sectionName):
     awayGoals = matchDict['awayGoals']
     isPostponed = matchDict['isPostponed']
     away = matchDict['away']
+    if "Note" in matchDict:
+        note = matchDict["Note"]
+    else:
+        note = ""
     return Match(date, time, venue, home, homeGoals, awayGoals, away,
-                 isPostponed, sectionName)
+                 isPostponed, sectionName, note)
 
 # yorkshire_mens = get_matches("Mens", 204, home_away=1, club_id=66)
 # yorkshire_ladies = get_matches("Ladies", 205, home_away=1, club_id=66)
@@ -53,13 +57,25 @@ def _get_match_dicts_from_HTML(html):
     listOfMatches = []
     for tr in soup("tr"):
         matchDict = _parse_row(tr)
-        if matchDict is not None:
+        if matchDict is None:
+            continue
+        elif "Note" in matchDict and listOfMatches:
+            listOfMatches[-1]["Note"] = matchDict["Note"]
+        elif "date" in matchDict:
             listOfMatches.append(matchDict)
     return listOfMatches
+
+def _parse_note(tds):
+    try:
+        return { "Note" : tds[0].text }
+    except Exception:
+        return None
 
 def _parse_row(tr):
     try:
         tds = tr("td")
+        if len(tds) == 2:
+            return _parse_note(tds)
         if len(tds) != 6:
             return None
         date_td, time_td, venue_td, home_td, result_td, away_td = tds
