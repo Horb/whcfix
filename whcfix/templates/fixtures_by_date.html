@@ -1,39 +1,18 @@
 {% extends "base.html" %}
 {% block body %}
 <h3>Fixtures By Date</h3>
-{% for _date, date_matches in matches|groupby('_date') %}
-<h4 {% if _date == scroll_to_date %}id="current"{% endif %}>{{ date_matches[0].date }}</h4>
 <table class="table">
     <thead>
-        <tr>
-            <td>Time</td>
-            <td>Home</td>
-            <td>Away</td>
-            <td class="hidden-sm hidden-xs">Venue</td>
-            <td class="hidden-sm hidden-xs">Note</td>
-        </tr>
+        {% include "match_header.html" %}
     </thead>
-    <tbody>
+{% for _date, date_matches in matches|groupby('_date') %}
+    <tbody {% if _date == scroll_to_date %}id="current"{% endif %}>
         {% for match in date_matches|sort %}
-        <tr>
-            <td>{{match.time}}</td>
-            {% if "Wakefield" in match.home %}
-            <td><a href="/teams/{{match.home}}/">{{match.home}}</a></td>
-            {% else %}
-            <td>{{match.home}}</td>
-            {% endif %}
-            {% if "Wakefield" in match.away %}
-            <td><a href="/teams/{{match.away}}/">{{match.away}}</a></td>
-            {% else %}
-            <td>{{match.away}}</td>
-            {% endif %}
-            <td class="hidden-sm hidden-xs">{{match.venue}}</td>
-            <td class="hidden-sm hidden-xs">{{match.note}}</td>
-        </tr>
+            {% include "match_snippet.html" %}
         {% endfor %}
     </tbody>
-</table>
 {% endfor %}
+</table>
 <script>
 window.onload = function() {
     var delay = 2000;
