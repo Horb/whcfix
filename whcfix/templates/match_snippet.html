@@ -1,0 +1,72 @@
+<tr class="visible-sm visible-xs 
+                    {% if team is not defined %}
+                    
+                    {% elif match.didLose(team)%}
+                        text-danger
+                    {% elif match.didWin(team)%}
+                        text-success
+                    {% elif match.isResult() %}
+                        text-info
+                    {% elif match.isPostponed %}
+                        text-warning
+                    {% else %}
+                    {% endif %}
+                    ">
+    <td style="text-align:center;vertical-align:middle">
+        {{match.date}}<br/>{{match.time}}
+    </td>
+    <td style="text-align:center;vertical-align:middle">
+        {% if "Wakefield" in match.home %}
+            <a href="/teams/{{match.home}}/">{{match.home}}</a>
+        {% else %}
+            {{match.home}}
+        {% endif %}
+        <br/>
+        {{match.homeGoals}} - {{match.awayGoals}}
+        <br/>
+        {% if "Wakefield" in match.away %}
+            <a href="/teams/{{match.away}}/">{{match.away}}</a>
+        {% else %}
+            {{match.away}}
+        {% endif %}
+        <span class="text-muted">
+            {% if match.venue %}
+                <br/>Venue: {{match.venue}}
+            {% endif %}
+            {% if match.note %}
+                <br/>Note: {{match.note}}
+            {% endif %}
+        </span>
+    </td>
+</tr>
+
+<tr class="hidden-sm hidden-xs 
+                    {% if team is not defined %}
+                    
+                    {% elif match.didLose(team)%}
+                        text-danger
+                    {% elif match.didWin(team)%}
+                        text-success
+                    {% elif match.isResult() %}
+                        text-info
+                    {% elif match.isPostponed %}
+                        text-warning
+                    {% else %}
+                    {% endif %}">
+    <td style="text-align:center;">{{match.date}}</td>
+    <td style="text-align:center;">{{match.time}}</td>
+    {% if "Wakefield" in match.home %}
+        <td><a href="/teams/{{match.home}}/">{{match.home}}</a></td>
+    {% else %}
+        <td>{{match.home}}</td>
+    {% endif %}
+    <td style="white-space:nowrap;">{{match.homeGoals}} - {{match.awayGoals}}</td>
+    </td>
+    {% if "Wakefield" in match.away %}
+        <td><a href="/teams/{{match.away}}/">{{match.away}}</a></td>
+    {% else %}
+        <td>{{match.away}}</td>
+    {% endif %}
+    <td class="hidden-sm hidden-xs">{{match.venue}}</td>
+    <td class="hidden-sm hidden-xs">{{match.note}}</td>
+</td>
