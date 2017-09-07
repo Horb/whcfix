@@ -1,3 +1,4 @@
+Key,HasWarmUp,MatchStart,PitchStart,Priority,Gender,Date
 B1,0,10:00:00,10:00:00,9,F,2017-09-02
 B2,0,11:30:00,11:30:00,5,M,2017-09-02
 B3,1,13:30:00,13:00:00,1,F,2017-09-02
