@@ -1,4 +1,8 @@
+.DS_Store
 *.pyc
 .gitignore
 *.pickle
 *.swp
+*~
+.idea
+*.prod
