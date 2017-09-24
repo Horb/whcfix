@@ -1,8 +1,6 @@
 import tweepy
 import random
 from datetime import datetime, timedelta
-from pytz import timezone
-london = timezone('Europe/London')
 
 from twitfix.credentials import *
 from whcfix.logic.matches import Matches
@@ -43,8 +41,8 @@ def get_tweets(the_datetime, interval_minutes):
                                 current_match._date.day,
                                 current_match._time.hour,
                                 current_match._time.minute,
-                                current_match._time.second,
-                                tzinfo=london)
+                                current_match._time.second
+                                )
 
             td = full_date - the_datetime
 
@@ -75,5 +73,6 @@ def print_tweets(tweets):
         print(tweet)
 
 if __name__ == '__main__':
-    d = london.localize(datetime.utcnow())
-    send_tweets(get_tweets(d, 30))
+    d = datetime.now()
+    d = d + timedelta(hours=5)
+    send_tweets(get_tweets(d, 29))

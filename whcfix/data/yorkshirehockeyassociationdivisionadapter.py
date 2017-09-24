@@ -14,10 +14,7 @@ class YorkshireHockeyAssociationDivisionAdapter(object):
     def get_divisions(self):
         for d in self._get_divisions_from_HTML(self._get_HTML()):
             logging.debug("yielding division")
-            if d.name == "Mens Division 6 South":
-                yield self.clean(d)
-            else:
-                yield d
+            yield d
 
     def _get_HTML(self):
         url = "http://yorkshireha.org.uk/e107_plugins/league_manager/index.php?tables"
@@ -113,33 +110,3 @@ class YorkshireHockeyAssociationDivisionAdapter(object):
             if attribute == 'src' and "divdown.gif" in value:
                 return True
         return False
-
-    def clean(self, dirty):
-        logging.debug("cleaning")
-        clean = Division(dirty.name)
-
-        excluded = (
-                'Leeds Adel 4 Mens',
-                'Bradford 5 Mens',
-                'Leeds Adel 5 Mens',
-                'Boston Spa 4 Mens',
-                'Driffield 3 Mens',
-                'Thirsk &amp; Malton 3 Mens',
-                'Ben Rhydding 5 Mens',
-                'Harrogate 6 Mens',
-                'Scarborough 2 Mens',
-                'City of York 9 Mens',
-                'Airdale 3 Mens',
-                )
-
-        for row in dirty.rows:
-            logging.debug("%s" % (row.team))
-            if row.team in excluded:
-                pass
-            else:
-                clean.rows.append(row)
-
-        for n, row in enumerate(clean.rows):
-            row.pos = n + 1
-
-        return clean
