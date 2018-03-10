@@ -50,7 +50,7 @@ def _get_HTML(league_id, club_id, date, division, home_away):
     r = requests.post(url,
                       headers={'user-agent': 'whcfix.com/1.0'},
                       data=payload)
-    return r.content
+    return r.text
 
 def _get_match_dicts_from_HTML(html):
     soup = BeautifulSoup(html)
