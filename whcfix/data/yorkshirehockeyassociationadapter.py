@@ -68,7 +68,8 @@ def _get_match_dicts_from_HTML(html):
 def _parse_note(tds):
     try:
         return { "Note" : tds[0].text }
-    except Exception:
+    except Exception as ex:
+        logging.exception(ex)
         return None
 
 def _parse_row(tr):
@@ -97,15 +98,15 @@ def _parse_row(tr):
                        'isPostponed': isPostponed,
                        'away': away}
         return return_dict
-    except Exception:
-        logging.exception("")
+    except Exception as ex:
+        logging.exception(ex)
         return None
 
 def _parse_date(date_td):
     try:
         return datetime.datetime.strptime(date_td.text, '%d %b %y')
-    except Exception:
-        logging.exception(date_td.text)
+    except Exception as ex:
+        logging.exception(ex)
         return None
 
 def _parse_time(time_td):
@@ -113,32 +114,32 @@ def _parse_time(time_td):
         if time_td.text == '--:--':
             return None
         return datetime.datetime.strptime(time_td.text, '%H:%M')
-    except Exception:
-        logging.exception(time_td.text)
+    except Exception as ex:
+        logging.exception(ex)
         return None
 
 def _parse_venue(venue_td):
     try:
         s = venue_td.text
         return " ".join(s.split(nbsp))
-    except Exception:
-        logging.exception(venue_td.text)
+    except Exception as ex:
+        logging.exception(ex)
         return None
 
 def _parse_home(home_td):
     try:
         s = home_td.text
         return " ".join(s.split(nbsp))
-    except Exception:
-        logging.exception(home_td.text)
+    except Exception as ex:
+        logging.exception(ex)
         return None
 
 def _parse_away(away_td):
     try:
         s = away_td.text
         return " ".join(s.split(nbsp))
-    except Exception:
-        logging.exception(away_td.text)
+    except Exception as ex:
+        logging.exception(ex)
         return None
 
 def _parse_homeGoals(result_td):
@@ -152,8 +153,8 @@ def _parse_homeGoals(result_td):
                 return None
             else:
                 return int(scores[0])
-    except Exception:
-        logging.exception(result_td.text)
+    except Exception as ex:
+        logging.exception(ex)
         return None
 
 def _parse_awayGoals(result_td):
@@ -167,8 +168,8 @@ def _parse_awayGoals(result_td):
                 return None
             else:
                 return int(scores[-1])
-    except Exception:
-        logging.exception(result_td.text)
+    except Exception as ex:
+        logging.exception(ex)
         return None
 
 def _parse_isPostponed(result_td):
@@ -178,6 +179,6 @@ def _parse_isPostponed(result_td):
             return True
         else:
             return False
-    except Exception:
-        logging.exception(result_td.text)
+    except Exception as ex:
+        logging.exception(ex)
         return False

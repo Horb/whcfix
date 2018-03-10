@@ -51,8 +51,8 @@ class YorkshireHockeyAssociationDivisionAdapter(object):
                 return None
             name_th = ths[0]
             return name_th.text
-        except:
-            logging.exception("")
+        except Exception as ex:
+            logging.exception(ex)
             return None
 
     def try_parse_division_row(self, tr):
@@ -79,8 +79,8 @@ class YorkshireHockeyAssociationDivisionAdapter(object):
             return DivisionRow(pos, team, is_promotion, is_relegation, played,
                                won, drawn, lost, goals_for, goals_against,
                                goals_difference, points, max_points)
-        except Exception:
-            logging.exception("")
+        except Exception as ex:
+            logging.exception(ex)
             return None
 
     @utils.catch_log_return_None
