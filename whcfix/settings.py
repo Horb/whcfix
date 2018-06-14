@@ -9,6 +9,35 @@ CONFIGS = {
     "configs": [
         {
             "dataSource": {
+                "clubId": "66",
+                "leagueId": "268",
+                "source": "YorkshireHA"
+            },
+            "sectionName": "Mens"
+        },
+        {
+            "dataSource": {
+                "clubId": "66",
+                "leagueId": "270",
+                "source": "YorkshireHA"
+            },
+            "sectionName": "Ladies"
+        },
+        {
+            "dataSource": {
+                "clubId": "66",
+                "leagueId": "269",
+                "source": "YorkshireHA"
+            },
+            "sectionName": "Mens Development"
+        },
+    ]
+}
+
+OLD_CONFIGS = {
+    "configs": [
+        {
+            "dataSource": {
                 "fixLiveNumber": "4173",
                 "club_name": "Wakefield 2",
                 "source": "FixturesLive",
@@ -39,16 +68,6 @@ CONFIGS = {
         },
         {
             "dataSource": {
-                "fixLiveNumber": "1131",
-                "club_name": "Wakefield 2",
-                "source": "FixturesLive",
-                "league" : "NHML 2 East"
-            },
-            "teamName": "Wakefield 2",
-            "sectionName": "Mens"
-        },
-        {
-            "dataSource": {
                 "fixLiveNumber": "1031",
                 "club_name": "Wakefield 1",
                 "source": "FixturesLive",
@@ -57,29 +76,5 @@ CONFIGS = {
             "teamName": "Wakefield 1",
             "sectionName": "Mens"
         },
-        {
-            "dataSource": {
-                "clubId": "66",
-                "leagueId": "238",
-                "source": "YorkshireHA"
-            },
-            "sectionName": "Mens Development"
-        },
-        {
-            "dataSource": {
-                "clubId": "66",
-                "leagueId": "237",
-                "source": "YorkshireHA"
-            },
-            "sectionName": "Mens"
-        },
-        {
-            "dataSource": {
-                "clubId": "66",
-                "leagueId": "239",
-                "source": "YorkshireHA"
-            },
-            "sectionName": "Ladies"
-        }
     ]
 }

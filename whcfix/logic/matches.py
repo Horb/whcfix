@@ -33,18 +33,26 @@ class Matches(MatchesBase):
         names.sort()
         return names
 
-    def getTodaysMatches(self, listOfTeamNames, section=None):
+    def getMatchesForDate(self, listOfTeamNames, dateOfInterest, section=None):
         todaysMatches = []
-        today = datetime.date.today()
         for team in listOfTeamNames:
             if section is not None:
                 if section not in team:
                     continue
             todaysMatches += [m for m in self.listOfMatches
                               if m.doesFeature(team)
-                              and m._date.date() == today]
+                              and m._date.date() == dateOfInterest]
         todaysMatches.sort()
         return todaysMatches
+
+
+    def getTodaysMatches(self, listOfTeamNames, section=None):
+        dateOfInterest = datetime.date.today()
+        return self.getMatchesForDate(
+                listOfTeamNames,
+                dateOfInterest,
+                section)
+
 
     def lastResult(self, teamName):
         for match in self.listOfMatches[::-1]:
