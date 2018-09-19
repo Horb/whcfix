@@ -31,39 +31,14 @@ CONFIGS = {
             },
             "sectionName": "Mens Development"
         },
-    ]
-}
-
-OLD_CONFIGS = {
-    "configs": [
         {
             "dataSource": {
                 "fixLiveNumber": "4173",
                 "club_name": "Wakefield 2",
                 "source": "FixturesLive",
-                "league" : "NTWHL Prem Div"
+                "league" : "NTWHL Div 1"
             },
             "teamName": "Wakefield 2",
-            "sectionName": "Ladies"
-        },
-        {
-            "dataSource": {
-                "fixLiveNumber": "4221",
-                "club_name": "Wakefield 3",
-                "source": "FixturesLive",
-                "league" : "NTWHL D2SE"
-            },
-            "teamName": "Wakefield 3",
-            "sectionName": "Ladies"
-        },
-        {
-            "dataSource": {
-                "fixLiveNumber": "4160",
-                "club_name": "Wakefield 1",
-                "source" : "FixturesLive",
-                "league" : "IWHL WCN"
-            },
-            "teamName": "Wakefield 1",
             "sectionName": "Ladies"
         },
         {
@@ -75,6 +50,31 @@ OLD_CONFIGS = {
             },
             "teamName": "Wakefield 1",
             "sectionName": "Mens"
+        },
+        {
+            "dataSource": {
+                "fixLiveNumber": "4160",
+                "club_name": "Wakefield 1",
+                "source" : "FixturesLive",
+                "league" : "NTWHL Prem Div"
+            },
+            "teamName": "Wakefield 1",
+            "sectionName": "Ladies"
+        },
+    ]
+}
+
+OLD_CONFIGS = {
+    "configs": [
+        {
+            "dataSource": {
+                "fixLiveNumber": "4221",
+                "club_name": "Wakefield 3",
+                "source": "FixturesLive",
+                "league" : "NTWHL D2SE"
+            },
+            "teamName": "Wakefield 3",
+            "sectionName": "Ladies"
         },
     ]
 }
