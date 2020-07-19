@@ -69,7 +69,7 @@ def team_ics(team):
         e.begin = begin
         e.duration = timedelta(minutes=90)
         c.events.append(e)
-    return Response(c, mimetype='text/calendar')
+    return Response(c, mimetype='application/octet-stream')
 
 @fixtures.route("/fixtures/by_team/")
 def fixtures_by_team():

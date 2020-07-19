@@ -10,7 +10,7 @@ CONFIGS = {
         {
             "dataSource": {
                 "clubId": "66",
-                "leagueId": "303",
+                "leagueId": "328",
                 "source": "YorkshireHA"
             },
             "sectionName": "Mens"
@@ -18,7 +18,7 @@ CONFIGS = {
         {
             "dataSource": {
                 "clubId": "66",
-                "leagueId": "304",
+                "leagueId": "330",
                 "source": "YorkshireHA"
             },
             "sectionName": "Ladies"
@@ -26,11 +26,16 @@ CONFIGS = {
         {
             "dataSource": {
                 "clubId": "66",
-                "leagueId": "305",
+                "leagueId": "332",
                 "source": "YorkshireHA"
             },
             "sectionName": "Mens Development"
         },
+    ]
+}
+
+DISABLED_CONFIGS = {
+    "configs" : [
         {
             "dataSource": {
                 "fixLiveNumber": "4173",

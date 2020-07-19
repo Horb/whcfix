@@ -29,8 +29,3 @@ def home():
 @base.route("/about/")
 def about():
     return render_template("about.html")
-
-
-@base.route('/uploads/<filename>/')
-def uploads(filename):
-    return send_from_directory(settings.UPLOAD_FOLDER, filename)
