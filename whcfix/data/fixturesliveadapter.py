@@ -1,10 +1,10 @@
 import requests
 import logging
+from multiprocessing import Process
 from BeautifulSoup import BeautifulSoup
 import datetime
 from whcfix.data.adapterbase import AdapterBase
 from whcfix.logic.match import Match
-
 
 nbsp = '&nbsp;'
 
@@ -25,9 +25,8 @@ def get_matches(sectionName, fixLiveNumber, club_name, league):
     dicts = _get_match_dicts(fixLiveNumber, club_name, league)
     return [_getMatchObjectFromDict(d, sectionName) for d in dicts]
 
-def _get_match_dicts_from_HTML(htmlString, club_name, league):
-    soup = BeautifulSoup(htmlString)
-    listOfMatches = []
+def _get_match_dicts_from_HTML(html, club_name, league, listOfMatches):
+    soup = BeautifulSoup(html)
     for tr in soup("tr"):
         matchDict = _parse_row(tr, club_name, league)
         if matchDict is not None:
@@ -35,8 +34,12 @@ def _get_match_dicts_from_HTML(htmlString, club_name, league):
     return listOfMatches
 
 def _get_match_dicts(fixLiveNumber, club_name, league):
-    htmlString = _get_HTML(fixLiveNumber)
-    return _get_match_dicts_from_HTML(htmlString, club_name, league)
+    html = _get_HTML(fixLiveNumber)
+    listOfMatches = []
+    p = Process(target=_get_match_dicts_from_HTML, args=(html, club_name, league, listOfMatches))
+    p.start()
+    p.join()
+    return listOfMatches
 
 def _parse_venue(venue_td):
     s = venue_td.text

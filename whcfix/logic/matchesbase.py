@@ -50,8 +50,3 @@ class MatchesBase(object):
         keyfunc = lambda m: (m.date, m.home, m.away)
         matches = [ list(m)[0] for k, m in groupby(matches, keyfunc) ]
         return matches
-
-
-
-
-    

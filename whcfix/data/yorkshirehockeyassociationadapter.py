@@ -1,3 +1,4 @@
+from multiprocessing import Process
 import datetime
 import logging
 import requests
@@ -30,8 +31,11 @@ def _getMatchObjectFromDict(matchDict, sectionName):
 
 def get_matches(sectionName, league_id, club_id="", date="all", division="", home_away="0"):
     html = _get_HTML(league_id, club_id, date, division, home_away)
-    dicts = _get_match_dicts_from_HTML(html)
-    return [_getMatchObjectFromDict(d, sectionName) for d in dicts]
+    listOfMatches = []
+    p = Process(target=_get_match_dicts_from_HTML, args=(html, listOfMatches))
+    p.start()
+    p.join()
+    return [_getMatchObjectFromDict(d, sectionName) for d in listOfMatches]
 
 def _get_HTML(league_id, club_id, date, division, home_away):
     url = "http://www.yorkshireha.org.uk/e107_plugins/league_manager/index.php?fixtures"
@@ -52,9 +56,8 @@ def _get_HTML(league_id, club_id, date, division, home_away):
                       data=payload)
     return r.text
 
-def _get_match_dicts_from_HTML(html):
+def _get_match_dicts_from_HTML(html, listOfMatches):
     soup = BeautifulSoup(html)
-    listOfMatches = []
     for tr in soup("tr"):
         matchDict = _parse_row(tr)
         if matchDict is None:
