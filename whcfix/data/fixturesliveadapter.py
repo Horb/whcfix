@@ -1,6 +1,6 @@
 import requests
 import logging
-from multiprocessing import Process
+from multiprocessing import Process, Queue
 from BeautifulSoup import BeautifulSoup
 import datetime
 from whcfix.data.adapterbase import AdapterBase
@@ -25,19 +25,21 @@ def get_matches(sectionName, fixLiveNumber, club_name, league):
     dicts = _get_match_dicts(fixLiveNumber, club_name, league)
     return [_getMatchObjectFromDict(d, sectionName) for d in dicts]
 
-def _get_match_dicts_from_HTML(html, club_name, league, listOfMatches):
+def _get_match_dicts_from_HTML(html, club_name, league, q):
     soup = BeautifulSoup(html)
+    listOfMatches = []
     for tr in soup("tr"):
         matchDict = _parse_row(tr, club_name, league)
         if matchDict is not None:
             listOfMatches.append(matchDict)
-    return listOfMatches
+    q.put(listOfMatches)
 
 def _get_match_dicts(fixLiveNumber, club_name, league):
     html = _get_HTML(fixLiveNumber)
-    listOfMatches = []
-    p = Process(target=_get_match_dicts_from_HTML, args=(html, club_name, league, listOfMatches))
+    q = Queue()
+    p = Process(target=_get_match_dicts_from_HTML, args=(html, club_name, league, q))
     p.start()
+    listOfMatches = q.get()
     p.join()
     return listOfMatches
 

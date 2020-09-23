@@ -31,11 +31,6 @@ CONFIGS = {
             },
             "sectionName": "Mens Development"
         },
-    ]
-}
-
-DISABLED_CONFIGS = {
-    "configs" : [
         {
             "dataSource": {
                 "fixLiveNumber": "4173",
@@ -56,5 +51,10 @@ DISABLED_CONFIGS = {
             "teamName": "Wakefield 2",
             "sectionName": "Mens"
         },
+    ]
+}
+
+DISABLED_CONFIGS = {
+    "configs" : [
     ]
 }

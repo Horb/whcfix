@@ -1,4 +1,4 @@
-from multiprocessing import Process
+from multiprocessing import Process, Queue
 import datetime
 import logging
 import requests
@@ -31,9 +31,10 @@ def _getMatchObjectFromDict(matchDict, sectionName):
 
 def get_matches(sectionName, league_id, club_id="", date="all", division="", home_away="0"):
     html = _get_HTML(league_id, club_id, date, division, home_away)
-    listOfMatches = []
-    p = Process(target=_get_match_dicts_from_HTML, args=(html, listOfMatches))
+    q = Queue()
+    p = Process(target=_get_match_dicts_from_HTML, args=(html, q))
     p.start()
+    listOfMatches = q.get()
     p.join()
     return [_getMatchObjectFromDict(d, sectionName) for d in listOfMatches]
 
@@ -56,8 +57,9 @@ def _get_HTML(league_id, club_id, date, division, home_away):
                       data=payload)
     return r.text
 
-def _get_match_dicts_from_HTML(html, listOfMatches):
+def _get_match_dicts_from_HTML(html, q):
     soup = BeautifulSoup(html)
+    listOfMatches = []
     for tr in soup("tr"):
         matchDict = _parse_row(tr)
         if matchDict is None:
@@ -66,7 +68,7 @@ def _get_match_dicts_from_HTML(html, listOfMatches):
             listOfMatches[-1]["Note"] = matchDict["Note"]
         elif "date" in matchDict:
             listOfMatches.append(matchDict)
-    return listOfMatches
+    q.put(listOfMatches)
 
 def _parse_note(tds):
     try:
