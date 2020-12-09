@@ -1,0 +1,27 @@
+<h1>2020-12-19 Rebuild</h1>
+<p>I've been neglecting whcfix.com for some time now, with regards to both the
+operating system (CentOS 6, which recently passed it's end of life!) and the
+aging application code which is no longer fit for a tiny (128MB!) server like
+this one. I had considered abandoning the project entirely because the prospect
+of updating all that Python 2 code isn't a very enjoyable prospect for a
+hobby project.</p>
+<p>Instead I've decided to rebuild whcfix.com from the ground up with the 
+following goals;</p>
+<ul>
+<li>move to Debian, for docs</li>
+<li>static website with dynamic content, for speed</li>
+<li>use simple (think gnutils) tools, for nostalgia</li>
+<li>functional approach, for purity</li>
+<li>embrace CI/CD, for welfare</li>
+</ul>
+<h2>Rebuild Notes</h2>
+<ul>
+<li>logged into VPS Control panel and reinstalled the operating system,
+selecting Debian 10.</li>
+<li>setup a local user and followed the <a href="https://wiki.debian.org/SSH">ssh setup guide</a>.</li>
+<li>letsencrypt.org requires snap (?!) to install certbot which isn't supported
+by the VPS. Instead I installed certbot from the debian packages and manually
+configured the SSL certs by following the <a href="https://www.debian.org/doc/manuals/debian-handbook/sect.http-web-server.en.html">Web Server</a> guide.</li>
+<li>to get the certs to work it's important to request all subdomains you want to
+support, in this case www.whcfix.com and whcfix.com.</li>
+</ul>
